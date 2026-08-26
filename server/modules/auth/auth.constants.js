@@ -1,0 +1,10 @@
+export const USER_ROLES = {
+  BUYER: 'BUYER',
+  CREATOR: 'CREATOR',
+  ADMIN: 'ADMIN',
+}
+
+export const PUBLIC_REGISTRATION_ROLES = [
+  USER_ROLES.BUYER,
+  USER_ROLES.CREATOR,
+]

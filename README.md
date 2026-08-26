@@ -1,16 +1,64 @@
-# React + Vite
+# Market Palce
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Production-ready two-sided website marketplace, built in phases.
 
-Currently, two official plugins are available:
+## Current phase
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Phase 2 implements authentication only:
 
-## React Compiler
+- Registration for `BUYER` and `CREATOR`
+- Login with password verification
+- Logout for stateless JWT sessions
+- Password hashing
+- JWT issuing and verification
+- Authentication middleware
+- Role-based authorization middleware
+- Protected backend routes
+- Protected frontend routes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This phase does not include marketplace listings, products, payments, creator dashboard, admin dashboard, website uploads, or website builder functionality.
 
-## Expanding the ESLint configuration
+## Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+src/
+  app/
+  config/
+  features/
+    auth/
+    foundation/
+  services/
+server/
+  config/
+  db/
+  middleware/
+  modules/
+    auth/
+    health/
+  utils/
+```
+
+## Scripts
+
+```bash
+npm run dev
+npm run dev:client
+npm run dev:server
+npm run server
+npm run build
+npm run lint
+npm run preview
+```
+
+## Environment variables
+
+Copy `.env.example` to `.env` for local API configuration.
+
+- `PORT`: Express API port
+- `CLIENT_ORIGIN`: allowed frontend origin for CORS
+- `VITE_API_BASE_URL`: frontend API base URL
+- `MONGODB_URI`: MongoDB connection string
+- `MONGODB_DB_NAME`: MongoDB database name
+- `MONGODB_SERVER_SELECTION_TIMEOUT_MS`: MongoDB connection timeout
+- `JWT_SECRET`: secret used to sign and verify JWTs
+- `JWT_EXPIRES_IN`: JWT lifetime

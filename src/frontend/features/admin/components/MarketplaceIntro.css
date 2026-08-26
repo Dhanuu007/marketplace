@@ -1,0 +1,494 @@
+.market-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #15151d 0%,
+      #09090d 45%,
+      #050507 100%
+    );
+
+  opacity: 1;
+  transform: scale(1);
+
+  transition:
+    opacity 0.35s ease,
+    transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.market-intro-exit {
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+
+/* =========================
+   BACKGROUND ORBS
+========================= */
+
+.intro-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(70px);
+}
+
+.intro-orb-one {
+  width: 420px;
+  height: 420px;
+
+  background: rgba(99, 102, 241, 0.18);
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%) scale(0.5);
+
+  animation: orbOne 2.4s ease-out forwards;
+}
+
+.intro-orb-two {
+  width: 260px;
+  height: 260px;
+
+  background: rgba(168, 85, 247, 0.12);
+
+  top: 45%;
+  left: 52%;
+
+  transform: translate(-50%, -50%) scale(0);
+
+  animation: orbTwo 2s ease-out 0.2s forwards;
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.intro-grid {
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 50px 50px;
+
+  mask-image: radial-gradient(
+    circle at center,
+    black 0%,
+    transparent 75%
+  );
+
+  opacity: 0;
+
+  animation:
+    gridAppear
+    1.2s
+    ease-out
+    0.2s
+    forwards;
+}
+
+
+/* =========================
+   CENTER
+========================= */
+
+.intro-center {
+  position: relative;
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  transform: translateY(25px);
+  opacity: 0;
+
+  animation:
+    centerAppear
+    0.9s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    0.15s
+    forwards;
+}
+
+
+/* =========================
+   SMALL TITLE
+========================= */
+
+.intro-small {
+  margin-bottom: 18px;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 10px;
+  font-weight: 600;
+
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+
+  opacity: 0;
+
+  animation:
+    fadeUp
+    0.7s
+    ease-out
+    0.25s
+    forwards;
+}
+
+
+/* =========================
+   MAIN TITLE
+========================= */
+
+.intro-title-wrapper {
+  overflow: hidden;
+  padding: 8px 15px;
+}
+
+.intro-title {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(38px, 7vw, 78px);
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+  line-height: 1;
+
+  transform: translateY(110%);
+  opacity: 0;
+
+  animation:
+    titleReveal
+    0.9s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    0.35s
+    forwards;
+}
+
+.intro-title span {
+  background: linear-gradient(
+    90deg,
+    #ffffff,
+    #a5b4fc,
+    #c084fc
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* =========================
+   LINE
+========================= */
+
+.intro-line {
+  width: 180px;
+  height: 1px;
+
+  margin-top: 26px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  overflow: hidden;
+}
+
+.intro-line span {
+  display: block;
+
+  width: 0;
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #a5b4fc,
+    transparent
+  );
+
+  animation:
+    lineGrow
+    0.9s
+    ease-out
+    0.75s
+    forwards;
+}
+
+
+/* =========================
+   TAGLINE
+========================= */
+
+.intro-tagline {
+  margin: 17px 0 0;
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 12px;
+  font-weight: 400;
+
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+
+  opacity: 0;
+
+  animation:
+    fadeUp
+    0.7s
+    ease-out
+    0.95s
+    forwards;
+}
+
+
+/* =========================
+   CORNERS
+========================= */
+
+.intro-corner {
+  position: absolute;
+
+  width: 45px;
+  height: 45px;
+
+  border-color: rgba(255, 255, 255, 0.12);
+
+  opacity: 0;
+
+  animation:
+    cornerAppear
+    0.8s
+    ease-out
+    0.4s
+    forwards;
+}
+
+.intro-corner-top {
+  top: 35px;
+  left: 35px;
+
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.intro-corner-bottom {
+  right: 35px;
+  bottom: 35px;
+
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes orbOne {
+  0% {
+    transform:
+      translate(-50%, -50%)
+      scale(0.2);
+
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(1.3);
+
+    opacity: 0.75;
+  }
+}
+
+@keyframes orbTwo {
+  0% {
+    transform:
+      translate(-50%, -50%)
+      scale(0);
+
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(1.2);
+
+    opacity: 0.6;
+  }
+}
+
+@keyframes gridAppear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes centerAppear {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lineGrow {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes cornerAppear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .intro-title {
+    font-size: 34px;
+    letter-spacing: 0.06em;
+  }
+
+  .intro-small {
+    font-size: 8px;
+    letter-spacing: 0.35em;
+  }
+
+  .intro-tagline {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+  }
+
+  .intro-line {
+    width: 130px;
+  }
+
+  .intro-corner-top {
+    top: 20px;
+    left: 20px;
+  }
+
+  .intro-corner-bottom {
+    right: 20px;
+    bottom: 20px;
+  }
+}
+
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .market-intro,
+  .intro-center,
+  .intro-small,
+  .intro-title,
+  .intro-line span,
+  .intro-tagline,
+  .intro-corner,
+  .intro-orb-one,
+  .intro-orb-two,
+  .intro-grid {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .intro-center,
+  .intro-small,
+  .intro-title,
+  .intro-tagline,
+  .intro-corner {
+    opacity: 1;
+    transform: none;
+  }
+
+  .intro-line span {
+    width: 100%;
+  }
+}

@@ -1,0 +1,1 @@
+export const MARKETPLACE_COMMISSION_RATE = 0.05

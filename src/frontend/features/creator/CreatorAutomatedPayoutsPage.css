@@ -1,0 +1,1298 @@
+.creator-automated-payouts-page {
+  min-height: 100vh;
+  padding: 40px 24px 80px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f7fbfb 0%,
+      #ffffff 50%,
+      #eef8f8 100%
+    );
+}
+
+
+.creator-automated-payouts-container {
+  width: min(1150px, 100%);
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   BACK
+========================================================= */
+
+.creator-automated-payouts-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 30px;
+
+  color: #008080;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+.creator-automated-payouts-back:hover {
+  transform: translateX(-3px);
+  opacity: 0.8;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.creator-automated-payouts-header {
+  margin-bottom: 30px;
+}
+
+
+.creator-automated-payouts-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 12px;
+  margin-bottom: 14px;
+
+  border: 1px solid rgba(0, 128, 128, 0.18);
+  border-radius: 999px;
+
+  background: rgba(0, 128, 128, 0.07);
+
+  color: #008080;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+
+.creator-automated-payouts-badge span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #008080;
+}
+
+
+.creator-automated-payouts-header h1 {
+  margin: 0;
+
+  color: #123333;
+
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.08;
+
+  letter-spacing: -0.035em;
+}
+
+
+.creator-automated-payouts-header > p {
+  max-width: 700px;
+
+  margin: 14px 0 0;
+
+  color: #617474;
+
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   STATUS CARD
+========================================================= */
+
+.creator-automated-payouts-status-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  padding: 18px 20px;
+  margin-bottom: 20px;
+
+  border: 1px solid rgba(0, 128, 128, 0.2);
+  border-radius: 16px;
+
+  background: rgba(0, 128, 128, 0.06);
+}
+
+
+.creator-automated-payouts-status-icon {
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 36px;
+
+  width: 36px;
+  height: 36px;
+
+  border-radius: 50%;
+
+  background: #008080;
+
+  color: #ffffff;
+
+  font-weight: 800;
+}
+
+
+.creator-automated-payouts-status-card strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #173333;
+
+  font-size: 15px;
+}
+
+
+.creator-automated-payouts-status-card span {
+  display: block;
+
+  color: #667777;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.creator-automated-payouts-progress {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+
+  width: 100%;
+  margin: 0 0 22px;
+}
+
+
+/* CLICKABLE STEP BUTTON */
+
+.creator-automated-payouts-progress button {
+  appearance: none;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  width: 100%;
+  min-height: 58px;
+
+  box-sizing: border-box;
+
+  padding: 12px 16px;
+  margin: 0;
+
+  border: 1px solid #dce7e7;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  color: #899696;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  box-shadow: 0 2px 8px rgba(0, 70, 70, 0.02);
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* STEP NUMBER */
+
+.creator-automated-payouts-progress button span {
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 30px;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 50%;
+
+  background: #edf3f3;
+
+  color: #718080;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* STEP TITLE */
+
+.creator-automated-payouts-progress button strong {
+  display: block;
+
+  color: inherit;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  line-height: 1.3;
+}
+
+
+/* HOVER */
+
+.creator-automated-payouts-progress button:hover {
+  transform: translateY(-1px);
+
+  border-color: rgba(0, 128, 128, 0.4);
+
+  background: #ffffff;
+
+  color: #008080;
+
+  box-shadow:
+    0 8px 22px rgba(0, 128, 128, 0.08);
+}
+
+
+/* ACTIVE */
+
+.creator-automated-payouts-progress button.active {
+  border-color: rgba(0, 128, 128, 0.32);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 128, 128, 0.08),
+      rgba(255, 255, 255, 0.98)
+    );
+
+  color: #008080;
+
+  box-shadow:
+    0 7px 20px rgba(0, 128, 128, 0.08);
+}
+
+
+/* ACTIVE NUMBER */
+
+.creator-automated-payouts-progress button.active span {
+  background: #008080;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 14px rgba(0, 128, 128, 0.2);
+}
+
+
+/* FOCUS */
+
+.creator-automated-payouts-progress button:focus-visible {
+  outline: 2px solid #008080;
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.creator-automated-payouts-card {
+  overflow: hidden;
+
+  border: 1px solid #dceaea;
+  border-radius: 24px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 20px 60px rgba(0, 70, 70, 0.08);
+}
+
+
+.creator-automated-payouts-card-header {
+  padding: 30px 32px;
+
+  border-bottom: 1px solid #edf3f3;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 128, 128, 0.06),
+      rgba(255, 255, 255, 0.95)
+    );
+}
+
+
+.creator-automated-payouts-eyebrow {
+  margin: 0 0 8px;
+
+  color: #008080;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+.creator-automated-payouts-card-header h2 {
+  margin: 0;
+
+  color: #183535;
+
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+
+.creator-automated-payouts-card-header p:last-child {
+  max-width: 620px;
+
+  margin: 9px 0 0;
+
+  color: #718080;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.creator-automated-payouts-form {
+  padding: 32px;
+}
+
+
+.creator-automated-payouts-field {
+  margin-bottom: 24px;
+}
+
+
+.creator-automated-payouts-field label,
+.creator-automated-payouts-account-type legend {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: #294444;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+.creator-automated-payouts-field input[type="text"],
+.creator-automated-payouts-field input[type="tel"],
+.creator-automated-payouts-field select {
+  box-sizing: border-box;
+
+  width: 100%;
+
+  padding: 14px 15px;
+
+  border: 1px solid #d4e1e1;
+  border-radius: 12px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #203838;
+
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.creator-automated-payouts-field select {
+  cursor: pointer;
+}
+
+
+.creator-automated-payouts-field input:focus,
+.creator-automated-payouts-field select:focus {
+  border-color: #008080;
+
+  box-shadow:
+    0 0 0 4px rgba(0, 128, 128, 0.09);
+}
+
+
+.creator-automated-payouts-field input::placeholder {
+  color: #a2b0b0;
+}
+
+
+.creator-automated-payouts-field > small {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #7a8888;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   READONLY EMAIL
+========================================================= */
+
+.creator-automated-payouts-readonly {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 14px 15px;
+
+  border: 1px solid #dce8e8;
+  border-radius: 12px;
+
+  background: #f7fafa;
+}
+
+
+.creator-automated-payouts-readonly span {
+  overflow: hidden;
+
+  color: #294444;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.creator-automated-payouts-readonly small {
+  flex-shrink: 0;
+
+  color: #008080;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ACCOUNT TYPE
+========================================================= */
+
+.creator-automated-payouts-account-type {
+  margin: 0 0 26px;
+  padding: 0;
+
+  border: 0;
+}
+
+
+.creator-automated-payouts-account-type legend {
+  padding: 0;
+}
+
+
+.creator-automated-payouts-account-type label {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+
+  padding: 16px;
+  margin-bottom: 12px;
+
+  border: 1px solid #dce7e7;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.creator-automated-payouts-account-type label:hover {
+  border-color: rgba(0, 128, 128, 0.45);
+}
+
+
+.creator-automated-payouts-account-type label.selected {
+  border-color: #008080;
+
+  background: rgba(0, 128, 128, 0.055);
+
+  box-shadow:
+    0 5px 20px rgba(0, 128, 128, 0.07);
+}
+
+
+.creator-automated-payouts-account-type input {
+  width: 17px;
+  height: 17px;
+
+  margin-top: 2px;
+
+  accent-color: #008080;
+
+  cursor: pointer;
+}
+
+
+.creator-automated-payouts-account-type label > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+
+.creator-automated-payouts-account-type label strong {
+  color: #274141;
+
+  font-size: 14px;
+}
+
+
+.creator-automated-payouts-account-type label small {
+  color: #748383;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   TWO COLUMN
+========================================================= */
+
+.creator-automated-payouts-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+
+/* =========================================================
+   INFO BOX
+========================================================= */
+
+.creator-automated-payouts-info-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  padding: 16px 18px;
+  margin-bottom: 22px;
+
+  border: 1px solid #cfe4e4;
+  border-radius: 14px;
+
+  background: #f4fafa;
+}
+
+
+.creator-automated-payouts-info-box strong {
+  color: #294444;
+
+  font-size: 14px;
+}
+
+
+.creator-automated-payouts-info-box span {
+  color: #6e8080;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   REVIEW
+========================================================= */
+
+.creator-automated-payouts-review {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+.creator-automated-payouts-review-section {
+  padding: 20px;
+
+  border: 1px solid #dce8e8;
+  border-radius: 16px;
+
+  background: #ffffff;
+}
+
+
+.creator-automated-payouts-review-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding-bottom: 15px;
+  margin-bottom: 18px;
+
+  border-bottom: 1px solid #edf2f2;
+}
+
+
+.creator-automated-payouts-review-heading strong {
+  color: #294444;
+
+  font-size: 15px;
+}
+
+
+.creator-automated-payouts-review-heading button {
+  padding: 7px 12px;
+
+  border: 1px solid #cfe0e0;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #008080;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.creator-automated-payouts-review-heading button:hover {
+  border-color: #008080;
+
+  background: rgba(0, 128, 128, 0.05);
+}
+
+
+.creator-automated-payouts-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+
+.creator-automated-payouts-review-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+
+.creator-automated-payouts-review-grid span {
+  color: #7a8888;
+
+  font-size: 12px;
+}
+
+
+.creator-automated-payouts-review-grid strong {
+  color: #203838;
+
+  font-size: 14px;
+
+  overflow-wrap: anywhere;
+}
+
+
+.creator-automated-payouts-review-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  padding: 17px 18px;
+
+  border: 1px solid #cfe4e4;
+  border-radius: 14px;
+
+  background: #f4fafa;
+}
+
+
+.creator-automated-payouts-review-notice strong {
+  color: #294444;
+
+  font-size: 14px;
+}
+
+
+.creator-automated-payouts-review-notice span {
+  color: #6f8080;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.creator-automated-payouts-error {
+  padding: 13px 15px;
+  margin-bottom: 22px;
+
+  border: 1px solid #f0cccc;
+  border-radius: 12px;
+
+  background: #fff6f6;
+
+  color: #a83a3a;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.creator-automated-payouts-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding-top: 25px;
+  margin-top: 25px;
+
+  border-top: 1px solid #edf2f2;
+}
+
+
+.creator-automated-payouts-footer > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+
+.creator-automated-payouts-footer strong {
+  color: #294444;
+
+  font-size: 13px;
+}
+
+
+.creator-automated-payouts-footer span {
+  max-width: 450px;
+
+  color: #7b8989;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+.creator-automated-payouts-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.creator-automated-payouts-continue,
+.creator-automated-payouts-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 150px;
+
+  padding: 13px 20px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+.creator-automated-payouts-continue {
+  border: 0;
+
+  background: #008080;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 22px rgba(0, 128, 128, 0.2);
+}
+
+
+.creator-automated-payouts-continue:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 28px rgba(0, 128, 128, 0.25);
+}
+
+
+.creator-automated-payouts-continue:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+}
+
+
+.creator-automated-payouts-back-button {
+  border: 1px solid #d4e1e1;
+
+  background: #ffffff;
+
+  color: #405858;
+}
+
+
+.creator-automated-payouts-back-button:hover {
+  border-color: #008080;
+
+  color: #008080;
+}
+
+
+/* =========================================================
+   COMPLETED STATE
+========================================================= */
+
+.creator-automated-payouts-complete {
+  padding: 52px 48px 48px;
+}
+
+
+.creator-automated-payouts-complete-icon {
+  display: grid;
+  place-items: center;
+
+  width: 58px;
+  height: 58px;
+
+  margin-bottom: 22px;
+
+  border-radius: 50%;
+
+  background: #008080;
+
+  color: #ffffff;
+
+  font-size: 28px;
+  font-weight: 900;
+
+  box-shadow:
+    0 10px 25px rgba(0, 128, 128, 0.2);
+}
+
+
+.creator-automated-payouts-complete h1 {
+  margin: 0;
+
+  color: #123333;
+
+  font-size: clamp(32px, 5vw, 46px);
+  line-height: 1.1;
+
+  letter-spacing: -0.035em;
+}
+
+
+.creator-automated-payouts-complete-description {
+  max-width: 900px;
+
+  margin: 16px 0 30px;
+
+  color: #607474;
+
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   MANUAL PAYOUT CARD
+========================================================= */
+
+.creator-automated-payouts-manual-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  padding: 20px;
+  margin-bottom: 18px;
+
+  border: 1px solid #dce8e8;
+  border-radius: 16px;
+
+  background: #fbfdfd;
+}
+
+
+.creator-automated-payouts-manual-icon {
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 42px;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 12px;
+
+  background: rgba(0, 128, 128, 0.1);
+
+  color: #008080;
+
+  font-size: 19px;
+  font-weight: 900;
+}
+
+
+.creator-automated-payouts-manual-card > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+
+.creator-automated-payouts-manual-card strong {
+  color: #294444;
+
+  font-size: 15px;
+}
+
+
+.creator-automated-payouts-manual-card span {
+  color: #008080;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+.creator-automated-payouts-manual-card small {
+  max-width: 850px;
+
+  margin-top: 3px;
+
+  color: #718080;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   COMPLETED ACTIONS
+========================================================= */
+
+.creator-automated-payouts-complete-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding-top: 26px;
+  margin-top: 26px;
+
+  border-top: 1px solid #edf2f2;
+}
+
+
+.creator-automated-payouts-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 13px 20px;
+
+  border: 1px solid #cddddd;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #008080;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.creator-automated-payouts-secondary-button:hover {
+  border-color: #008080;
+
+  background: rgba(0, 128, 128, 0.05);
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.creator-automated-payouts-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 420px;
+
+  padding: 40px;
+
+  text-align: center;
+}
+
+
+.creator-automated-payouts-spinner {
+  width: 38px;
+  height: 38px;
+
+  margin-bottom: 18px;
+
+  border: 3px solid #d9eaea;
+  border-top-color: #008080;
+
+  border-radius: 50%;
+
+  animation:
+    creator-automated-payouts-spin 0.8s linear infinite;
+}
+
+
+.creator-automated-payouts-loading strong {
+  margin-bottom: 6px;
+
+  color: #294444;
+
+  font-size: 15px;
+}
+
+
+.creator-automated-payouts-loading span {
+  max-width: 420px;
+
+  color: #7a8888;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+@keyframes creator-automated-payouts-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .creator-automated-payouts-two-column,
+  .creator-automated-payouts-review-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .creator-automated-payouts-progress {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .creator-automated-payouts-page {
+    padding: 25px 16px 55px;
+  }
+
+
+  .creator-automated-payouts-card {
+    border-radius: 18px;
+  }
+
+
+  .creator-automated-payouts-card-header,
+  .creator-automated-payouts-form {
+    padding: 24px 20px;
+  }
+
+
+  .creator-automated-payouts-complete {
+    padding: 36px 22px 28px;
+  }
+
+
+  .creator-automated-payouts-header h1,
+  .creator-automated-payouts-complete h1 {
+    font-size: 34px;
+  }
+
+
+  .creator-automated-payouts-readonly {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+
+  .creator-automated-payouts-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+
+  .creator-automated-payouts-footer-actions {
+    width: 100%;
+
+    flex-direction: column;
+  }
+
+
+  .creator-automated-payouts-continue,
+  .creator-automated-payouts-back-button {
+    width: 100%;
+  }
+
+
+  .creator-automated-payouts-complete-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+
+  .creator-automated-payouts-complete-actions a {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  .creator-automated-payouts-progress {
+    gap: 9px;
+  }
+
+
+  .creator-automated-payouts-progress button {
+    min-height: 54px;
+    padding: 11px 14px;
+  }
+
+}
+
+
+@media (max-width: 430px) {
+
+  .creator-automated-payouts-page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+
+  .creator-automated-payouts-header h1,
+  .creator-automated-payouts-complete h1 {
+    font-size: 30px;
+  }
+
+
+  .creator-automated-payouts-card-header h2 {
+    font-size: 21px;
+  }
+
+
+  .creator-automated-payouts-complete-description {
+    font-size: 14px;
+  }
+
+
+  .creator-automated-payouts-progress button {
+    min-height: 50px;
+    padding: 10px 12px;
+  }
+
+
+  .creator-automated-payouts-progress button span {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+
+
+  .creator-automated-payouts-progress button strong {
+    font-size: 12px;
+  }
+
+}

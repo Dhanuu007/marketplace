@@ -1,0 +1,1138 @@
+/* =========================================================
+   WEBSITE MANAGEMENT — MODERN ADMIN PAGE
+========================================================= */
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.admin-website-back-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 28px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--admin-primary);
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 750;
+
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+
+.admin-website-back-button span {
+  font-size: 19px;
+
+  line-height: 1;
+
+  transition:
+    transform 180ms ease;
+}
+
+
+.admin-website-back-button:hover {
+  color: var(--admin-primary-dark);
+
+  transform: translateX(2px);
+}
+
+
+.admin-website-back-button:hover span {
+  transform: translateX(-3px);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.admin-website-hero {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  min-height: 205px;
+
+  margin-bottom: 26px;
+
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8fcfc 58%,
+      #f2faf9 100%
+    );
+}
+
+
+.admin-website-hero-copy {
+  position: relative;
+
+  z-index: 2;
+
+  min-width: 0;
+
+  padding: 24px 0 24px 2px;
+}
+
+
+.admin-website-hero-copy h1 {
+  margin: 0;
+
+  color: var(--admin-navy);
+
+  font-size: clamp(34px, 4vw, 48px);
+
+  line-height: 1.02;
+
+  font-weight: 850;
+
+  letter-spacing: -0.045em;
+}
+
+
+.admin-website-hero-copy p {
+  max-width: 580px;
+
+  margin: 12px 0 0;
+
+  color: var(--admin-text-soft);
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   HERO ILLUSTRATION
+========================================================= */
+
+.admin-website-hero-illustration {
+  position: relative;
+
+  width: 320px;
+  height: 185px;
+
+  flex: 0 0 320px;
+
+  margin-right: 18px;
+}
+
+
+.admin-website-browser {
+  position: absolute;
+
+  top: 17px;
+  right: 34px;
+
+  width: 220px;
+  height: 140px;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 15px 35px rgba(16, 42, 67, 0.10);
+}
+
+
+.admin-website-browser-top {
+  height: 29px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 0 11px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #008f8f,
+      #079b9b
+    );
+}
+
+
+.admin-website-browser-top span {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.92);
+}
+
+
+.admin-website-browser-top i {
+  width: 42px;
+  height: 5px;
+
+  margin-left: auto;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.9);
+}
+
+
+.admin-website-browser-body {
+  padding: 13px;
+}
+
+
+.admin-browser-block {
+  border-radius: 6px;
+
+  background: #dff5f3;
+}
+
+
+.admin-browser-block.large {
+  width: 38px;
+  height: 28px;
+
+  float: left;
+
+  margin-right: 9px;
+}
+
+
+.admin-browser-lines {
+  display: grid;
+
+  gap: 6px;
+
+  padding-top: 4px;
+}
+
+
+.admin-browser-lines span {
+  height: 7px;
+
+  border-radius: 999px;
+
+  background: #e2f3f3;
+}
+
+
+.admin-browser-lines span:first-child {
+  width: 92%;
+}
+
+
+.admin-browser-lines span:last-child {
+  width: 68%;
+}
+
+
+.admin-browser-row {
+  clear: both;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr 1fr;
+
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+
+.admin-browser-row div {
+  height: 42px;
+
+  border-radius: 6px;
+
+  background: #edf8f8;
+}
+
+
+.admin-website-gear {
+  position: absolute;
+
+  right: 10px;
+  bottom: 22px;
+
+  width: 64px;
+  height: 64px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #00a0a0,
+      #008080
+    );
+
+  color: #ffffff;
+
+  font-size: 31px;
+
+  box-shadow:
+    0 14px 28px rgba(0, 128, 128, 0.22);
+}
+
+
+.admin-website-leaf {
+  position: absolute;
+
+  border-radius:
+    100% 0 100% 0;
+
+  background:
+    linear-gradient(
+      145deg,
+      #d8f4f1,
+      #bfeae7
+    );
+
+  transform: rotate(28deg);
+}
+
+
+.admin-website-leaf.leaf-one {
+  width: 35px;
+  height: 70px;
+
+  left: 35px;
+  bottom: 20px;
+}
+
+
+.admin-website-leaf.leaf-two {
+  width: 26px;
+  height: 55px;
+
+  left: 70px;
+  bottom: 31px;
+
+  transform: rotate(55deg);
+}
+
+
+.admin-website-leaf.leaf-three {
+  width: 23px;
+  height: 48px;
+
+  right: 62px;
+  top: 18px;
+
+  transform: rotate(-30deg);
+}
+
+
+/* =========================================================
+   MANAGEMENT CARDS
+========================================================= */
+
+.admin-website-management-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 22px;
+}
+
+
+.admin-website-management-card {
+  position: relative;
+
+  min-width: 0;
+
+  min-height: 287px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  padding: 26px;
+
+  overflow: hidden;
+
+  border:
+    1px solid #e4edf2;
+
+  border-top:
+    3px solid var(--admin-primary);
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #fbfdfd 100%
+    );
+
+  color: var(--admin-navy);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 30px rgba(16, 42, 67, 0.055);
+
+  font-family: inherit;
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+
+.admin-website-management-card:hover {
+  transform: translateY(-5px);
+
+  border-color: #d3e3e8;
+
+  box-shadow:
+    0 18px 38px rgba(16, 42, 67, 0.09);
+}
+
+
+.admin-website-management-card::after {
+  content: '';
+
+  position: absolute;
+
+  right: -45px;
+  bottom: -65px;
+
+  width: 150px;
+  height: 150px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(0, 143, 143, 0.035);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   CARD COLORS
+========================================================= */
+
+.admin-website-management-card.teal {
+  border-top-color: #08a3a3;
+}
+
+
+.admin-website-management-card.blue {
+  border-top-color: #2875d8;
+}
+
+
+.admin-website-management-card.purple {
+  border-top-color: #8650dc;
+}
+
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.admin-website-card-top {
+  width: 100%;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 22px;
+}
+
+
+.admin-website-card-icon {
+  width: 58px;
+  height: 58px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 17px;
+
+  font-size: 25px;
+
+  font-weight: 700;
+}
+
+
+.admin-website-management-card.teal
+.admin-website-card-icon {
+  border: 1px solid #ccefeb;
+
+  background: #e2f8f5;
+
+  color: #00a19f;
+}
+
+
+.admin-website-management-card.blue
+.admin-website-card-icon {
+  border: 1px solid #d7e6ff;
+
+  background: #edf4ff;
+
+  color: #2875d8;
+}
+
+
+.admin-website-management-card.purple
+.admin-website-card-icon {
+  border: 1px solid #e6d9ff;
+
+  background: #f4edff;
+
+  color: #7b49d7;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.admin-website-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  min-height: 28px;
+
+  padding: 0 10px;
+
+  border-radius: 9px;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+.admin-website-management-card.teal
+.admin-website-status {
+  background: #e7f9ee;
+
+  color: #159447;
+}
+
+
+.admin-website-management-card.blue
+.admin-website-status {
+  background: #edf4ff;
+
+  color: #2875d8;
+}
+
+
+.admin-website-management-card.purple
+.admin-website-status {
+  background: #f3ebff;
+
+  color: #7b49d7;
+}
+
+
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
+.admin-website-card-content {
+  min-width: 0;
+
+  flex: 1;
+}
+
+
+.admin-website-card-content h2 {
+  margin: 0;
+
+  color: var(--admin-navy);
+
+  font-size: 23px;
+
+  font-weight: 850;
+
+  letter-spacing: -0.03em;
+}
+
+
+.admin-website-card-content p {
+  max-width: 270px;
+
+  margin: 9px 0 0;
+
+  color: #627d98;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   CARD ACTION
+========================================================= */
+
+.admin-website-card-action {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 25px;
+
+  font-size: 12px;
+
+  font-weight: 850;
+}
+
+
+.admin-website-card-action span {
+  font-size: 18px;
+
+  transition:
+    transform 180ms ease;
+}
+
+
+.admin-website-management-card:hover
+.admin-website-card-action span {
+  transform: translateX(4px);
+}
+
+
+.admin-website-management-card.teal
+.admin-website-card-action {
+  color: #009b9b;
+}
+
+
+.admin-website-management-card.blue
+.admin-website-card-action {
+  color: #2875d8;
+}
+
+
+.admin-website-management-card.purple
+.admin-website-card-action {
+  color: #7b49d7;
+}
+
+
+/* =========================================================
+   WEBSITE OVERVIEW
+========================================================= */
+
+.admin-website-overview {
+  margin-bottom: 18px;
+
+  overflow: hidden;
+
+  border: 1px solid #e2ebef;
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow: var(--admin-shadow);
+}
+
+
+.admin-website-overview-heading {
+  padding: 22px 26px 0;
+}
+
+
+.admin-website-overview-grid {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr))
+    0.85fr;
+
+  align-items: center;
+
+  padding: 23px 26px 27px;
+}
+
+
+.admin-website-overview-item {
+  min-height: 110px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 15px;
+
+  padding: 8px 24px;
+
+  border-right:
+    1px solid #e8eef2;
+}
+
+
+.admin-website-overview-item:first-child {
+  padding-left: 0;
+}
+
+
+.admin-website-overview-icon {
+  width: 44px;
+  height: 44px;
+
+  display: grid;
+
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  border-radius: 12px;
+
+  font-size: 18px;
+
+  font-weight: 800;
+}
+
+
+.admin-website-overview-icon.teal {
+  background: #e5f8f5;
+
+  color: #009b9b;
+}
+
+
+.admin-website-overview-icon.blue {
+  background: #edf4ff;
+
+  color: #2875d8;
+}
+
+
+.admin-website-overview-icon.purple {
+  background: #f2eaff;
+
+  color: #7b49d7;
+}
+
+
+.admin-website-overview-item > div:last-child {
+  display: grid;
+
+  gap: 5px;
+}
+
+
+.admin-website-overview-item > div:last-child > span {
+  color: #627d98;
+
+  font-size: 11px;
+
+  font-weight: 650;
+}
+
+
+.admin-website-overview-item strong {
+  display: block;
+
+  font-size: 19px;
+
+  line-height: 1.1;
+
+  font-weight: 850;
+}
+
+
+.admin-website-overview-item
+.teal-text {
+  color: #009b9b;
+}
+
+
+.admin-website-overview-item
+.blue-text {
+  color: #2875d8;
+}
+
+
+.admin-website-overview-item
+.purple-text {
+  color: #7b49d7;
+}
+
+
+.admin-website-overview-item p {
+  max-width: 190px;
+
+  margin: 3px 0 0;
+
+  color: #829ab1;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   STATUS ILLUSTRATION
+========================================================= */
+
+.admin-website-status-illustration {
+  position: relative;
+
+  height: 125px;
+
+  display: grid;
+
+  place-items: center;
+}
+
+
+.admin-status-monitor {
+  width: 135px;
+  height: 82px;
+
+  display: grid;
+
+  place-items: center;
+
+  border: 4px solid #18a4a4;
+
+  border-radius: 10px;
+
+  background: #effafa;
+
+  box-shadow:
+    0 10px 25px rgba(0, 128, 128, 0.08);
+}
+
+
+.admin-status-check {
+  width: 43px;
+  height: 43px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #3dbbbb,
+      #149d9d
+    );
+
+  color: #ffffff;
+
+  font-size: 22px;
+
+  font-weight: 850;
+}
+
+
+.admin-status-monitor-base {
+  position: absolute;
+
+  bottom: 7px;
+
+  width: 80px;
+  height: 7px;
+
+  border-radius: 999px;
+
+  background: #0d8e8e;
+}
+
+
+/* =========================================================
+   INFO BANNER
+========================================================= */
+
+.admin-website-info-banner {
+  min-height: 62px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 0 20px;
+
+  border: 1px solid #cfe9eb;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #f0fbfa,
+      #f7fcfc
+    );
+}
+
+
+.admin-website-info-icon {
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  border: 2px solid #0a9b9b;
+
+  border-radius: 50%;
+
+  color: #0a9b9b;
+
+  font-size: 12px;
+
+  font-weight: 850;
+}
+
+
+.admin-website-info-banner p {
+  margin: 0;
+
+  color: #526b82;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.admin-website-back-button:focus-visible,
+.admin-website-management-card:focus-visible {
+  outline:
+    3px solid rgba(0, 143, 143, 0.18);
+
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .admin-website-hero {
+    min-height: 185px;
+  }
+
+
+  .admin-website-hero-illustration {
+    width: 260px;
+
+    flex-basis: 260px;
+
+    transform: scale(0.9);
+
+    transform-origin: right center;
+  }
+
+
+  .admin-website-management-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+  }
+
+
+  .admin-website-management-card {
+    padding: 21px;
+
+    min-height: 270px;
+  }
+
+
+  .admin-website-overview-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+
+  .admin-website-status-illustration {
+    display: none;
+  }
+
+
+  .admin-website-overview-item:last-of-type {
+    border-right: 0;
+  }
+
+}
+
+
+@media (max-width: 800px) {
+
+  .admin-website-hero {
+    align-items: flex-start;
+
+    min-height: auto;
+  }
+
+
+  .admin-website-hero-copy {
+    padding: 20px 0;
+  }
+
+
+  .admin-website-hero-illustration {
+    display: none;
+  }
+
+
+  .admin-website-management-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .admin-website-management-card {
+    min-height: 225px;
+  }
+
+
+  .admin-website-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .admin-website-overview-item {
+    padding: 17px 0;
+
+    border-right: 0;
+
+    border-bottom:
+      1px solid #edf2f5;
+  }
+
+
+  .admin-website-overview-item:last-of-type {
+    border-bottom: 0;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .admin-website-back-button {
+    margin-bottom: 20px;
+  }
+
+
+  .admin-website-hero-copy h1 {
+    font-size: 34px;
+  }
+
+
+  .admin-website-hero-copy p {
+    font-size: 12px;
+  }
+
+
+  .admin-website-management-card {
+    min-height: 220px;
+
+    padding: 21px;
+  }
+
+
+  .admin-website-card-content h2 {
+    font-size: 21px;
+  }
+
+
+  .admin-website-overview-heading {
+    padding:
+      19px 18px 0;
+  }
+
+
+  .admin-website-overview-grid {
+    padding:
+      12px 18px 20px;
+  }
+
+
+  .admin-website-info-banner {
+    align-items: flex-start;
+
+    padding:
+      13px 15px;
+  }
+
+}

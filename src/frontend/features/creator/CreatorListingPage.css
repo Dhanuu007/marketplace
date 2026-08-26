@@ -1,0 +1,1035 @@
+/* =========================================================
+   CREATOR LISTING PAGE
+========================================================= */
+
+.creator-listing-shell {
+  min-height: 100svh;
+  padding: 48px 24px 80px;
+
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      rgba(37, 99, 235, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 92% 10%,
+      rgba(14, 165, 233, 0.06),
+      transparent 25%
+    ),
+    linear-gradient(
+      180deg,
+      #f8fafc 0%,
+      #ffffff 42%,
+      #f8fafc 100%
+    );
+}
+
+
+.creator-listing-container {
+  width: min(900px, 100%);
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.creator-listing-header {
+  margin-bottom: 30px;
+}
+
+
+.creator-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 24px;
+
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 850;
+  text-decoration: none;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+
+.creator-back-link:hover {
+  color: var(--accent-strong);
+  transform: translateX(-2px);
+}
+
+
+.creator-back-link:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+
+.creator-listing-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+
+.creator-listing-header .eyebrow {
+  margin: 0 0 9px;
+
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+
+.creator-listing-header h1 {
+  margin: 0;
+
+  color: #0f172a;
+  font-size: clamp(36px, 5vw, 54px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+
+.creator-listing-intro {
+  max-width: 650px;
+  margin: 13px 0 0;
+
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+
+.creator-listing-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  flex: 0 0 auto;
+
+  min-height: 34px;
+  padding: 0 12px;
+
+  border: 1px solid #dbeafe;
+  border-radius: 999px;
+
+  color: #1d4ed8;
+  background: #eff6ff;
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+
+.creator-listing-header-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* =========================================================
+   MAIN FORM
+========================================================= */
+
+.creator-listing-form {
+  display: grid;
+  gap: 0;
+
+  overflow: hidden;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.98);
+
+  box-shadow:
+    0 20px 60px rgba(15, 23, 42, 0.07);
+}
+
+
+/* =========================================================
+   FORM INTRO
+========================================================= */
+
+.creator-form-intro {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 22px 26px;
+
+  border-bottom: 1px solid #e8edf3;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(239, 246, 255, 0.72),
+      rgba(255, 255, 255, 0.98)
+    );
+}
+
+
+.creator-form-intro-icon {
+  display: grid;
+  place-items: center;
+
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+
+  border: 1px solid #bfdbfe;
+  border-radius: 11px;
+
+  color: #1d4ed8;
+  background: #eff6ff;
+
+  font-size: 22px;
+  font-weight: 500;
+}
+
+
+.creator-form-intro h2 {
+  margin: 0;
+
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+
+.creator-form-intro p {
+  margin: 3px 0 0;
+
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.creator-listing-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin: 22px 26px 0;
+  padding: 13px 15px;
+
+  border: 1px solid #fecaca;
+  border-radius: 11px;
+
+  color: #991b1b;
+  background: #fff7f7;
+
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+
+.creator-error-icon {
+  display: grid;
+  place-items: center;
+
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+  background: #dc2626;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+
+/* =========================================================
+   FORM SECTION
+========================================================= */
+
+.creator-form-section {
+  display: grid;
+  gap: 22px;
+
+  padding: 28px 26px;
+
+  border-bottom: 1px solid #e8edf3;
+}
+
+
+.creator-form-section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+
+.creator-form-step {
+  display: grid;
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+
+  border: 1px solid #dbeafe;
+  border-radius: 9px;
+
+  color: #2563eb;
+  background: #eff6ff;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+
+.creator-form-section-heading h3 {
+  margin: 1px 0 3px;
+
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+
+.creator-form-section-heading p {
+  margin: 0;
+
+  color: #94a3b8;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.creator-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+
+.creator-field {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+
+.creator-field-full {
+  grid-column: 1 / -1;
+}
+
+
+.creator-field > span {
+  color: #1e293b;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+
+.creator-field > span b {
+  margin-left: 3px;
+
+  color: #dc2626;
+  font-weight: 900;
+}
+
+
+.creator-field small {
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+.creator-listing-form input,
+.creator-listing-form textarea,
+.creator-listing-form select {
+  width: 100%;
+
+  border: 1px solid #dbe3ec;
+  border-radius: 10px;
+
+  color: #0f172a;
+  background: #ffffff;
+
+  font: inherit;
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+
+.creator-listing-form input,
+.creator-listing-form select {
+  min-height: 46px;
+  padding: 0 13px;
+}
+
+
+.creator-listing-form textarea {
+  min-height: 150px;
+  padding: 12px 13px;
+
+  resize: vertical;
+
+  line-height: 1.6;
+}
+
+
+.creator-listing-form input::placeholder,
+.creator-listing-form textarea::placeholder {
+  color: #a8b1bd;
+}
+
+
+.creator-listing-form input:hover,
+.creator-listing-form textarea:hover,
+.creator-listing-form select:hover {
+  border-color: #cbd5e1;
+}
+
+
+.creator-listing-form input:focus,
+.creator-listing-form textarea:focus,
+.creator-listing-form select:focus {
+  border-color: var(--accent);
+
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px var(--focus);
+}
+
+
+.creator-listing-form input:disabled,
+.creator-listing-form textarea:disabled,
+.creator-listing-form select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   SCREENSHOTS
+========================================================= */
+
+.creator-screenshots-section {
+  display: grid;
+  gap: 14px;
+}
+
+
+.creator-screenshots-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+
+.creator-screenshots-heading > div {
+  display: grid;
+  gap: 3px;
+}
+
+
+.creator-screenshots-heading > div > span {
+  color: #1e293b;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+
+.creator-screenshots-heading small {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+
+.creator-screenshot-limit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 46px;
+  min-height: 27px;
+  padding: 0 8px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+
+  color: #64748b;
+  background: #f8fafc;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+
+.creator-screenshot-upload {
+  position: relative;
+
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+
+  min-height: 180px;
+  padding: 28px;
+
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 14px;
+
+  color: #64748b;
+  background:
+    linear-gradient(
+      145deg,
+      #fbfdff,
+      #f8fafc
+    );
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+
+.creator-screenshot-upload:hover {
+  border-color: #93c5fd;
+  background: #f8fbff;
+  transform: translateY(-1px);
+}
+
+
+.creator-screenshot-upload:focus-within {
+  border-color: var(--accent);
+
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+
+.creator-upload-icon {
+  display: grid;
+  place-items: center;
+
+  width: 44px;
+  height: 44px;
+
+  margin-bottom: 3px;
+
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+
+  color: #2563eb;
+  background: #eff6ff;
+
+  font-size: 22px;
+  font-weight: 500;
+}
+
+
+.creator-screenshot-upload strong {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+
+.creator-screenshot-upload > span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+
+.creator-screenshot-upload small {
+  color: #94a3b8;
+  font-size: 10px;
+}
+
+
+.creator-screenshot-upload input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  overflow: hidden;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   SELECTED SCREENSHOTS
+========================================================= */
+
+.creator-selected-screenshots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+
+.creator-selected-screenshot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-width: 0;
+  padding: 10px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+
+.creator-selected-screenshot-number {
+  display: grid;
+  place-items: center;
+
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+
+  border-radius: 8px;
+
+  color: #2563eb;
+  background: #eff6ff;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+
+.creator-selected-screenshot-info {
+  display: grid;
+  gap: 2px;
+
+  min-width: 0;
+}
+
+
+.creator-selected-screenshot-info strong {
+  overflow: hidden;
+
+  color: #334155;
+
+  font-size: 11px;
+  font-weight: 850;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.creator-selected-screenshot-info span {
+  color: #94a3b8;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.creator-price-field {
+  max-width: 430px;
+}
+
+
+.creator-price-input {
+  display: flex;
+  align-items: stretch;
+
+  overflow: hidden;
+
+  border: 1px solid #dbe3ec;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+
+.creator-price-input:focus-within {
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 0 3px var(--focus);
+}
+
+
+.creator-price-input > span {
+  display: grid;
+  place-items: center;
+
+  width: 48px;
+  flex: 0 0 48px;
+
+  border-right: 1px solid #e2e8f0;
+
+  color: #64748b;
+  background: #f8fafc;
+
+  font-size: 15px;
+  font-weight: 900;
+}
+
+
+.creator-price-input input {
+  min-height: 48px;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+
+  box-shadow: none !important;
+
+  font-size: 15px;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.creator-listing-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+
+  padding: 22px 26px;
+
+  background: #fcfdff;
+}
+
+
+.creator-secondary-button,
+.creator-submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 44px;
+  padding: 0 18px;
+
+  border-radius: 10px;
+
+  font-size: 12px;
+  font-weight: 900;
+
+  text-decoration: none;
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+
+.creator-secondary-button {
+  border: 1px solid #dbe3ec;
+
+  color: #475569;
+  background: #ffffff;
+}
+
+
+.creator-secondary-button:hover {
+  border-color: #cbd5e1;
+
+  color: #1e293b;
+  background: #f8fafc;
+
+  transform: translateY(-1px);
+}
+
+
+.creator-submit-button {
+  border: 1px solid var(--accent);
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent-strong)
+    );
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.18);
+
+  cursor: pointer;
+}
+
+
+.creator-submit-button:hover:not(:disabled) {
+  border-color: var(--accent-strong);
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 12px 26px rgba(37, 99, 235, 0.24);
+}
+
+
+.creator-submit-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+
+.creator-secondary-button:focus-visible,
+.creator-submit-button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+
+.creator-submit-spinner {
+  width: 14px;
+  height: 14px;
+
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+
+  animation: creator-listing-spin 700ms linear infinite;
+}
+
+
+@keyframes creator-listing-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   FOOTER NOTE
+========================================================= */
+
+.creator-form-footer-note {
+  margin: 0;
+
+  padding: 0 26px 24px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 700px) {
+  .creator-listing-shell {
+    padding: 34px 18px 58px;
+  }
+
+
+  .creator-listing-title-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+
+  .creator-listing-header-badge {
+    align-self: flex-start;
+  }
+
+
+  .creator-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .creator-field-full {
+    grid-column: auto;
+  }
+
+
+  .creator-selected-screenshots {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+  .creator-listing-shell {
+    padding: 26px 14px 48px;
+  }
+
+
+  .creator-listing-header {
+    margin-bottom: 22px;
+  }
+
+
+  .creator-back-link {
+    margin-bottom: 20px;
+  }
+
+
+  .creator-listing-header h1 {
+    font-size: 36px;
+  }
+
+
+  .creator-listing-intro {
+    font-size: 14px;
+  }
+
+
+  .creator-listing-form {
+    border-radius: 16px;
+  }
+
+
+  .creator-form-intro {
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+
+  .creator-listing-error {
+    margin: 18px 18px 0;
+  }
+
+
+  .creator-form-section {
+    padding: 22px 18px;
+  }
+
+
+  .creator-form-section-heading {
+    gap: 10px;
+  }
+
+
+  .creator-form-section-heading p {
+    font-size: 11px;
+  }
+
+
+  .creator-screenshot-upload {
+    min-height: 165px;
+    padding: 24px 16px;
+  }
+
+
+  .creator-screenshots-heading {
+    align-items: flex-start;
+  }
+
+
+  .creator-screenshot-limit {
+    flex: 0 0 auto;
+  }
+
+
+  .creator-price-field {
+    max-width: none;
+  }
+
+
+  .creator-listing-actions {
+    flex-direction: column-reverse;
+    padding: 18px;
+  }
+
+
+  .creator-secondary-button,
+  .creator-submit-button {
+    width: 100%;
+  }
+
+
+  .creator-form-footer-note {
+    padding: 0 18px 20px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+  .creator-listing-header h1 {
+    font-size: 32px;
+  }
+
+
+  .creator-form-section-heading h3 {
+    font-size: 15px;
+  }
+
+
+  .creator-form-intro h2 {
+    font-size: 15px;
+  }
+
+
+  .creator-form-intro p {
+    font-size: 11px;
+  }
+}
