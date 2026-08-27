@@ -26,6 +26,14 @@ const router = Router()
 
 
 router.use(healthRoutes)
+
+router.get('/debug-route', (request, response) => {
+  response.json({
+    status: 'ok',
+    message: 'API router is working',
+  })
+})
+
 router.use(authRoutes)
 router.use(websiteRoutes)
 router.use(categoryRoutes)
