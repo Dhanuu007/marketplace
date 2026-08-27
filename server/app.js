@@ -28,6 +28,14 @@ export function createApp() {
       ]
 
 
+      app.get('/debug-app', (request, response) => {
+  response.json({
+    status: 'ok',
+    message: 'createApp is using this app.js',
+  })
+})
+
+
   app.use(
     cors({
       origin: allowedOrigins,
