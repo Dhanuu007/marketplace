@@ -20,6 +20,11 @@ const navigation = [
   },
 
   {
+    label: 'Messages',
+    path: '/admin/chat',
+  },
+
+  {
     label: 'Payouts',
     path: '/admin/payouts',
   },
@@ -58,18 +63,21 @@ export function AdminSidebar({
 
   return (
     <aside
-  className={
-    isOpen
-      ? 'admin-sidebar open'
-      : 'admin-sidebar'
-  }
->
+      className={
+        isOpen
+          ? 'admin-sidebar open'
+          : 'admin-sidebar'
+      }
+    >
+
       <div className="admin-brand">
+
         <div className="admin-brand-mark">
           M
         </div>
 
         <div>
+
           <strong>
             Marketplace
           </strong>
@@ -77,17 +85,21 @@ export function AdminSidebar({
           <span>
             Admin
           </span>
+
         </div>
+
       </div>
 
 
       <nav className="admin-navigation">
+
         <p className="admin-nav-label">
           Workspace
         </p>
 
 
         {navigation.map((item) => (
+
           <NavLink
             key={item.path}
             to={item.path}
@@ -98,6 +110,7 @@ export function AdminSidebar({
               }`
             }
           >
+
             <span className="admin-nav-icon">
               {item.label.charAt(0)}
             </span>
@@ -105,17 +118,22 @@ export function AdminSidebar({
             <span>
               {item.label}
             </span>
+
           </NavLink>
+
         ))}
+
       </nav>
 
 
       <div className="admin-sidebar-bottom">
+
         <button
           type="button"
           className="admin-nav-link admin-logout-button"
           onClick={handleLogout}
         >
+
           <span className="admin-nav-icon">
             ↪
           </span>
@@ -123,15 +141,18 @@ export function AdminSidebar({
           <span>
             Logout
           </span>
+
         </button>
 
 
         <div className="admin-sidebar-user">
+
           <div className="admin-avatar">
             {adminName.charAt(0).toUpperCase()}
           </div>
 
           <div>
+
             <strong>
               {adminName}
             </strong>
@@ -139,9 +160,13 @@ export function AdminSidebar({
             <span>
               Administrator
             </span>
+
           </div>
+
         </div>
+
       </div>
+
     </aside>
   )
 }

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import {
+  Link,
+  useNavigate,
+} from 'react-router-dom'
 
 import { useAuth } from '../auth/useAuth.js'
 import { apiRequest } from '../../../services/apiClient.js'
@@ -9,12 +12,16 @@ import './BuyerOrdersPage.css'
 
 export function BuyerOrdersPage() {
   const auth = useAuth()
+  const navigate = useNavigate()
+
 
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [downloadingDelivery, setDownloadingDelivery] =
-  useState('')
+    useState('')
+  const [openingChat, setOpeningChat] =
+    useState('')
 
 
   // =========================================================
@@ -65,88 +72,166 @@ export function BuyerOrdersPage() {
   // HELPERS
   // =========================================================
 
-
   async function handleDownloadDelivery(
+    orderId,
+    productId,
+    originalFileName,
+  ) {
+    if (!auth.token) {
+      return
+    }
+
+    const downloadKey =
+      `${orderId}-${productId}`
+
+    try {
+      setDownloadingDelivery(downloadKey)
+
+      const response = await fetch(
+        `/api/orders/${encodeURIComponent(
+          orderId,
+        )}/items/${encodeURIComponent(
+          productId,
+        )}/delivery/download`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization:
+              `Bearer ${auth.token}`,
+          },
+        },
+      )
+
+      if (!response.ok) {
+        let message =
+          'Unable to download the website ZIP.'
+
+        try {
+          const errorData =
+            await response.json()
+
+          if (errorData?.message) {
+            message = errorData.message
+          }
+        } catch {
+          // Ignore non-JSON error responses.
+        }
+
+        throw new Error(message)
+      }
+
+      const blob =
+        await response.blob()
+
+      const blobUrl =
+        window.URL.createObjectURL(blob)
+
+      const link =
+        document.createElement('a')
+
+      link.href = blobUrl
+
+      link.download =
+        originalFileName ||
+        'website-delivery.zip'
+
+      document.body.appendChild(link)
+
+      link.click()
+
+      link.remove()
+
+      window.URL.revokeObjectURL(
+        blobUrl,
+      )
+    } catch (requestError) {
+      window.alert(
+        requestError?.message ||
+          'Unable to download the website ZIP.',
+      )
+    } finally {
+      setDownloadingDelivery('')
+    }
+  }
+
+
+  // =========================================================
+  // OPEN CREATOR CHAT
+  // =========================================================
+
+  async function handleOpenChat(
   orderId,
   productId,
-  originalFileName,
 ) {
   if (!auth.token) {
+    window.alert(
+      'Authentication is required.',
+    )
+
     return
   }
 
-  const downloadKey =
+  const chatKey =
     `${orderId}-${productId}`
 
   try {
-    setDownloadingDelivery(downloadKey)
+    setOpeningChat(chatKey)
 
-    const response = await fetch(
-      `/api/orders/${encodeURIComponent(
-        orderId,
-      )}/items/${encodeURIComponent(
-        productId,
-      )}/delivery/download`,
+    const data = await apiRequest(
+      '/chat/conversations',
       {
-        method: 'GET',
-        headers: {
-          Authorization:
-            `Bearer ${auth.token}`,
+        method: 'POST',
+        token: auth.token,
+        body: {
+          orderId,
+          productId,
         },
       },
     )
 
-    if (!response.ok) {
-      let message =
-        'Unable to download the website ZIP.'
+    const conversationId =
+      data?.conversation?.id
 
-      try {
-        const errorData =
-          await response.json()
-
-        if (errorData?.message) {
-          message = errorData.message
-        }
-      } catch {
-        // Ignore non-JSON error responses.
-      }
-
-      throw new Error(message)
+    if (!conversationId) {
+      throw new Error(
+        'Unable to open the conversation.',
+      )
     }
 
-    const blob =
-      await response.blob()
-
-    const blobUrl =
-      window.URL.createObjectURL(blob)
-
-    const link =
-      document.createElement('a')
-
-    link.href = blobUrl
-
-    link.download =
-      originalFileName ||
-      'website-delivery.zip'
-
-    document.body.appendChild(link)
-
-    link.click()
-
-    link.remove()
-
-    window.URL.revokeObjectURL(
-      blobUrl,
+    navigate(
+      `/buyer/chat/${conversationId}`,
     )
   } catch (requestError) {
     window.alert(
       requestError?.message ||
-        'Unable to download the website ZIP.',
+        'Unable to open chat with the creator.',
     )
   } finally {
-    setDownloadingDelivery('')
+    setOpeningChat('')
   }
 }
+
+
+  // =========================================================
+  // CHAT ELIGIBILITY
+  // =========================================================
+
+  function canChatWithCreator(
+    orderStatus,
+  ) {
+    return [
+      'PAID',
+      'CONFIRMED',
+      'PROCESSING',
+      'SHIPPED',
+      'DELIVERED',
+    ].includes(
+      String(
+        orderStatus || '',
+      ).toUpperCase(),
+    )
+  }
+
 
   function formatCurrency(value) {
     return `₹${Number(
@@ -280,6 +365,7 @@ export function BuyerOrdersPage() {
               className="buyer-orders-primary-button"
             >
               Browse Websites
+
               <span>
                 →
               </span>
@@ -528,6 +614,7 @@ export function BuyerOrdersPage() {
                   className="buyer-orders-empty-button"
                 >
                   Browse Websites
+
                   <span>
                     →
                   </span>
@@ -573,6 +660,7 @@ export function BuyerOrdersPage() {
 
                         <span className="buyer-order-date">
                           Placed on{' '}
+
                           {formatDate(
                             order.createdAt,
                           )}
@@ -643,10 +731,12 @@ export function BuyerOrdersPage() {
 
                                 <p className="buyer-order-creator">
                                   Created by{' '}
+
                                   <strong>
                                     {item.creatorName ||
                                       'Website Creator'}
                                   </strong>
+
                                 </p>
 
                               </div>
@@ -747,30 +837,30 @@ export function BuyerOrdersPage() {
                                 </div>
 
 
-                               <button
-                                type="button"
-                                className="buyer-download-button"
-                                onClick={() =>
+                                <button
+                                  type="button"
+                                  className="buyer-download-button"
+                                  onClick={() =>
                                     handleDownloadDelivery(
-                                    order.id,
-                                    item.productId,
-                                    item.websiteZip ||
+                                      order.id,
+                                      item.productId,
+                                      item.websiteZip ||
                                         'website-delivery.zip',
                                     )
-                                }
-                                disabled={
+                                  }
+                                  disabled={
                                     downloadingDelivery ===
                                     `${order.id}-${item.productId}`
-                                }
+                                  }
                                 >
-                                {downloadingDelivery ===
-                                `${order.id}-${item.productId}`
+                                  {downloadingDelivery ===
+                                  `${order.id}-${item.productId}`
                                     ? 'Downloading...'
                                     : 'Download Website'}
 
-                                <span>
+                                  <span>
                                     ↓
-                                </span>
+                                  </span>
                                 </button>
 
                               </div>
@@ -796,6 +886,68 @@ export function BuyerOrdersPage() {
                                   </span>
 
                                 </div>
+
+                              </div>
+
+                            )}
+
+
+                            {/* =================================
+                                CHAT WITH CREATOR
+                            ================================= */}
+
+                            {canChatWithCreator(
+                              order.status,
+                            ) && (
+
+                              <div className="buyer-order-chat-box">
+
+                                <div className="buyer-order-chat-info">
+
+                                  <div className="buyer-order-chat-icon">
+                                    💬
+                                  </div>
+
+                                  <div>
+
+                                    <strong>
+                                      Need help with this website?
+                                    </strong>
+
+                                    <span>
+                                      Chat directly with the creator
+                                      about your purchase.
+                                    </span>
+
+                                  </div>
+
+                                </div>
+
+
+                                <button
+                                  type="button"
+                                  className="buyer-chat-creator-button"
+                                  onClick={() =>
+                                    handleOpenChat(
+                                      order.id,
+                                      item.productId,
+                                    )
+                                  }
+                                  disabled={
+                                    openingChat ===
+                                    `${order.id}-${item.productId}`
+                                  }
+                                >
+                                  {openingChat ===
+                                  `${order.id}-${item.productId}`
+                                    ? 'Opening Chat...'
+                                    : 'Chat with Creator'}
+
+                                  <span>
+                                    →
+                                  </span>
+
+                                </button>
 
                               </div>
 

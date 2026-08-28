@@ -887,3 +887,95 @@
     height: 50px;
   }
 }
+
+/* =========================================================
+   CHAT WITH CREATOR
+========================================================= */
+
+.buyer-order-chat-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 14px;
+  padding: 16px 18px;
+  border: 1px solid rgba(17, 24, 39, 0.09);
+  border-radius: 14px;
+  background: rgba(17, 24, 39, 0.025);
+}
+
+.buyer-order-chat-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.buyer-order-chat-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: rgba(17, 24, 39, 0.07);
+  font-size: 1.1rem;
+}
+
+.buyer-order-chat-info strong,
+.buyer-order-chat-info span {
+  display: block;
+}
+
+.buyer-order-chat-info strong {
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+.buyer-order-chat-info span {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  opacity: 0.62;
+}
+
+.buyer-chat-creator-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 16px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: #111827;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.buyer-chat-creator-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.buyer-chat-creator-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (max-width: 650px) {
+  .buyer-order-chat-box {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .buyer-chat-creator-button {
+    width: 100%;
+  }
+}

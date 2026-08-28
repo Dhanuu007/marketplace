@@ -189,6 +189,36 @@ export function BuyerDashboardPage() {
 
             </Link>
 
+            {/* Messages */}
+
+                <Link
+                  to="/buyer/chat"
+                  className="buyer-action-card"
+                >
+
+                  <div className="buyer-action-icon">
+                    💬
+                  </div>
+
+                  <div>
+
+                    <h3>
+                      Messages
+                    </h3>
+
+                    <p>
+                      Chat with creators about your
+                      purchased websites.
+                    </p>
+
+                  </div>
+
+                  <span className="buyer-action-arrow">
+                    →
+                  </span>
+
+                </Link>
+
 
             {/* Account */}
 

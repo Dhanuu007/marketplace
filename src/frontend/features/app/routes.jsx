@@ -26,15 +26,20 @@ import { CreatorOrdersPage } from '../creator/CreatorOrdersPage.jsx'
 import { CreatorPaymentSettingsPage } from '../creator/CreatorPaymentSettingsPage.jsx'
 import { CreatorFinancesPage } from '../creator/CreatorFinancesPage.jsx'
 import { CreatorAutomatedPayoutsPage } from '../creator/CreatorAutomatedPayoutsPage.jsx'
+import { CreatorChatPage } from '../creator/CreatorChatPage.jsx'
+import { CreatorConversationPage } from '../creator/CreatorConversationPage.jsx'
 
 import { BuyerDashboardPage } from '../buyer/BuyerDashboardPage.jsx'
 import { BuyerOrdersPage } from '../buyer/BuyerOrdersPage.jsx'
+import { BuyerChatPage } from '../buyer/BuyerChatPage.jsx'
 
 import { AdminDashboardPage } from '../admin/AdminDashboardPage.jsx'
 import { AdminOrdersPage } from '../admin/AdminOrdersPage.jsx'
 import { AdminProductsPage } from '../admin/AdminProductsPage.jsx'
 import { AdminPayoutsPage } from '../admin/AdminPayoutsPage.jsx'
 import { AdminActivityPage } from '../admin/AdminActivityPage.jsx'
+import { AdminChatPage } from '../admin/AdminChatPage.jsx'
+import { AdminConversationPage } from '../admin/AdminConversationPage.jsx'
 
 import WebsiteManagementPage from '../admin/pages/WebsiteManagementPage.jsx'
 import HomepagePage from '../admin/pages/website-management/HomepagePage.jsx'
@@ -152,6 +157,25 @@ export function AppRoutes() {
           }
         />
 
+        <Route
+          path="/creator/chat"
+          element={
+            <ProtectedRoute allowedRoles={['CREATOR']}>
+              <CreatorChatPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/creator/chat/:conversationId"
+          element={
+            <ProtectedRoute allowedRoles={['CREATOR']}>
+              <CreatorConversationPage />
+            </ProtectedRoute>
+          }
+        />
+
+
         {/* =========================
               WEBSITE BUYER
         ========================= */}
@@ -173,6 +197,24 @@ export function AppRoutes() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+            path="/buyer/chat"
+            element={
+              <ProtectedRoute allowedRoles={['BUYER']}>
+                <BuyerChatPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/buyer/chat/:conversationId"
+            element={
+              <ProtectedRoute allowedRoles={['BUYER']}>
+                <BuyerChatPage />
+              </ProtectedRoute>
+            }
+          />
 
         <Route
           path="/creator/orders"
@@ -328,6 +370,24 @@ export function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['ADMIN']}>
               <WebsiteSettingsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/chat"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminChatPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/chat/:conversationId"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminConversationPage />
             </ProtectedRoute>
           }
         />
