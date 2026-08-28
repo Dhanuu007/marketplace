@@ -28,20 +28,31 @@ export function createApp() {
       ]
 
 
-      app.get('/debug-app', (request, response) => {
-  response.json({
-    status: 'ok',
-    message: 'createApp is using this app.js',
-  })
-})
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests without an Origin header
+      // such as health checks/server-to-server requests.
+      if (!origin) {
+        callback(null, true)
+        return
+      }
 
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true)
+        return
+      }
 
-  app.use(
-    cors({
-      origin: allowedOrigins,
-      credentials: true,
-    }),
-  )
+      callback(
+        new Error(
+          `CORS origin not allowed: ${origin}`,
+        ),
+      )
+    },
+
+    credentials: true,
+  }),
+)
 
 
   app.use(
