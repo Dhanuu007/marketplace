@@ -21,7 +21,11 @@ export function createApp() {
 
   const allowedOrigins =
   env.nodeEnv === 'production'
-    ? [env.clientOrigin]
+    ? [
+        env.clientOrigin,
+        'http://localhost:5173',
+        'http://192.168.1.8:5173',
+      ]
     : [
         'http://localhost:5173',
         'http://192.168.1.8:5173',
