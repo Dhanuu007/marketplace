@@ -96,3 +96,101 @@ export function verifyRazorpayPayment({
 
   return true
 }
+
+export function verifyRazorpayWebhook({
+  rawBody,
+  razorpaySignature,
+}) {
+  if (
+    !Buffer.isBuffer(rawBody) ||
+    rawBody.length === 0
+  ) {
+    const error = new Error(
+      'Razorpay webhook raw body is required.',
+    )
+
+    error.statusCode = 400
+
+    throw error
+  }
+
+
+  if (
+    typeof razorpaySignature !== 'string' ||
+    razorpaySignature.trim() === ''
+  ) {
+    const error = new Error(
+      'Razorpay webhook signature is required.',
+    )
+
+    error.statusCode = 400
+
+    throw error
+  }
+
+
+  const webhookSecret =
+    process.env.RAZORPAY_WEBHOOK_SECRET
+
+
+  if (
+    typeof webhookSecret !== 'string' ||
+    webhookSecret.trim() === ''
+  ) {
+    const error = new Error(
+      'Razorpay webhook secret is not configured.',
+    )
+
+    error.statusCode = 500
+
+    throw error
+  }
+
+
+  const generatedSignature =
+    crypto
+      .createHmac(
+        'sha256',
+        webhookSecret.trim(),
+      )
+      .update(rawBody)
+      .digest('hex')
+
+
+  const receivedSignature =
+    razorpaySignature.trim()
+
+
+  const generatedBuffer =
+    Buffer.from(
+      generatedSignature,
+      'utf8',
+    )
+
+  const receivedBuffer =
+    Buffer.from(
+      receivedSignature,
+      'utf8',
+    )
+
+
+  if (
+    generatedBuffer.length !==
+    receivedBuffer.length ||
+    !crypto.timingSafeEqual(
+      generatedBuffer,
+      receivedBuffer,
+    )
+  ) {
+    const error = new Error(
+      'Razorpay webhook signature verification failed.',
+    )
+
+    error.statusCode = 400
+
+    throw error
+  }
+
+
+  return true
+}

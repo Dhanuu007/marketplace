@@ -60,10 +60,14 @@ app.use(
 
 
   app.use(
-    express.json({
-      limit: '1mb',
-    }),
-  )
+  express.json({
+    limit: '1mb',
+
+    verify: (request, response, buffer) => {
+      request.rawBody = buffer
+    },
+  }),
+)
 
 
   // Uploaded website screenshots
