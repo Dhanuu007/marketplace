@@ -88,6 +88,21 @@ export function ProductDetailsPage() {
   }
 
 
+  const primaryScreenshot =
+    Array.isArray(product?.screenshots) &&
+    product.screenshots.length > 0
+      ? product.screenshots[0]
+      : null
+
+
+  const primaryScreenshotUrl =
+    primaryScreenshot
+      ? primaryScreenshot.startsWith('http')
+        ? primaryScreenshot
+        : `${API_ORIGIN}${primaryScreenshot}`
+      : null
+
+
   if (!productId) {
     return (
       <main className="product-details-page">
@@ -235,7 +250,26 @@ export function ProductDetailsPage() {
 
             <div className="product-details-image-wrapper">
 
-              {product.image ? (
+              {primaryScreenshotUrl ? (
+                <a
+                  href={primaryScreenshotUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="product-details-main-image-link"
+                >
+
+                  <img
+                    src={primaryScreenshotUrl}
+                    alt={`${product.name} website preview`}
+                    className="product-details-image"
+                  />
+
+                  <span className="product-details-image-badge">
+                    WEBSITE PREVIEW ↗
+                  </span>
+
+                </a>
+              ) : product.image ? (
                 <img
                   src={product.image}
                   alt={product.name}
@@ -256,62 +290,6 @@ export function ProductDetailsPage() {
               )}
 
             </div>
-
-
-            {Array.isArray(product.screenshots) &&
-              product.screenshots.length > 0 && (
-
-                <div className="product-details-screenshots">
-
-                  <div className="product-details-section-heading">
-
-                    <span>
-                      WEBSITE SCREENSHOTS
-                    </span>
-
-                    <small>
-                      {product.screenshots.length}{' '}
-                      {product.screenshots.length === 1
-                        ? 'image'
-                        : 'images'}
-                    </small>
-
-                  </div>
-
-
-                  <div className="product-details-screenshot-grid">
-
-                    {product.screenshots.map(
-                      (screenshot, index) => {
-
-                        const screenshotUrl =
-  screenshot.startsWith('http')
-    ? screenshot
-    : `${API_ORIGIN}${screenshot}`
-
-                        return (
-                          <a
-                            key={`${screenshot}-${index}`}
-                            href={screenshotUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="product-details-screenshot"
-                          >
-
-                            <img
-                              src={screenshotUrl}
-                              alt={`${product.name} screenshot ${index + 1}`}
-                            />
-
-                          </a>
-                        )
-                      },
-                    )}
-
-                  </div>
-
-                </div>
-              )}
 
           </div>
 
