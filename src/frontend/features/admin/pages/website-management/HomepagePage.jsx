@@ -18,6 +18,22 @@ const DEFAULT_HOMEPAGE = {
 }
 
 
+const DEFAULT_BANNER = {
+  label: 'PROMOTION',
+
+  heading:
+    'Build your online presence today.',
+
+  description:
+    'Discover premium websites from our marketplace.',
+
+  buttonText:
+    'Explore Now',
+
+  isActive: true,
+}
+
+
 const DEFAULT_SECTIONS = {
   hero: true,
   categories: true,
@@ -32,6 +48,10 @@ function HomepagePage() {
 
   const [homepage, setHomepage] =
     useState(DEFAULT_HOMEPAGE)
+
+
+  const [banner, setBanner] =
+    useState(DEFAULT_BANNER)
 
 
   const [categories, setCategories] =
@@ -115,6 +135,12 @@ function HomepagePage() {
         if (homepageData?.homepage) {
           const savedHomepage =
             homepageData.homepage
+
+
+          setBanner({
+            ...DEFAULT_BANNER,
+            ...(savedHomepage.banner ?? {}),
+          })
 
 
           setHomepage({
@@ -321,6 +347,23 @@ function HomepagePage() {
               featuredProductIds:
                 selectedProductIds,
 
+              banner: {
+                label:
+                  banner.label,
+
+                heading:
+                  banner.heading,
+
+                description:
+                  banner.description,
+
+                buttonText:
+                  banner.buttonText,
+
+                isActive:
+                  banner.isActive,
+              },
+
               sections,
             },
           },
@@ -336,6 +379,12 @@ function HomepagePage() {
 
       const savedHomepage =
         data.homepage
+
+
+      setBanner({
+        ...DEFAULT_BANNER,
+        ...(savedHomepage.banner ?? {}),
+      })
 
 
       setHomepage({
