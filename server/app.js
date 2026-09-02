@@ -72,16 +72,19 @@ app.use(
 
   // Uploaded website screenshots
 
-    app.use(
-    '/uploads/screenshots',
-    express.static(
-      path.resolve(
-        process.cwd(),
-        'uploads',
-        'screenshots',
-      ),
+    // Uploaded website screenshots
+
+app.use(
+  '/uploads/screenshots',
+  express.static(
+    path.resolve(
+      process.cwd(),
+      'server',
+      'uploads',
+      'screenshots',
     ),
-  )
+  ),
+)
 
 
   app.use(
