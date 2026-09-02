@@ -1160,97 +1160,6 @@ top: -50px;
 
 
 /* =========================================================
-   STATS
-========================================================= */
-
-.marketplace-stats {
-  display: grid;
-
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  gap: 0;
-
-  padding:
-    25px
-    7vw;
-
-  border-top: 1px solid
-    var(--market-border-soft);
-
-  border-bottom: 1px solid
-    var(--market-border-soft);
-
-  background:
-    var(--market-bg);
-
-  transition:
-    background 0.35s ease,
-    border-color 0.35s ease;
-}
-
-
-.marketplace-stat {
-  display: flex;
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 12px;
-
-  min-height: 60px;
-
-  border-right: 1px solid
-    var(--market-border-soft);
-}
-
-
-.marketplace-stat:last-child {
-  border-right: 0;
-}
-
-
-.marketplace-stat-icon {
-  display: grid;
-  place-items: center;
-
-  width: 34px;
-  height: 34px;
-
-  border-radius: 50%;
-
-  color: var(--market-primary);
-
-  background:
-    rgba(99, 102, 241, 0.1);
-
-  font-size: 15px;
-}
-
-
-.marketplace-stat div {
-  display: grid;
-
-  gap: 3px;
-}
-
-
-.marketplace-stat strong {
-  color: var(--market-text-strong);
-
-  font-size: 17px;
-}
-
-
-.marketplace-stat div span {
-  color: var(--market-text-soft);
-
-  font-size: 9px;
-  font-weight: 700;
-}
-
-
-/* =========================================================
    GENERAL SECTIONS
 ========================================================= */
 
@@ -2494,31 +2403,6 @@ top: -50px;
   }
 
 
-  .marketplace-stats {
-    grid-template-columns:
-      repeat(2, 1fr);
-
-    gap: 0;
-  }
-
-
-  .marketplace-stat {
-    border-bottom: 1px solid
-      var(--market-border-soft);
-  }
-
-
-  .marketplace-stat:nth-child(2) {
-    border-right: 0;
-  }
-
-
-  .marketplace-stat:nth-child(3),
-  .marketplace-stat:nth-child(4) {
-    border-bottom: 0;
-  }
-
-
   .marketplace-footer-main {
     flex-direction: column;
   }
@@ -2680,30 +2564,6 @@ top: -50px;
   .marketplace-floating-card-bottom {
     right: -2px;
     bottom: 25px;
-  }
-
-
-  /* STATS */
-
-  .marketplace-stats {
-    grid-template-columns: 1fr;
-
-    padding:
-      15px 20px;
-  }
-
-  .marketplace-stat {
-    justify-content: flex-start;
-
-    min-height: 65px;
-
-    border-right: 0 !important;
-    border-bottom: 1px solid
-      var(--market-border) !important;
-  }
-
-  .marketplace-stat:last-child {
-    border-bottom: 0 !important;
   }
 
 

@@ -3467,3 +3467,71 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* =========================================================
+   REGISTER PAGE — COMPACT CENTERED CARD
+========================================================= */
+
+.auth-shell > .auth-card {
+  width: min(760px, calc(100% - 40px));
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+
+/* =========================================================
+   REGISTER PAGE — DARK MODE TEXT
+========================================================= */
+
+[data-theme='dark'] .auth-shell > .auth-card h1,
+[data-theme='dark'] .auth-shell > .auth-card h2,
+[data-theme='dark'] .auth-shell > .auth-card h3,
+.dark .auth-shell > .auth-card h1,
+.dark .auth-shell > .auth-card h2,
+.dark .auth-shell > .auth-card h3 {
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .auth-shell > .auth-card p,
+[data-theme='dark'] .auth-shell > .auth-card label,
+[data-theme='dark'] .auth-shell > .auth-card label > span,
+.dark .auth-shell > .auth-card p,
+.dark .auth-shell > .auth-card label,
+.dark .auth-shell > .auth-card label > span {
+  color: #cbd5e1;
+}
+
+[data-theme='dark'] .auth-shell > .auth-card input,
+[data-theme='dark'] .auth-shell > .auth-card select,
+.dark .auth-shell > .auth-card input,
+.dark .auth-shell > .auth-card select {
+  color: #f8fafc;
+  background: rgba(9, 9, 11, 0.75);
+}
+
+[data-theme='dark'] .auth-shell > .auth-card input::placeholder,
+.dark .auth-shell > .auth-card input::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme='dark'] .auth-shell > .auth-card select option,
+.dark .auth-shell > .auth-card select option {
+  color: #111827;
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   REGISTER PAGE — MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+
+  .auth-shell > .auth-card {
+    width: calc(100% - 20px);
+    max-width: none;
+    padding: 26px 20px;
+  }
+
+}

@@ -40,6 +40,7 @@ import { AdminPayoutsPage } from '../admin/AdminPayoutsPage.jsx'
 import { AdminActivityPage } from '../admin/AdminActivityPage.jsx'
 import { AdminChatPage } from '../admin/AdminChatPage.jsx'
 import { AdminConversationPage } from '../admin/AdminConversationPage.jsx'
+import { AccountSecurityPage } from '../admin/AccountSecurityPage.jsx'
 
 import WebsiteManagementPage from '../admin/pages/WebsiteManagementPage.jsx'
 import HomepagePage from '../admin/pages/website-management/HomepagePage.jsx'
@@ -307,6 +308,15 @@ export function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['ADMIN']}>
               <AdminProductsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/account-security"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AccountSecurityPage />
             </ProtectedRoute>
           }
         />

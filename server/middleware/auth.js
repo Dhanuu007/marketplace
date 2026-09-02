@@ -8,14 +8,32 @@ export async function requireAuth(request, response, next) {
     const [scheme, token] = authorization.split(' ')
 
     if (scheme?.toLowerCase() !== 'bearer' || !token) {
-      throw createHttpError(401, 'AUTH_REQUIRED', 'Bearer token is required')
+      throw createHttpError(
+        401,
+        'AUTH_REQUIRED',
+        'Bearer token is required',
+      )
     }
 
     const payload = verifyAuthToken(token)
     const user = await findUserById(payload.sub)
 
     if (!user) {
-      throw createHttpError(401, 'USER_NOT_FOUND', 'Authenticated user no longer exists')
+      throw createHttpError(
+        401,
+        'USER_NOT_FOUND',
+        'Authenticated user no longer exists',
+      )
+    }
+
+    if (user.suspended) {
+      throw createHttpError(
+        403,
+        'ACCOUNT_SUSPENDED',
+        user.suspensionReason
+          ? `Your account is suspended. Reason: ${user.suspensionReason}`
+          : 'Your account has been suspended. Please contact the administrator.',
+      )
     }
 
     request.user = user
@@ -28,11 +46,23 @@ export async function requireAuth(request, response, next) {
 export function requireRole(...allowedRoles) {
   return function authorizeRole(request, response, next) {
     if (!request.user) {
-      return next(createHttpError(401, 'AUTH_REQUIRED', 'Authentication is required'))
+      return next(
+        createHttpError(
+          401,
+          'AUTH_REQUIRED',
+          'Authentication is required',
+        ),
+      )
     }
 
     if (!allowedRoles.includes(request.user.role)) {
-      return next(createHttpError(403, 'FORBIDDEN', 'You do not have access to this route'))
+      return next(
+        createHttpError(
+          403,
+          'FORBIDDEN',
+          'You do not have access to this route',
+        ),
+      )
     }
 
     return next()

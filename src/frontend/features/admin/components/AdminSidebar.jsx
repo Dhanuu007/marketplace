@@ -33,6 +33,11 @@ const navigation = [
     label: 'Products',
     path: '/admin/products',
   },
+
+    {
+    label: 'Account Security',
+    path: '/admin/account-security',
+  },
 ]
 
 

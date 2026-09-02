@@ -7,6 +7,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  sendHeartbeat,
 } from './authApi.js'
 
 
@@ -91,6 +92,60 @@ export function AuthProvider({
       isMounted = false
     }
   }, [token])
+
+
+  // =======================================================
+  // ONLINE PRESENCE HEARTBEAT
+  // =======================================================
+
+    useEffect(() => {
+    if (!token || !user?.id) {
+      return undefined
+    }
+
+
+    let isActive = true
+
+
+    async function heartbeat() {
+      try {
+        const data =
+          await sendHeartbeat(
+            token,
+          )
+
+
+        if (isActive && data?.user) {
+          setUser(
+            data.user,
+          )
+        }
+      } catch {
+        // Authentication errors are handled by
+        // the normal auth/session flow.
+      }
+    }
+
+
+    // Send immediately when authenticated
+    heartbeat()
+
+
+    // Keep lastSeenAt fresh while the user is active
+    const intervalId =
+      window.setInterval(
+        heartbeat,
+        30 * 1000,
+      )
+
+
+    return () => {
+      isActive = false
+      window.clearInterval(
+        intervalId,
+      )
+    }
+  }, [token, user?.id])
 
 
   async function register(input) {

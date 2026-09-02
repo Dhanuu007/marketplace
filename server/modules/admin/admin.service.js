@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb'
+
 import { getDatabase } from '../../db/mongo.js'
 
 const USERS_COLLECTION = 'users'
@@ -854,4 +856,285 @@ export async function getAdminRecentActivity() {
   // =========================================================
 
   return activity.slice(0, 50)
+}
+
+// =============================================================
+// ACCOUNT SECURITY
+// =============================================================
+
+const ONLINE_WINDOW_MS =
+  90 * 1000
+
+
+// =============================================================
+// GET CREATOR / BUYER SECURITY STATUS
+// =============================================================
+
+export async function getAccountSecurityUsers() {
+  const database = getDatabase()
+
+  const usersCollection =
+    database.collection(USERS_COLLECTION)
+
+
+  const users =
+    await usersCollection
+      .find({
+        role: {
+          $in: [
+            'CREATOR',
+            'BUYER',
+          ],
+        },
+      })
+      .sort({
+        role: 1,
+        name: 1,
+      })
+      .toArray()
+
+
+  const now =
+    Date.now()
+
+
+  return users.map((user) => {
+    const lastSeenTime =
+      user.lastSeenAt
+        ? new Date(
+            user.lastSeenAt,
+          ).getTime()
+        : 0
+
+
+    const isOnline =
+      lastSeenTime > 0 &&
+      now - lastSeenTime <=
+        ONLINE_WINDOW_MS
+
+
+    return {
+      id:
+        user._id.toString(),
+
+      name:
+        user.name,
+
+      email:
+        user.email,
+
+      role:
+        user.role,
+
+      suspended:
+        user.suspended === true,
+
+      suspensionReason:
+        user.suspensionReason ??
+        null,
+
+      suspendedAt:
+        user.suspendedAt ??
+        null,
+
+      lastSeenAt:
+        user.lastSeenAt ??
+        null,
+
+      isOnline,
+    }
+  })
+}
+
+
+// =============================================================
+// SUSPEND USER
+// =============================================================
+
+export async function suspendUser(
+  userId,
+  reason,
+) {
+  if (!ObjectId.isValid(userId)) {
+    return null
+  }
+
+
+  const trimmedReason =
+    String(
+      reason ?? '',
+    ).trim()
+
+
+  if (!trimmedReason) {
+    return {
+      error:
+        'SUSPENSION_REASON_REQUIRED',
+    }
+  }
+
+
+  const database = getDatabase()
+
+  const usersCollection =
+    database.collection(USERS_COLLECTION)
+
+
+  const now =
+    new Date()
+
+
+  const result =
+    await usersCollection.findOneAndUpdate(
+      {
+        _id:
+          new ObjectId(
+            userId,
+          ),
+
+        role: {
+          $in: [
+            'CREATOR',
+            'BUYER',
+          ],
+        },
+      },
+
+      {
+        $set: {
+          suspended: true,
+
+          suspensionReason:
+            trimmedReason,
+
+          suspendedAt:
+            now,
+
+          updatedAt:
+            now,
+        },
+      },
+
+      {
+        returnDocument:
+          'after',
+      },
+    )
+
+
+  if (!result) {
+    return null
+  }
+
+
+  return {
+    id:
+      result._id.toString(),
+
+    name:
+      result.name,
+
+    email:
+      result.email,
+
+    role:
+      result.role,
+
+    suspended:
+      result.suspended === true,
+
+    suspensionReason:
+      result.suspensionReason ??
+      null,
+
+    suspendedAt:
+      result.suspendedAt ??
+      null,
+  }
+}
+
+
+// =============================================================
+// UNSUSPEND USER
+// =============================================================
+
+export async function unsuspendUser(
+  userId,
+) {
+  if (!ObjectId.isValid(userId)) {
+    return null
+  }
+
+
+  const database = getDatabase()
+
+  const usersCollection =
+    database.collection(USERS_COLLECTION)
+
+
+  const result =
+    await usersCollection.findOneAndUpdate(
+      {
+        _id:
+          new ObjectId(
+            userId,
+          ),
+
+        role: {
+          $in: [
+            'CREATOR',
+            'BUYER',
+          ],
+        },
+      },
+
+      {
+        $set: {
+          suspended: false,
+
+          suspensionReason:
+            null,
+
+          suspendedAt:
+            null,
+
+          updatedAt:
+            new Date(),
+        },
+      },
+
+      {
+        returnDocument:
+          'after',
+      },
+    )
+
+
+  if (!result) {
+    return null
+  }
+
+
+  return {
+    id:
+      result._id.toString(),
+
+    name:
+      result.name,
+
+    email:
+      result.email,
+
+    role:
+      result.role,
+
+    suspended:
+      false,
+
+    suspensionReason:
+      null,
+
+    suspendedAt:
+      null,
+  }
 }

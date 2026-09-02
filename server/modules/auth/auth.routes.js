@@ -22,6 +22,8 @@ import {
   createUser,
   findUserByEmail,
   updateUserPassword,
+  setUserOnline,
+  setUserOffline,
 } from './user.repository.js'
 
 import {
@@ -140,13 +142,33 @@ router.post(
         )
       }
 
+      // Block suspended accounts from logging in
+      if (user.suspended) {
+        throw createHttpError(
+          403,
+          'ACCOUNT_SUSPENDED',
+          user.suspensionReason
+            ? `Your account is suspended. Reason: ${user.suspensionReason}`
+            : 'Your account has been suspended. Please contact the administrator.',
+        )
+      }
+
       delete user.passwordHash
 
-      response.json({
-        user,
-        token: signAuthToken(
+      const token =
+        signAuthToken(
           user,
-        ),
+        )
+
+      // Mark user online after successful login
+      const onlineUser =
+        await setUserOnline(
+          user.id,
+        )
+
+      response.json({
+        user: onlineUser,
+        token,
       })
     } catch (error) {
       next(error)
@@ -317,10 +339,19 @@ router.post(
 router.post(
   '/auth/logout',
   requireAuth,
-  (request, response) => {
-    response.json({
-      status: 'ok',
-    })
+  async (request, response, next) => {
+    try {
+      // Mark user offline when they explicitly log out
+      await setUserOffline(
+        request.user.id,
+      )
+
+      response.json({
+        status: 'ok',
+      })
+    } catch (error) {
+      next(error)
+    }
   },
 )
 
@@ -336,6 +367,30 @@ router.get(
     response.json({
       user: request.user,
     })
+  },
+)
+
+
+// =========================================================
+// ONLINE HEARTBEAT
+// =========================================================
+
+router.post(
+  '/auth/heartbeat',
+  requireAuth,
+  async (request, response, next) => {
+    try {
+      const user =
+        await setUserOnline(
+          request.user.id,
+        )
+
+      response.json({
+        user,
+      })
+    } catch (error) {
+      next(error)
+    }
   },
 )
 
