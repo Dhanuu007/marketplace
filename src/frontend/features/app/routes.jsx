@@ -42,6 +42,7 @@ import { AdminActivityPage } from '../admin/AdminActivityPage.jsx'
 import { AdminChatPage } from '../admin/AdminChatPage.jsx'
 import { AdminConversationPage } from '../admin/AdminConversationPage.jsx'
 import { AccountSecurityPage } from '../admin/AccountSecurityPage.jsx'
+import { AdminSuspensionSupportPage } from '../admin/AdminSuspensionSupportPage.jsx'
 
 import WebsiteManagementPage from '../admin/pages/WebsiteManagementPage.jsx'
 import HomepagePage from '../admin/pages/website-management/HomepagePage.jsx'
@@ -408,6 +409,24 @@ export function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['ADMIN']}>
               <AdminConversationPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/suspension-support"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminSuspensionSupportPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/suspension-support/:conversationId"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminSuspensionSupportPage />
             </ProtectedRoute>
           }
         />

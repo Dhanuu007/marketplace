@@ -342,6 +342,34 @@ function AdminChatPage() {
 
           )}
 
+          <section className="admin-panel admin-suspension-support-entry">
+              <div className="admin-suspension-support-entry-copy">
+                <span className="admin-panel-eyebrow">
+                  Account Support
+                </span>
+
+                <h2>
+                  Suspension Support
+                </h2>
+
+                <p>
+                  View and respond to suspended Buyer and Creator
+                  support requests.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className="admin-suspension-support-entry-button"
+                onClick={() =>
+                  navigate('/admin/suspension-support')
+                }
+              >
+                Open Suspension Support
+                <span aria-hidden="true">→</span>
+              </button>
+            </section>
+
 
           {/* =================================================
               SUMMARY

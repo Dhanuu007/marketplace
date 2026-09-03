@@ -609,3 +609,79 @@
     font-size: 6px;
   }
 }
+
+.admin-suspension-support-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding: 20px 22px;
+  border: 1px solid #ead4d4;
+  background: #fffafa;
+}
+
+.admin-suspension-support-entry-copy {
+  min-width: 0;
+}
+
+.admin-suspension-support-entry-copy h2 {
+  margin: 5px 0 0;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.admin-suspension-support-entry-copy p {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.admin-suspension-support-entry-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 9px;
+  background: #7f1d1d;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-suspension-support-entry-button:hover {
+  background: #991b1b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(127, 29, 29, 0.18);
+}
+
+.admin-suspension-support-entry-button:active {
+  transform: translateY(0);
+}
+
+.admin-suspension-support-entry-button span {
+  font-size: 15px;
+  line-height: 1;
+}
+
+@media (max-width: 700px) {
+  .admin-suspension-support-entry {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-suspension-support-entry-button {
+    width: 100%;
+  }
+}
