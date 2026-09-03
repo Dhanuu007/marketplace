@@ -34,7 +34,7 @@ export function AdminSuspensionSupportPage() {
         setError('')
 
         const data = await apiRequest(
-          '/chat/admin/suspension-support/conversations',
+          '/admin/suspension-support/conversations',
           {
             method: 'GET',
             token: auth.token,
@@ -72,7 +72,7 @@ export function AdminSuspensionSupportPage() {
         setError('')
 
         const data = await apiRequest(
-          `/chat/admin/suspension-support/conversations/${encodeURIComponent(
+          `/admin/suspension-support/conversations/${encodeURIComponent(
             conversationId,
           )}`,
           {
@@ -89,7 +89,7 @@ export function AdminSuspensionSupportPage() {
         )
 
         await apiRequest(
-          `/chat/admin/suspension-support/conversations/${encodeURIComponent(
+          `/admin/suspension-support/conversations/${encodeURIComponent(
             conversationId,
           )}/read`,
           {
@@ -145,7 +145,7 @@ export function AdminSuspensionSupportPage() {
       setError('')
 
       const data = await apiRequest(
-        `/chat/admin/suspension-support/conversations/${encodeURIComponent(
+        `/admin/suspension-support/conversations/${encodeURIComponent(
           conversation.id,
         )}/messages`,
         {
@@ -350,6 +350,7 @@ export function AdminSuspensionSupportPage() {
             ) : !conversation ? (
               <div className="admin-suspension-support-empty-chat">
                 <h2>Conversation unavailable</h2>
+
                 <p>
                   This suspension-support conversation
                   could not be loaded.
