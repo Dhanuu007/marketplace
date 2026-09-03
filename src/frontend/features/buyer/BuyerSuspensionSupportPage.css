@@ -1,0 +1,475 @@
+.buyer-support-shell {
+  min-height: 100vh;
+  padding: 48px 24px;
+  background: #f6f7fb;
+}
+
+.buyer-support-container {
+  width: min(100%, 980px);
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.buyer-support-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.buyer-support-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.buyer-support-header h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.15;
+}
+
+.buyer-support-header p {
+  margin: 10px 0 0;
+  max-width: 650px;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+.buyer-support-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border: 1px solid #d9dce5;
+  border-radius: 10px;
+  background: #ffffff;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.buyer-support-back-button:hover {
+  transform: translateY(-1px);
+  border-color: #bfc4d0;
+  box-shadow: 0 5px 16px rgba(20, 25, 40, 0.06);
+}
+
+
+/* =========================================================
+   SUSPENSION INFORMATION
+========================================================= */
+
+.buyer-support-suspension {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  border: 1px solid #f0caca;
+  border-radius: 14px;
+  background: #fff7f7;
+}
+
+.buyer-support-warning-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 50%;
+  background: #ffe2e2;
+  font-weight: 800;
+}
+
+.buyer-support-suspension > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.buyer-support-suspension span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.buyer-support-suspension strong {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.buyer-support-error {
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border: 1px solid #f1caca;
+  border-radius: 10px;
+  background: #fff0f0;
+  color: #7a2222;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   CHAT CONTAINER
+========================================================= */
+
+.buyer-support-chat {
+  overflow: hidden;
+  border: 1px solid #e1e4ec;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(20, 25, 40, 0.06);
+}
+
+
+/* =========================================================
+   CHAT HEADER
+========================================================= */
+
+.buyer-support-chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #eceef3;
+}
+
+.buyer-support-chat-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.buyer-support-chat-header strong {
+  font-size: 15px;
+}
+
+.buyer-support-chat-header div span {
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.buyer-support-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e8f7ee;
+  color: #176b3a;
+  font-size: 11px !important;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.buyer-support-status-closed {
+  background: #f0f1f4;
+  color: #626775;
+}
+
+
+/* =========================================================
+   MESSAGE AREA
+========================================================= */
+
+.buyer-support-messages {
+  min-height: 420px;
+  max-height: 560px;
+  overflow-y: auto;
+  padding: 24px;
+  background: #fafbfc;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.buyer-support-empty {
+  min-height: 360px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 20px;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.buyer-support-empty strong {
+  font-size: 16px;
+}
+
+.buyer-support-empty span {
+  max-width: 460px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   MESSAGE ROW
+========================================================= */
+
+.buyer-support-message-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 14px;
+}
+
+.buyer-support-message-row:last-child {
+  margin-bottom: 0;
+}
+
+.buyer-support-message-row-own {
+  justify-content: flex-end;
+}
+
+
+/* =========================================================
+   MESSAGE BUBBLE
+========================================================= */
+
+.buyer-support-message {
+  width: min(75%, 620px);
+  padding: 12px 15px;
+  border: 1px solid #e2e5eb;
+  border-radius: 14px 14px 14px 4px;
+  background: #ffffff;
+}
+
+.buyer-support-message-row-own
+  .buyer-support-message {
+  border-radius: 14px 14px 4px 14px;
+  background: #f0f5ff;
+  border-color: #d9e3f5;
+}
+
+
+/* =========================================================
+   MESSAGE META
+========================================================= */
+
+.buyer-support-message-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.buyer-support-message-meta strong {
+  font-size: 12px;
+}
+
+.buyer-support-message-meta span {
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+
+/* =========================================================
+   MESSAGE CONTENT
+========================================================= */
+
+.buyer-support-message p {
+  margin: 0;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   COMPOSER
+========================================================= */
+
+.buyer-support-composer {
+  padding: 18px;
+  border-top: 1px solid #eceef3;
+  background: #ffffff;
+}
+
+.buyer-support-composer textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 100px;
+  padding: 13px;
+  resize: vertical;
+  border: 1px solid #dfe2e9;
+  border-radius: 11px;
+  background: #ffffff;
+  color: inherit;
+  font: inherit;
+  line-height: 1.5;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.buyer-support-composer textarea:focus {
+  border-color: #8ea9d8;
+  box-shadow: 0 0 0 3px rgba(100, 130, 190, 0.1);
+}
+
+.buyer-support-composer textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   COMPOSER FOOTER
+========================================================= */
+
+.buyer-support-composer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.buyer-support-composer-footer span {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.buyer-support-composer-footer button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 18px;
+  background: #111827;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.buyer-support-composer-footer button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.buyer-support-composer-footer button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+
+/* =========================================================
+   CLOSED CONVERSATION
+========================================================= */
+
+.buyer-support-closed-message {
+  padding: 18px;
+  border-top: 1px solid #eceef3;
+  background: #fafbfc;
+  text-align: center;
+  opacity: 0.7;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.buyer-support-loading {
+  min-height: 60vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+}
+
+.buyer-support-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #dddddd;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: buyer-support-spin 0.8s linear infinite;
+}
+
+@keyframes buyer-support-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .buyer-support-shell {
+    padding: 24px 14px;
+  }
+
+  .buyer-support-header {
+    flex-direction: column;
+  }
+
+  .buyer-support-header h1 {
+    font-size: 28px;
+  }
+
+  .buyer-support-back-button {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .buyer-support-suspension {
+    align-items: flex-start;
+  }
+
+  .buyer-support-messages {
+    min-height: 360px;
+    max-height: 500px;
+    padding: 16px;
+  }
+
+  .buyer-support-message {
+    width: 88%;
+  }
+
+  .buyer-support-composer {
+    padding: 14px;
+  }
+
+  .buyer-support-composer-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .buyer-support-composer-footer button {
+    width: 100%;
+  }
+}

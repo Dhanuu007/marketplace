@@ -5,6 +5,9 @@ import { getDatabase } from '../../db/mongo.js'
 const CONVERSATIONS_COLLECTION = 'conversations'
 const MESSAGES_COLLECTION = 'messages'
 
+const SUSPENSION_SUPPORT_TYPE =
+  'SUSPENSION_SUPPORT'
+
 function conversationCollection() {
   return getDatabase().collection(
     CONVERSATIONS_COLLECTION,
@@ -169,6 +172,194 @@ export async function getConversationsByCreatorId(
       updatedAt: -1,
     })
     .toArray()
+}
+
+/*
+ * Find the suspension-support conversation
+ * for one user.
+ */
+export async function getSuspensionConversationByUserId(
+  userId,
+) {
+  await ensureChatIndexes()
+
+  return conversationCollection().findOne({
+    type: SUSPENSION_SUPPORT_TYPE,
+    userId,
+  })
+}
+
+
+/*
+ * Create a suspension-support conversation.
+ */
+export async function createSuspensionConversation(
+  userId,
+  userRole,
+  userName,
+) {
+  await ensureChatIndexes()
+
+  const now = new Date()
+
+  const document = {
+    type: SUSPENSION_SUPPORT_TYPE,
+
+    userId,
+    userRole,
+    userName,
+
+    lastMessage: '',
+    lastMessageAt: null,
+
+    userUnreadCount: 0,
+    adminUnreadCount: 0,
+
+    status: 'OPEN',
+
+    createdAt: now,
+    updatedAt: now,
+  }
+
+  const result =
+    await conversationCollection().insertOne(
+      document,
+    )
+
+  return conversationCollection().findOne({
+    _id: result.insertedId,
+  })
+}
+
+
+/*
+ * Get all suspension-support conversations
+ * for Admin.
+ */
+export async function getSuspensionConversations() {
+  await ensureChatIndexes()
+
+  return conversationCollection()
+    .find({
+      type: SUSPENSION_SUPPORT_TYPE,
+    })
+    .sort({
+      updatedAt: -1,
+    })
+    .toArray()
+}
+
+
+/*
+ * Update a suspension conversation after
+ * a new message.
+ */
+export async function updateSuspensionConversationAfterMessage(
+  conversationId,
+  lastMessage,
+  senderRole,
+) {
+  await ensureChatIndexes()
+
+  if (!ObjectId.isValid(conversationId)) {
+    return null
+  }
+
+  const update = {
+    $set: {
+      lastMessage,
+      lastMessageAt: new Date(),
+      updatedAt: new Date(),
+    },
+  }
+
+  if (
+      senderRole === 'BUYER' ||
+      senderRole === 'CREATOR'
+    ) {
+      update.$inc = {
+        adminUnreadCount: 1,
+      }
+    }
+
+    if (senderRole === 'ADMIN') {
+      update.$inc = {
+        userUnreadCount: 1,
+      }
+    }
+
+  return conversationCollection().findOneAndUpdate(
+    {
+      _id: new ObjectId(conversationId),
+      type: SUSPENSION_SUPPORT_TYPE,
+    },
+    update,
+    {
+      returnDocument: 'after',
+    },
+  )
+}
+
+
+/*
+ * Mark a suspension-support conversation
+ * as read for the current participant.
+ */
+export async function markSuspensionConversationRead(
+  conversationId,
+  userId,
+  isAdmin,
+) {
+  await ensureChatIndexes()
+
+  if (!ObjectId.isValid(conversationId)) {
+    return null
+  }
+
+  const conversation =
+    await conversationCollection().findOneAndUpdate(
+      {
+        _id: new ObjectId(conversationId),
+        type: SUSPENSION_SUPPORT_TYPE,
+        ...(isAdmin
+          ? {}
+          : { userId }),
+      },
+      {
+        $set: isAdmin
+          ? {
+              adminUnreadCount: 0,
+              updatedAt: new Date(),
+            }
+          : {
+              userUnreadCount: 0,
+              updatedAt: new Date(),
+            },
+      },
+      {
+        returnDocument: 'after',
+      },
+    )
+
+  if (!conversation) {
+    return null
+  }
+
+  await messageCollection().updateMany(
+    {
+      conversationId,
+      readBy: {
+        $ne: userId,
+      },
+    },
+    {
+      $addToSet: {
+        readBy: userId,
+      },
+    },
+  )
+
+  return conversation
 }
 
 

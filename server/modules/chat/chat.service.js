@@ -18,7 +18,15 @@ import {
   updateConversationAfterMessage,
   markConversationRead,
   closeConversation,
+
+  getSuspensionConversationByUserId,
+  createSuspensionConversation,
+  getSuspensionConversations,
+  updateSuspensionConversationAfterMessage,
+  markSuspensionConversationRead,
 } from './chat.repository.js'
+
+
 
 
 const CHAT_ELIGIBLE_ORDER_STATUSES = [
@@ -208,6 +216,358 @@ export async function getCreatorConversations(
 
   return conversations.map(
     serializeConversation,
+  )
+}
+
+/*
+ * Get or create the suspension-support
+ * conversation for the current suspended user.
+ *
+ * This flow is intentionally separate from
+ * normal Buyer ↔ Creator product chat.
+ */
+export async function getOrCreateSuspensionConversation(
+  user,
+) {
+  if (
+    user.role !== 'BUYER' &&
+    user.role !== 'CREATOR'
+  ) {
+    throw createError(
+      403,
+      'Only Buyer and Creator accounts can use suspension support.',
+    )
+  }
+
+  if (!user.suspended) {
+    throw createError(
+      403,
+      'Suspension support is available only for suspended accounts.',
+    )
+  }
+
+
+  let conversation =
+    await getSuspensionConversationByUserId(
+      user.id,
+    )
+
+
+  if (!conversation) {
+    conversation =
+      await createSuspensionConversation(
+        user.id,
+        user.role,
+        user.name,
+      )
+  }
+
+
+  return serializeSuspensionConversation(
+    conversation,
+  )
+}
+
+
+/*
+ * Get a suspension-support conversation
+ * with all messages.
+ */
+export async function getSuspensionConversationWithMessages(
+  user,
+  conversationId,
+) {
+  const conversation =
+    await getConversationById(
+      conversationId,
+    )
+
+
+  if (!conversation) {
+    throw createError(
+      404,
+      'Conversation not found.',
+    )
+  }
+
+
+  if (
+    conversation.type !==
+    'SUSPENSION_SUPPORT'
+  ) {
+    throw createError(
+      403,
+      'This is not a suspension-support conversation.',
+    )
+  }
+
+
+  if (user.role === 'ADMIN') {
+    // Admin can view all suspension conversations.
+  } else {
+
+    if (
+      user.role !== 'BUYER' &&
+      user.role !== 'CREATOR'
+    ) {
+      throw createError(
+        403,
+        'You do not have access to this conversation.',
+      )
+    }
+
+    if (!user.suspended) {
+      throw createError(
+        403,
+        'Suspension support is available only for suspended accounts.',
+      )
+    }
+
+    if (
+      conversation.userId !==
+      user.id
+    ) {
+      throw createError(
+        403,
+        'You do not have access to this conversation.',
+      )
+    }
+  }
+
+
+  const messages =
+    await getMessagesByConversationId(
+      conversationId,
+    )
+
+
+  return {
+    conversation:
+      serializeSuspensionConversation(
+        conversation,
+      ),
+
+    messages:
+      messages.map(
+        serializeMessage,
+      ),
+  }
+}
+
+
+/*
+ * Get all suspension-support conversations
+ * for Admin.
+ */
+export async function getAdminSuspensionConversations() {
+  const conversations =
+    await getSuspensionConversations()
+
+  return conversations.map(
+    serializeSuspensionConversation,
+  )
+}
+
+
+/*
+ * Send a suspension-support message.
+ *
+ * Suspended Buyer/Creator and Admin can both
+ * send real typed messages.
+ */
+export async function sendSuspensionMessage(
+  conversationId,
+  user,
+  text,
+) {
+  const conversation =
+    await getConversationById(
+      conversationId,
+    )
+
+
+  if (!conversation) {
+    throw createError(
+      404,
+      'Conversation not found.',
+    )
+  }
+
+
+  if (
+    conversation.type !==
+    'SUSPENSION_SUPPORT'
+  ) {
+    throw createError(
+      403,
+      'This is not a suspension-support conversation.',
+    )
+  }
+
+
+  let senderRole
+
+
+  if (user.role === 'ADMIN') {
+
+    senderRole = 'ADMIN'
+
+  } else {
+
+    if (
+      user.role !== 'BUYER' &&
+      user.role !== 'CREATOR'
+    ) {
+      throw createError(
+        403,
+        'You do not have access to suspension support.',
+      )
+    }
+
+    if (!user.suspended) {
+      throw createError(
+        403,
+        'Suspension support is available only for suspended accounts.',
+      )
+    }
+
+    if (
+      conversation.userId !==
+      user.id
+    ) {
+      throw createError(
+        403,
+        'You do not have access to this conversation.',
+      )
+    }
+
+    senderRole = user.role
+  }
+
+
+  if (
+    conversation.status ===
+    'CLOSED'
+  ) {
+    throw createError(
+      400,
+      'This conversation is closed.',
+    )
+  }
+
+
+  const message =
+    await createMessage({
+      conversationId,
+
+      senderId:
+        user.id,
+
+      senderRole,
+
+      text,
+    })
+
+
+  const updatedConversation =
+    await updateSuspensionConversationAfterMessage(
+      conversationId,
+      text,
+      senderRole,
+    )
+
+
+  return {
+    message:
+      serializeMessage(
+        message,
+      ),
+
+    conversation:
+      serializeSuspensionConversation(
+        updatedConversation,
+      ),
+  }
+}
+
+
+/*
+ * Mark suspension-support messages as read.
+ */
+export async function markSuspensionConversationAsRead(
+  conversationId,
+  user,
+) {
+  const conversation =
+    await getConversationById(
+      conversationId,
+    )
+
+
+  if (!conversation) {
+    throw createError(
+      404,
+      'Conversation not found.',
+    )
+  }
+
+
+  if (
+    conversation.type !==
+    'SUSPENSION_SUPPORT'
+  ) {
+    throw createError(
+      403,
+      'This is not a suspension-support conversation.',
+    )
+  }
+
+
+  const isAdmin =
+    user.role === 'ADMIN'
+
+
+  if (!isAdmin) {
+
+    if (
+      user.role !== 'BUYER' &&
+      user.role !== 'CREATOR'
+    ) {
+      throw createError(
+        403,
+        'You do not have access to this conversation.',
+      )
+    }
+
+    if (!user.suspended) {
+      throw createError(
+        403,
+        'Suspension support is available only for suspended accounts.',
+      )
+    }
+
+    if (
+      conversation.userId !==
+      user.id
+    ) {
+      throw createError(
+        403,
+        'You do not have access to this conversation.',
+      )
+    }
+  }
+
+
+  const updatedConversation =
+    await markSuspensionConversationRead(
+      conversationId,
+      user.id,
+      isAdmin,
+    )
+
+
+  return serializeSuspensionConversation(
+    updatedConversation,
   )
 }
 
@@ -558,5 +918,47 @@ function serializeMessage(
 
     updatedAt:
       message.updatedAt,
+  }
+}
+
+function serializeSuspensionConversation(
+  conversation,
+) {
+  return {
+    id:
+      conversation._id.toString(),
+
+    type:
+      conversation.type,
+
+    userId:
+      conversation.userId,
+
+    userRole:
+      conversation.userRole,
+
+    userName:
+      conversation.userName ?? '',
+
+    lastMessage:
+      conversation.lastMessage ?? '',
+
+    lastMessageAt:
+      conversation.lastMessageAt,
+
+    userUnreadCount:
+      conversation.userUnreadCount ?? 0,
+
+    adminUnreadCount:
+      conversation.adminUnreadCount ?? 0,
+
+    status:
+      conversation.status,
+
+    createdAt:
+      conversation.createdAt,
+
+    updatedAt:
+      conversation.updatedAt,
   }
 }

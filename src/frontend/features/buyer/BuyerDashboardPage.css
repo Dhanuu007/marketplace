@@ -192,6 +192,61 @@
   line-height: 1.6;
 }
 
+.buyer-suspension-contact-button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  margin-top: 16px;
+
+  padding: 11px 18px;
+
+  border: 0;
+
+  border-radius: 10px;
+
+  background: #7f1d1d;
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.02em;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 14px rgba(127, 29, 29, 0.16);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.buyer-suspension-contact-button:hover {
+  background: #991b1b;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 7px 18px rgba(127, 29, 29, 0.2);
+}
+
+.buyer-suspension-contact-button:active {
+  transform: translateY(0);
+}
+
+.buyer-suspension-contact-button span {
+  font-size: 15px;
+
+  line-height: 1;
+}
+
 
 /* =========================================================
    HEADER

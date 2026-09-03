@@ -43,6 +43,70 @@ export async function requireAuth(request, response, next) {
   }
 }
 
+export async function requireSuspensionSupportAuth(
+  request,
+  response,
+  next,
+) {
+  try {
+    const authorization =
+      request.get('authorization') ?? ''
+
+    const [scheme, token] =
+      authorization.split(' ')
+
+    if (
+      scheme?.toLowerCase() !== 'bearer' ||
+      !token
+    ) {
+      throw createHttpError(
+        401,
+        'AUTH_REQUIRED',
+        'Bearer token is required',
+      )
+    }
+
+    const payload =
+      verifyAuthToken(token)
+
+    const user =
+      await findUserById(payload.sub)
+
+    if (!user) {
+      throw createHttpError(
+        401,
+        'USER_NOT_FOUND',
+        'Authenticated user no longer exists',
+      )
+    }
+
+    if (
+      user.role !== 'BUYER' &&
+      user.role !== 'CREATOR'
+    ) {
+      throw createHttpError(
+        403,
+        'FORBIDDEN',
+        'Only Buyer and Creator accounts can use suspension support',
+      )
+    }
+
+    if (!user.suspended) {
+      throw createHttpError(
+        403,
+        'SUSPENSION_SUPPORT_REQUIRED',
+        'Suspension support is available only for suspended accounts',
+      )
+    }
+
+    request.user = user
+
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
 export function requireRole(...allowedRoles) {
   return function authorizeRole(request, response, next) {
     if (!request.user) {

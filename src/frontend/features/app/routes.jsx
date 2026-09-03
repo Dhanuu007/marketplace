@@ -32,6 +32,7 @@ import { CreatorConversationPage } from '../creator/CreatorConversationPage.jsx'
 import { BuyerDashboardPage } from '../buyer/BuyerDashboardPage.jsx'
 import { BuyerOrdersPage } from '../buyer/BuyerOrdersPage.jsx'
 import { BuyerChatPage } from '../buyer/BuyerChatPage.jsx'
+import { BuyerSuspensionSupportPage } from '../buyer/BuyerSuspensionSupportPage.jsx'
 
 import { AdminDashboardPage } from '../admin/AdminDashboardPage.jsx'
 import { AdminOrdersPage } from '../admin/AdminOrdersPage.jsx'
@@ -186,6 +187,15 @@ export function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['BUYER']}>
               <BuyerDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/buyer/suspension-support"
+          element={
+            <ProtectedRoute allowedRoles={['BUYER']}>
+              <BuyerSuspensionSupportPage />
             </ProtectedRoute>
           }
         />

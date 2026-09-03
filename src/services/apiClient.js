@@ -35,11 +35,18 @@ export async function apiRequest(path, options = {}) {
     .catch(() => null)
 
   if (!response.ok) {
-    throw new Error(
-      data?.error?.message ??
-        data?.message ??
-        `Request failed with status ${response.status}`,
-    )
+    const error =
+      new Error(
+        data?.error?.message ??
+          data?.message ??
+          `Request failed with status ${response.status}`,
+      )
+
+    error.code =
+      data?.error?.code ??
+      data?.code
+
+    throw error
   }
 
   return data

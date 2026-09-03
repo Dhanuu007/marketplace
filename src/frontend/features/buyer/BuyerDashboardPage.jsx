@@ -91,6 +91,17 @@ export function BuyerDashboardPage() {
                 assistance.
               </p>
 
+              <button
+                  type="button"
+                  className="buyer-suspension-contact-button"
+                  onClick={() =>
+                    navigate('/buyer/suspension-support')
+                  }
+                >
+                  Contact Admin
+                  <span>→</span>
+               </button>
+
             </div>
 
           </section>
