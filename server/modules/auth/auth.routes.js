@@ -16,11 +16,15 @@ import {
   verifyPassword,
 } from './password.service.js'
 
-import { signAuthToken } from './token.service.js'
+import {
+  signAuthToken,
+  verifyAuthToken,
+} from './token.service.js'
 
 import {
   createUser,
   findUserByEmail,
+  findUserById,
   updateUserPassword,
   setUserOnline,
   setUserOffline,
@@ -142,16 +146,15 @@ router.post(
         )
       }
 
-      // Block suspended accounts from logging in
-      if (user.suspended) {
-        throw createHttpError(
-          403,
-          'ACCOUNT_SUSPENDED',
-          user.suspensionReason
-            ? `Your account is suspended. Reason: ${user.suspensionReason}`
-            : 'Your account has been suspended. Please contact the administrator.',
-        )
-      }
+      /*
+       * Suspended accounts are allowed to establish a
+       * restricted frontend session.
+       *
+       * They are NOT marked online here.
+       *
+       * All protected marketplace APIs remain blocked
+       * by requireAuth in server/middleware/auth.js.
+       */
 
       delete user.passwordHash
 
@@ -160,7 +163,20 @@ router.post(
           user,
         )
 
-      // Mark user online after successful login
+      if (user.suspended) {
+        response.json({
+          user,
+          token,
+        })
+
+        return
+      }
+
+
+      /*
+       * Active users are marked online after login.
+       */
+
       const onlineUser =
         await setUserOnline(
           user.id,
@@ -169,6 +185,81 @@ router.post(
       response.json({
         user: onlineUser,
         token,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+
+// =========================================================
+// SUSPENSION STATUS
+// =========================================================
+//
+// This endpoint is intentionally NOT protected by
+// requireAuth.
+//
+// Suspended users cannot pass requireAuth because the
+// authentication middleware correctly blocks suspended
+// accounts from protected marketplace functionality.
+//
+// This endpoint only verifies the JWT and returns the
+// minimum account information required to render the
+// restricted dashboard experience.
+//
+
+router.get(
+  '/auth/suspension-status',
+  async (request, response, next) => {
+    try {
+      const authorization =
+        request.get('authorization') ?? ''
+
+      const [scheme, token] =
+        authorization.split(' ')
+
+      if (
+        scheme?.toLowerCase() !== 'bearer' ||
+        !token
+      ) {
+        throw createHttpError(
+          401,
+          'AUTH_REQUIRED',
+          'Bearer token is required',
+        )
+      }
+
+      const payload =
+        verifyAuthToken(
+          token,
+        )
+
+      const user =
+        await findUserById(
+          payload.sub,
+        )
+
+      if (!user) {
+        throw createHttpError(
+          401,
+          'USER_NOT_FOUND',
+          'Authenticated user no longer exists',
+        )
+      }
+
+      response.json({
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          suspended: user.suspended,
+          suspensionReason:
+            user.suspensionReason,
+          suspendedAt:
+            user.suspendedAt,
+        },
       })
     } catch (error) {
       next(error)

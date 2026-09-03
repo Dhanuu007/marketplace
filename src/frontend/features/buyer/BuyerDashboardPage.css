@@ -36,6 +36,164 @@
 
 
 /* =========================================================
+   SUSPENDED ACCOUNT WARNING
+========================================================= */
+
+.buyer-suspension-banner {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 20px;
+
+  margin-bottom: 28px;
+
+  padding: 26px 30px;
+
+  border: 1px solid #fecaca;
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff1f2,
+      #ffffff
+    );
+
+  box-shadow:
+    0 14px 36px rgba(127, 29, 29, 0.08);
+}
+
+
+.buyer-suspension-icon {
+  display: grid;
+
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  width: 48px;
+  height: 48px;
+
+  border: 1px solid #fca5a5;
+
+  border-radius: 14px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #dc2626,
+      #b91c1c
+    );
+
+  font-size: 24px;
+
+  font-weight: 900;
+
+  box-shadow:
+    0 8px 18px rgba(220, 38, 38, 0.20);
+}
+
+
+.buyer-suspension-content {
+  min-width: 0;
+}
+
+
+.buyer-suspension-eyebrow {
+  margin: 0 0 5px;
+
+  color: #dc2626;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.13em;
+
+  text-transform: uppercase;
+}
+
+
+.buyer-suspension-content h2 {
+  margin: 0;
+
+  color: #7f1d1d;
+
+  font-size: 26px;
+
+  line-height: 1.1;
+
+  letter-spacing: -0.035em;
+}
+
+
+.buyer-suspension-message {
+  margin: 9px 0 0;
+
+  color: #7f1d1d;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+.buyer-suspension-reason {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  margin-top: 16px;
+
+  padding: 13px 16px;
+
+  border: 1px solid #fecaca;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.80);
+}
+
+
+.buyer-suspension-reason span {
+  color: #991b1b;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.10em;
+
+  text-transform: uppercase;
+}
+
+
+.buyer-suspension-reason strong {
+  color: #450a0a;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+.buyer-suspension-contact {
+  margin: 13px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
    HEADER
 ========================================================= */
 
@@ -132,6 +290,33 @@
   flex-wrap: wrap;
 
   gap: 10px;
+}
+
+
+/*
+ * The blocked wrapper contains every dashboard action
+ * except Logout.
+ *
+ * pointer-events: none prevents navigation while the
+ * account is suspended.
+ */
+
+.buyer-dashboard-actions-blocked {
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  opacity: 0.45;
+
+  filter: grayscale(0.35);
+
+  pointer-events: none;
+
+  user-select: none;
 }
 
 
@@ -236,6 +421,78 @@
   border-color: #dc2626;
 
   background: #dc2626;
+}
+
+
+/* =========================================================
+   SUSPENDED DASHBOARD CONTENT
+========================================================= */
+
+/*
+ * The content remains visible enough for the user to
+ * understand what is unavailable, but all interaction
+ * is disabled.
+ */
+
+.buyer-dashboard-content-suspended {
+  position: relative;
+
+  opacity: 0.55;
+
+  filter:
+    blur(2px)
+    grayscale(0.20);
+
+  pointer-events: none;
+
+  user-select: none;
+}
+
+
+/*
+ * Add a subtle blocked-state overlay above the disabled
+ * dashboard content.
+ */
+
+.buyer-dashboard-content-suspended::after {
+  content: '🔒  Marketplace actions unavailable';
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  z-index: 5;
+
+  transform:
+    translate(-50%, -50%);
+
+  width: max-content;
+
+  max-width: calc(100% - 40px);
+
+  padding: 13px 20px;
+
+  border: 1px solid #fecaca;
+
+  border-radius: 999px;
+
+  color: #991b1b;
+
+  background: rgba(255, 255, 255, 0.94);
+
+  box-shadow:
+    0 12px 32px rgba(127, 29, 29, 0.12);
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.02em;
+
+  text-align: center;
+
+  pointer-events: none;
 }
 
 
@@ -468,6 +725,11 @@
   }
 
 
+  .buyer-suspension-banner {
+    padding: 24px;
+  }
+
+
   .buyer-dashboard-header {
     align-items: flex-start;
 
@@ -481,6 +743,11 @@
     width: 100%;
 
     justify-content: flex-start;
+  }
+
+
+  .buyer-dashboard-actions-blocked {
+    width: 100%;
   }
 
 
@@ -510,6 +777,22 @@
   }
 
 
+  .buyer-suspension-banner {
+    flex-direction: column;
+
+    gap: 14px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+  }
+
+
+  .buyer-suspension-content h2 {
+    font-size: 23px;
+  }
+
+
   .buyer-dashboard-header {
     padding: 24px;
 
@@ -523,6 +806,15 @@
 
 
   .buyer-dashboard-actions {
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    width: 100%;
+  }
+
+
+  .buyer-dashboard-actions-blocked {
     display: grid;
 
     grid-template-columns: 1fr;
@@ -545,6 +837,15 @@
 
   .buyer-info-button {
     width: 100%;
+  }
+
+
+  .buyer-dashboard-content-suspended::after {
+    width: auto;
+
+    border-radius: 14px;
+
+    white-space: normal;
   }
 
 }
