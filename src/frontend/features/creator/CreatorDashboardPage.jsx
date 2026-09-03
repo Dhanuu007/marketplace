@@ -29,6 +29,7 @@ export function CreatorDashboardPage() {
   const [ordersLoading, setOrdersLoading] = useState(true)
   const [ordersError, setOrdersError] = useState('')
 
+
   // =========================================================
   // NOTIFICATIONS
   // =========================================================
@@ -44,6 +45,29 @@ export function CreatorDashboardPage() {
     useState(false)
 
   const [notificationError, setNotificationError] =
+    useState('')
+
+
+  // =========================================================
+  // SUSPENSION SUPPORT CHAT
+  // =========================================================
+
+  const [supportConversation, setSupportConversation] =
+    useState(null)
+
+  const [supportMessages, setSupportMessages] =
+    useState([])
+
+  const [supportMessageText, setSupportMessageText] =
+    useState('')
+
+  const [supportLoading, setSupportLoading] =
+    useState(false)
+
+  const [supportSending, setSupportSending] =
+    useState(false)
+
+  const [supportError, setSupportError] =
     useState('')
 
 
@@ -140,123 +164,223 @@ export function CreatorDashboardPage() {
 
 
   // =========================================================
-// LOAD NOTIFICATIONS
-// =========================================================
+  // LOAD NOTIFICATIONS
+  // =========================================================
 
-useEffect(() => {
-  if (!auth.token || isSuspended) {
-    return undefined
-  }
+  useEffect(() => {
+    if (!auth.token || isSuspended) {
+      return undefined
+    }
 
-  let cancelled = false
-
-
-  async function fetchNotifications({
-    showLoading = true,
-  } = {}) {
-    try {
-      if (showLoading) {
-        setNotificationsLoading(true)
-      }
-
-      setNotificationError('')
-
-      const [
-        notificationsData,
-        unreadData,
-      ] = await Promise.all([
-        apiRequest(
-          '/notifications',
-          {
-            method: 'GET',
-            token: auth.token,
-          },
-        ),
-
-        apiRequest(
-          '/notifications/unread-count',
-          {
-            method: 'GET',
-            token: auth.token,
-          },
-        ),
-      ])
+    let cancelled = false
 
 
-      if (cancelled) {
-        return
-      }
+    async function fetchNotifications({
+      showLoading = true,
+    } = {}) {
+      try {
+        if (showLoading) {
+          setNotificationsLoading(true)
+        }
+
+        setNotificationError('')
 
 
-      setNotifications(
-        Array.isArray(
-          notificationsData?.notifications,
+        const [
+          notificationsData,
+          unreadData,
+        ] = await Promise.all([
+          apiRequest(
+            '/notifications',
+            {
+              method: 'GET',
+              token: auth.token,
+            },
+          ),
+
+          apiRequest(
+            '/notifications/unread-count',
+            {
+              method: 'GET',
+              token: auth.token,
+            },
+          ),
+        ])
+
+
+        if (cancelled) {
+          return
+        }
+
+
+        setNotifications(
+          Array.isArray(
+            notificationsData?.notifications,
+          )
+            ? notificationsData.notifications
+            : [],
         )
-          ? notificationsData.notifications
-          : [],
-      )
 
 
-      setNotificationUnreadCount(
-        Number(
-          unreadData?.count || 0,
-        ),
-      )
-    } catch (error) {
-      if (cancelled) {
-        return
-      }
+        setNotificationUnreadCount(
+          Number(
+            unreadData?.count || 0,
+          ),
+        )
+      } catch (error) {
+        if (cancelled) {
+          return
+        }
 
-      setNotificationError(
-        error?.message ||
-          'Unable to load notifications.',
-      )
-    } finally {
-      if (
-        !cancelled &&
-        showLoading
-      ) {
-        setNotificationsLoading(false)
+        setNotificationError(
+          error?.message ||
+            'Unable to load notifications.',
+        )
+      } finally {
+        if (
+          !cancelled &&
+          showLoading
+        ) {
+          setNotificationsLoading(false)
+        }
       }
     }
-  }
 
 
-  const timeout =
-    window.setTimeout(
-      () => {
-        fetchNotifications()
-      },
-      0,
-    )
+    const timeout =
+      window.setTimeout(
+        () => {
+          fetchNotifications()
+        },
+        0,
+      )
 
 
-  const interval =
-    window.setInterval(
-      () => {
-        fetchNotifications({
-          showLoading: false,
-        })
-      },
-      30000,
-    )
+    const interval =
+      window.setInterval(
+        () => {
+          fetchNotifications({
+            showLoading: false,
+          })
+        },
+        30000,
+      )
 
 
-  return () => {
-    cancelled = true
+    return () => {
+      cancelled = true
 
-    window.clearTimeout(
-      timeout,
-    )
+      window.clearTimeout(
+        timeout,
+      )
 
-    window.clearInterval(
-      interval,
-    )
-  }
-}, [
-  auth.token,
-  isSuspended,
-])
+      window.clearInterval(
+        interval,
+      )
+    }
+  }, [
+    auth.token,
+    isSuspended,
+  ])
+
+
+  // =========================================================
+  // LOAD / CREATE SUSPENSION SUPPORT CONVERSATION
+  // =========================================================
+
+  useEffect(() => {
+    async function loadSupportConversation() {
+      if (!auth.token || !isSuspended) {
+        setSupportConversation(null)
+        setSupportMessages([])
+        setSupportLoading(false)
+        setSupportError('')
+        return
+      }
+
+
+      try {
+        setSupportLoading(true)
+        setSupportError('')
+
+
+        const conversationData =
+          await apiRequest(
+            '/chat/suspension-support/conversation',
+            {
+              method: 'GET',
+              token: auth.token,
+            },
+          )
+
+
+        const conversation =
+          conversationData?.conversation ??
+          null
+
+
+        setSupportConversation(
+          conversation,
+        )
+
+
+        if (!conversation?.id) {
+          throw new Error(
+            'Unable to create the support conversation.',
+          )
+        }
+
+
+        const data =
+          await apiRequest(
+            `/chat/suspension-support/conversations/${encodeURIComponent(
+              conversation.id,
+            )}`,
+            {
+              method: 'GET',
+              token: auth.token,
+            },
+          )
+
+
+        setSupportConversation(
+          data?.conversation ??
+            conversation,
+        )
+
+
+        setSupportMessages(
+          Array.isArray(data?.messages)
+            ? data.messages
+            : [],
+        )
+
+
+        await apiRequest(
+          `/chat/suspension-support/conversations/${encodeURIComponent(
+            conversation.id,
+          )}/read`,
+          {
+            method: 'PATCH',
+            token: auth.token,
+          },
+        )
+      } catch (error) {
+        setSupportError(
+          error?.message ||
+            'Unable to open suspension support chat.',
+        )
+      } finally {
+        setSupportLoading(false)
+      }
+    }
+
+
+    loadSupportConversation()
+  }, [
+    auth.token,
+    isSuspended,
+  ])
 
 
   // =========================================================
@@ -419,6 +543,131 @@ useEffect(() => {
   }
 
 
+  function formatSupportTime(
+    value,
+  ) {
+    if (!value) {
+      return ''
+    }
+
+    const date =
+      new Date(value)
+
+    if (
+      Number.isNaN(
+        date.getTime(),
+      )
+    ) {
+      return ''
+    }
+
+    return date.toLocaleTimeString(
+      'en-IN',
+      {
+        hour: '2-digit',
+        minute: '2-digit',
+      },
+    )
+  }
+
+
+  function isOwnSupportMessage(
+    message,
+  ) {
+    const currentUserId =
+      auth.user?.id
+
+    const senderId =
+      message?.senderId
+
+    return Boolean(
+      currentUserId &&
+      senderId &&
+      String(currentUserId) ===
+        String(senderId),
+    )
+  }
+
+
+  // =========================================================
+  // SEND SUSPENSION SUPPORT MESSAGE
+  // =========================================================
+
+  async function handleSendSupportMessage(
+    event,
+  ) {
+    event.preventDefault()
+
+    const text =
+      supportMessageText.trim()
+
+
+    if (
+      !text ||
+      supportSending ||
+      !supportConversation?.id
+    ) {
+      return
+    }
+
+
+    if (!auth.token) {
+      setSupportError(
+        'Authentication is required.',
+      )
+      return
+    }
+
+
+    try {
+      setSupportSending(true)
+      setSupportError('')
+
+
+      const data =
+        await apiRequest(
+          `/chat/suspension-support/conversations/${encodeURIComponent(
+            supportConversation.id,
+          )}/messages`,
+          {
+            method: 'POST',
+            token: auth.token,
+            body: {
+              text,
+            },
+          },
+        )
+
+
+      if (data?.message) {
+        setSupportMessages(
+          (currentMessages) => [
+            ...currentMessages,
+            data.message,
+          ],
+        )
+      }
+
+
+      if (data?.conversation) {
+        setSupportConversation(
+          data.conversation,
+        )
+      }
+
+
+      setSupportMessageText('')
+    } catch (error) {
+      setSupportError(
+        error?.message ||
+          'Unable to send your message.',
+      )
+    } finally {
+      setSupportSending(false)
+    }
+  }
+
+
   // =========================================================
   // NOTIFICATION ACTIONS
   // =========================================================
@@ -433,6 +682,7 @@ useEffect(() => {
       return
     }
 
+
     try {
       if (!notification.read) {
         await apiRequest(
@@ -442,6 +692,7 @@ useEffect(() => {
             token: auth.token,
           },
         )
+
 
         setNotifications(
           (current) =>
@@ -457,6 +708,7 @@ useEffect(() => {
             ),
         )
 
+
         setNotificationUnreadCount(
           (count) =>
             Math.max(
@@ -470,9 +722,11 @@ useEffect(() => {
       // marking the notification fails.
     }
 
+
     setNotificationsOpen(
       false,
     )
+
 
     if (
       notification.relatedType ===
@@ -503,6 +757,7 @@ useEffect(() => {
       return
     }
 
+
     try {
       await apiRequest(
         '/notifications/read-all',
@@ -511,6 +766,7 @@ useEffect(() => {
           token: auth.token,
         },
       )
+
 
       setNotifications(
         (current) =>
@@ -521,6 +777,7 @@ useEffect(() => {
             }),
           ),
       )
+
 
       setNotificationUnreadCount(
         0,
@@ -544,9 +801,11 @@ useEffect(() => {
         'Are you sure you want to logout?',
       )
 
+
     if (!confirmed) {
       return
     }
+
 
     await auth.logout()
   }
@@ -573,15 +832,18 @@ useEffect(() => {
               !
             </div>
 
+
             <div className="creator-suspension-content">
 
               <p className="creator-suspension-eyebrow">
                 Account Security
               </p>
 
+
               <h2>
                 Account Suspended
               </h2>
+
 
               <p className="creator-suspension-message">
                 Your Creator account has been suspended
@@ -589,11 +851,13 @@ useEffect(() => {
                 unavailable.
               </p>
 
+
               <div className="creator-suspension-reason">
 
                 <span>
                   Suspension reason
                 </span>
+
 
                 <strong>
                   {auth.user?.suspensionReason ||
@@ -602,11 +866,234 @@ useEffect(() => {
 
               </div>
 
+
               <p className="creator-suspension-contact">
-                Please contact the administrator to
-                resolve this issue and request further
-                assistance.
+                Use the support chat below to contact
+                the administrator and request assistance
+                with your suspended account.
               </p>
+
+
+              {/* =================================================
+                  SUSPENSION SUPPORT CHAT
+              ================================================= */}
+
+              <section className="creator-suspension-support">
+
+                <div className="creator-suspension-support-header">
+
+                  <div>
+
+                    <p className="creator-suspension-support-eyebrow">
+                      Suspension Support
+                    </p>
+
+
+                    <h3>
+                      Contact Administrator
+                    </h3>
+
+
+                    <span>
+                      Discuss your suspension directly
+                      with the Marketplace administrator.
+                    </span>
+
+                  </div>
+
+
+                  <span
+                    className={`creator-suspension-support-status ${
+                      supportConversation?.status ===
+                      'CLOSED'
+                        ? 'creator-suspension-support-status-closed'
+                        : ''
+                    }`}
+                  >
+                    {supportConversation?.status ||
+                      'OPEN'}
+                  </span>
+
+                </div>
+
+
+                {supportError && (
+
+                  <div className="creator-suspension-support-error">
+                    {supportError}
+                  </div>
+
+                )}
+
+
+                {supportLoading ? (
+
+                  <div className="creator-suspension-support-loading">
+
+                    <div className="creator-loading-spinner" />
+
+                    <span>
+                      Opening support chat...
+                    </span>
+
+                  </div>
+
+                ) : (
+
+                  <>
+
+                    <div className="creator-suspension-support-messages">
+
+                      {supportMessages.length === 0 ? (
+
+                        <div className="creator-suspension-support-empty">
+
+                          <strong>
+                            Start the conversation
+                          </strong>
+
+                          <span>
+                            Explain your issue or request
+                            an administrator review of your
+                            suspended account.
+                          </span>
+
+                        </div>
+
+                      ) : (
+
+                        supportMessages.map(
+                          (message) => {
+
+                            const own =
+                              isOwnSupportMessage(
+                                message,
+                              )
+
+
+                            return (
+
+                              <div
+                                key={
+                                  message.id
+                                }
+                                className={`creator-suspension-support-message-row ${
+                                  own
+                                    ? 'creator-suspension-support-message-row-own'
+                                    : ''
+                                }`}
+                              >
+
+                                <div className="creator-suspension-support-message">
+
+                                  <div className="creator-suspension-support-message-meta">
+
+                                    <strong>
+                                      {own
+                                        ? 'You'
+                                        : 'Admin'}
+                                    </strong>
+
+
+                                    <span>
+                                      {formatSupportTime(
+                                        message.createdAt,
+                                      )}
+                                    </span>
+
+                                  </div>
+
+
+                                  <p>
+                                    {message.text ||
+                                      message.content ||
+                                      message.message ||
+                                      ''}
+                                  </p>
+
+                                </div>
+
+                              </div>
+
+                            )
+                          },
+                        )
+
+                      )}
+
+                    </div>
+
+
+                    {supportConversation?.status ===
+                    'CLOSED' ? (
+
+                      <div className="creator-suspension-support-closed">
+                        This support conversation has
+                        been closed by the administrator.
+                      </div>
+
+                    ) : (
+
+                      <form
+                        className="creator-suspension-support-composer"
+                        onSubmit={
+                          handleSendSupportMessage
+                        }
+                      >
+
+                        <textarea
+                          value={
+                            supportMessageText
+                          }
+                          onChange={(
+                            event,
+                          ) =>
+                            setSupportMessageText(
+                              event.target.value,
+                            )
+                          }
+                          placeholder="Write a message to the administrator..."
+                          rows={3}
+                          disabled={
+                            supportSending
+                          }
+                        />
+
+
+                        <div className="creator-suspension-support-composer-footer">
+
+                          <span>
+                            {supportMessageText.trim()
+                              .length > 0
+                              ? `${supportMessageText.trim().length} characters`
+                              : 'Describe your issue clearly'}
+                          </span>
+
+
+                          <button
+                            type="submit"
+                            disabled={
+                              supportSending ||
+                              !supportMessageText.trim() ||
+                              !supportConversation?.id
+                            }
+                          >
+                            {supportSending
+                              ? 'Sending...'
+                              : 'Send Message'}
+                          </button>
+
+                        </div>
+
+                      </form>
+
+                    )}
+
+                  </>
+
+                )}
+
+              </section>
 
             </div>
 
@@ -622,6 +1109,7 @@ useEffect(() => {
         <header className="creator-header">
 
           <CreatorDashboardScene />
+
 
           <div className="creator-header-main">
 
@@ -665,6 +1153,7 @@ useEffect(() => {
               <span>
                 Creator ID
               </span>
+
 
               <strong>
                 {auth.user?.id ||
@@ -780,6 +1269,7 @@ useEffect(() => {
                   <span>
                     Notifications
                   </span>
+
 
                   {notificationUnreadCount > 0 && (
 
@@ -907,10 +1397,12 @@ useEffect(() => {
                                 >
 
                                   <span className="creator-notification-item-icon">
+
                                     {notification.type ===
                                     'NEW_MESSAGE'
                                       ? '✉'
                                       : '•'}
+
                                   </span>
 
 
@@ -1517,13 +2009,16 @@ useEffect(() => {
                         product.screenshots.length >
                           0
 
+
                       const previewImage =
                         product.image ||
                         (hasScreenshot
                           ? product.screenshots[0]
                           : '')
 
+
                       return (
+
                         <article
                           key={product._id}
                           className="creator-listing-card"
@@ -1709,9 +2204,11 @@ useEffect(() => {
                                 </span>
 
                                 <strong className="creator-price">
+
                                   {formatCurrency(
                                     product.price,
                                   )}
+
                                 </strong>
 
                               </div>
@@ -1814,6 +2311,7 @@ useEffect(() => {
                           </div>
 
                         </article>
+
                       )
                     },
                   )}
