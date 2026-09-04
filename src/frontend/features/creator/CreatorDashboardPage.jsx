@@ -70,6 +70,9 @@ export function CreatorDashboardPage() {
   const [supportError, setSupportError] =
     useState('')
 
+  const [supportChatOpen, setSupportChatOpen] =
+    useState(false)
+
 
   // =========================================================
   // LOAD CREATOR LISTINGS
@@ -174,7 +177,6 @@ export function CreatorDashboardPage() {
 
     let cancelled = false
 
-
     async function fetchNotifications({
       showLoading = true,
     } = {}) {
@@ -184,7 +186,6 @@ export function CreatorDashboardPage() {
         }
 
         setNotificationError('')
-
 
         const [
           notificationsData,
@@ -207,11 +208,9 @@ export function CreatorDashboardPage() {
           ),
         ])
 
-
         if (cancelled) {
           return
         }
-
 
         setNotifications(
           Array.isArray(
@@ -220,7 +219,6 @@ export function CreatorDashboardPage() {
             ? notificationsData.notifications
             : [],
         )
-
 
         setNotificationUnreadCount(
           Number(
@@ -246,7 +244,6 @@ export function CreatorDashboardPage() {
       }
     }
 
-
     const timeout =
       window.setTimeout(
         () => {
@@ -254,7 +251,6 @@ export function CreatorDashboardPage() {
         },
         0,
       )
-
 
     const interval =
       window.setInterval(
@@ -265,7 +261,6 @@ export function CreatorDashboardPage() {
         },
         30000,
       )
-
 
     return () => {
       cancelled = true
@@ -298,11 +293,9 @@ export function CreatorDashboardPage() {
         return
       }
 
-
       try {
         setSupportLoading(true)
         setSupportError('')
-
 
         const conversationData =
           await apiRequest(
@@ -313,23 +306,19 @@ export function CreatorDashboardPage() {
             },
           )
 
-
         const conversation =
           conversationData?.conversation ??
           null
 
-
         setSupportConversation(
           conversation,
         )
-
 
         if (!conversation?.id) {
           throw new Error(
             'Unable to create the support conversation.',
           )
         }
-
 
         const data =
           await apiRequest(
@@ -342,19 +331,16 @@ export function CreatorDashboardPage() {
             },
           )
 
-
         setSupportConversation(
           data?.conversation ??
             conversation,
         )
-
 
         setSupportMessages(
           Array.isArray(data?.messages)
             ? data.messages
             : [],
         )
-
 
         await apiRequest(
           `/chat/suspension-support/conversations/${encodeURIComponent(
@@ -374,7 +360,6 @@ export function CreatorDashboardPage() {
         setSupportLoading(false)
       }
     }
-
 
     loadSupportConversation()
   }, [
@@ -601,7 +586,6 @@ export function CreatorDashboardPage() {
     const text =
       supportMessageText.trim()
 
-
     if (
       !text ||
       supportSending ||
@@ -610,7 +594,6 @@ export function CreatorDashboardPage() {
       return
     }
 
-
     if (!auth.token) {
       setSupportError(
         'Authentication is required.',
@@ -618,11 +601,9 @@ export function CreatorDashboardPage() {
       return
     }
 
-
     try {
       setSupportSending(true)
       setSupportError('')
-
 
       const data =
         await apiRequest(
@@ -638,7 +619,6 @@ export function CreatorDashboardPage() {
           },
         )
 
-
       if (data?.message) {
         setSupportMessages(
           (currentMessages) => [
@@ -648,13 +628,11 @@ export function CreatorDashboardPage() {
         )
       }
 
-
       if (data?.conversation) {
         setSupportConversation(
           data.conversation,
         )
       }
-
 
       setSupportMessageText('')
     } catch (error) {
@@ -682,7 +660,6 @@ export function CreatorDashboardPage() {
       return
     }
 
-
     try {
       if (!notification.read) {
         await apiRequest(
@@ -692,7 +669,6 @@ export function CreatorDashboardPage() {
             token: auth.token,
           },
         )
-
 
         setNotifications(
           (current) =>
@@ -708,7 +684,6 @@ export function CreatorDashboardPage() {
             ),
         )
 
-
         setNotificationUnreadCount(
           (count) =>
             Math.max(
@@ -722,11 +697,9 @@ export function CreatorDashboardPage() {
       // marking the notification fails.
     }
 
-
     setNotificationsOpen(
       false,
     )
-
 
     if (
       notification.relatedType ===
@@ -757,7 +730,6 @@ export function CreatorDashboardPage() {
       return
     }
 
-
     try {
       await apiRequest(
         '/notifications/read-all',
@@ -766,7 +738,6 @@ export function CreatorDashboardPage() {
           token: auth.token,
         },
       )
-
 
       setNotifications(
         (current) =>
@@ -777,7 +748,6 @@ export function CreatorDashboardPage() {
             }),
           ),
       )
-
 
       setNotificationUnreadCount(
         0,
@@ -801,11 +771,9 @@ export function CreatorDashboardPage() {
         'Are you sure you want to logout?',
       )
 
-
     if (!confirmed) {
       return
     }
-
 
     await auth.logout()
   }
@@ -868,8 +836,8 @@ export function CreatorDashboardPage() {
 
 
               <p className="creator-suspension-contact">
-                Use the support chat below to contact
-                the administrator and request assistance
+                Use the button below to contact the
+                administrator and request assistance
                 with your suspended account.
               </p>
 
@@ -878,222 +846,265 @@ export function CreatorDashboardPage() {
                   SUSPENSION SUPPORT CHAT
               ================================================= */}
 
-              <section className="creator-suspension-support">
+              {!supportChatOpen && (
 
-                <div className="creator-suspension-support-header">
+                <button
+                  type="button"
+                  className="creator-suspension-support-open-button"
+                  onClick={() =>
+                    setSupportChatOpen(true)
+                  }
+                >
 
-                  <div>
-
-                    <p className="creator-suspension-support-eyebrow">
-                      Suspension Support
-                    </p>
-
-
-                    <h3>
-                      Contact Administrator
-                    </h3>
-
-
-                    <span>
-                      Discuss your suspension directly
-                      with the Marketplace administrator.
-                    </span>
-
-                  </div>
-
-
-                  <span
-                    className={`creator-suspension-support-status ${
-                      supportConversation?.status ===
-                      'CLOSED'
-                        ? 'creator-suspension-support-status-closed'
-                        : ''
-                    }`}
-                  >
-                    {supportConversation?.status ||
-                      'OPEN'}
+                  <span className="creator-suspension-support-open-icon">
+                    💬
                   </span>
 
-                </div>
+                  <span>
+                    Contact Administrator
+                  </span>
+
+                  <span className="creator-button-arrow">
+                    →
+                  </span>
+
+                </button>
+
+              )}
 
 
-                {supportError && (
+              {supportChatOpen && (
 
-                  <div className="creator-suspension-support-error">
-                    {supportError}
-                  </div>
+                <section className="creator-suspension-support">
 
-                )}
+                  <div className="creator-suspension-support-header">
 
+                    <div>
 
-                {supportLoading ? (
-
-                  <div className="creator-suspension-support-loading">
-
-                    <div className="creator-loading-spinner" />
-
-                    <span>
-                      Opening support chat...
-                    </span>
-
-                  </div>
-
-                ) : (
-
-                  <>
-
-                    <div className="creator-suspension-support-messages">
-
-                      {supportMessages.length === 0 ? (
-
-                        <div className="creator-suspension-support-empty">
-
-                          <strong>
-                            Start the conversation
-                          </strong>
-
-                          <span>
-                            Explain your issue or request
-                            an administrator review of your
-                            suspended account.
-                          </span>
-
-                        </div>
-
-                      ) : (
-
-                        supportMessages.map(
-                          (message) => {
-
-                            const own =
-                              isOwnSupportMessage(
-                                message,
-                              )
+                      <p className="creator-suspension-support-eyebrow">
+                        Suspension Support
+                      </p>
 
 
-                            return (
-
-                              <div
-                                key={
-                                  message.id
-                                }
-                                className={`creator-suspension-support-message-row ${
-                                  own
-                                    ? 'creator-suspension-support-message-row-own'
-                                    : ''
-                                }`}
-                              >
-
-                                <div className="creator-suspension-support-message">
-
-                                  <div className="creator-suspension-support-message-meta">
-
-                                    <strong>
-                                      {own
-                                        ? 'You'
-                                        : 'Admin'}
-                                    </strong>
+                      <h3>
+                        Contact Administrator
+                      </h3>
 
 
-                                    <span>
-                                      {formatSupportTime(
-                                        message.createdAt,
-                                      )}
-                                    </span>
-
-                                  </div>
-
-
-                                  <p>
-                                    {message.text ||
-                                      message.content ||
-                                      message.message ||
-                                      ''}
-                                  </p>
-
-                                </div>
-
-                              </div>
-
-                            )
-                          },
-                        )
-
-                      )}
+                      <span>
+                        Discuss your suspension directly
+                        with the Marketplace administrator.
+                      </span>
 
                     </div>
 
 
-                    {supportConversation?.status ===
-                    'CLOSED' ? (
+                    <div className="creator-suspension-support-header-actions">
 
-                      <div className="creator-suspension-support-closed">
-                        This support conversation has
-                        been closed by the administrator.
-                      </div>
+                      <span
+                        className={`creator-suspension-support-status ${
+                          supportConversation?.status ===
+                          'CLOSED'
+                            ? 'creator-suspension-support-status-closed'
+                            : ''
+                        }`}
+                      >
+                        {supportConversation?.status ||
+                          'OPEN'}
+                      </span>
 
-                    ) : (
 
-                      <form
-                        className="creator-suspension-support-composer"
-                        onSubmit={
-                          handleSendSupportMessage
+                      <button
+                        type="button"
+                        className="creator-suspension-support-close-button"
+                        onClick={() =>
+                          setSupportChatOpen(false)
                         }
                       >
+                        Close Chat
+                      </button>
 
-                        <textarea
-                          value={
-                            supportMessageText
-                          }
-                          onChange={(
-                            event,
-                          ) =>
-                            setSupportMessageText(
-                              event.target.value,
-                            )
-                          }
-                          placeholder="Write a message to the administrator..."
-                          rows={3}
-                          disabled={
-                            supportSending
-                          }
-                        />
+                    </div>
+
+                  </div>
 
 
-                        <div className="creator-suspension-support-composer-footer">
+                  {supportError && (
 
-                          <span>
-                            {supportMessageText.trim()
-                              .length > 0
-                              ? `${supportMessageText.trim().length} characters`
-                              : 'Describe your issue clearly'}
-                          </span>
+                    <div className="creator-suspension-support-error">
+                      {supportError}
+                    </div>
+
+                  )}
 
 
-                          <button
-                            type="submit"
-                            disabled={
-                              supportSending ||
-                              !supportMessageText.trim() ||
-                              !supportConversation?.id
-                            }
-                          >
-                            {supportSending
-                              ? 'Sending...'
-                              : 'Send Message'}
-                          </button>
+                  {supportLoading ? (
 
+                    <div className="creator-suspension-support-loading">
+
+                      <div className="creator-loading-spinner" />
+
+                      <span>
+                        Opening support chat...
+                      </span>
+
+                    </div>
+
+                  ) : (
+
+                    <>
+
+                      <div className="creator-suspension-support-messages">
+
+                        {supportMessages.length === 0 ? (
+
+                          <div className="creator-suspension-support-empty">
+
+                            <strong>
+                              Start the conversation
+                            </strong>
+
+                            <span>
+                              Explain your issue or request
+                              an administrator review of your
+                              suspended account.
+                            </span>
+
+                          </div>
+
+                        ) : (
+
+                          supportMessages.map(
+                            (message) => {
+
+                              const own =
+                                isOwnSupportMessage(
+                                  message,
+                                )
+
+                              return (
+
+                                <div
+                                  key={message.id}
+                                  className={`creator-suspension-support-message-row ${
+                                    own
+                                      ? 'creator-suspension-support-message-row-own'
+                                      : ''
+                                  }`}
+                                >
+
+                                  <div className="creator-suspension-support-message">
+
+                                    <div className="creator-suspension-support-message-meta">
+
+                                      <strong>
+                                        {own
+                                          ? 'You'
+                                          : 'Admin'}
+                                      </strong>
+
+
+                                      <span>
+                                        {formatSupportTime(
+                                          message.createdAt,
+                                        )}
+                                      </span>
+
+                                    </div>
+
+
+                                    <p>
+                                      {message.text ||
+                                        message.content ||
+                                        message.message ||
+                                        ''}
+                                    </p>
+
+                                  </div>
+
+                                </div>
+
+                              )
+                            },
+                          )
+
+                        )}
+
+                      </div>
+
+
+                      {supportConversation?.status ===
+                      'CLOSED' ? (
+
+                        <div className="creator-suspension-support-closed">
+                          This support conversation has
+                          been closed by the administrator.
                         </div>
 
-                      </form>
+                      ) : (
 
-                    )}
+                        <form
+                          className="creator-suspension-support-composer"
+                          onSubmit={
+                            handleSendSupportMessage
+                          }
+                        >
 
-                  </>
+                          <textarea
+                            value={
+                              supportMessageText
+                            }
+                            onChange={(
+                              event,
+                            ) =>
+                              setSupportMessageText(
+                                event.target.value,
+                              )
+                            }
+                            placeholder="Write a message to the administrator..."
+                            rows={3}
+                            disabled={
+                              supportSending
+                            }
+                          />
 
-                )}
 
-              </section>
+                          <div className="creator-suspension-support-composer-footer">
+
+                            <span>
+                              {supportMessageText.trim()
+                                .length > 0
+                                ? `${supportMessageText.trim().length} characters`
+                                : 'Describe your issue clearly'}
+                            </span>
+
+
+                            <button
+                              type="submit"
+                              disabled={
+                                supportSending ||
+                                !supportMessageText.trim() ||
+                                !supportConversation?.id
+                              }
+                            >
+                              {supportSending
+                                ? 'Sending...'
+                                : 'Send Message'}
+                            </button>
+
+                          </div>
+
+                        </form>
+
+                      )}
+
+                    </>
+
+                  )}
+
+                </section>
+
+              )}
 
             </div>
 
