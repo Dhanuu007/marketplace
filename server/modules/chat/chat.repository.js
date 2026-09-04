@@ -26,18 +26,14 @@ async function ensureChatIndexes() {
   if (indexesReady) return
 
   await conversationCollection().createIndex({
-  buyerId: 1,
-  creatorId: 1,
-  orderId: 1,
-  productId: 1,
-}, {
-  unique: true,
-  partialFilterExpression: {
-    type: {
-      $exists: false,
-    },
-  },
-})
+    buyerId: 1,
+    creatorId: 1,
+    orderId: 1,
+    productId: 1,
+  }, {
+    unique: true,
+    sparse: true,
+  })
 
   await conversationCollection().createIndex({
     buyerId: 1,
