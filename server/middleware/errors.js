@@ -8,23 +8,36 @@ export function notFoundHandler(request, response) {
 }
 
 
-export function errorHandler(error, request, response, next) {
+export function errorHandler(
+  error,
+  request,
+  response,
+  next,
+) {
+  console.error(
+    '[ERROR]',
+    request.method,
+    request.originalUrl,
+    error,
+  )
+
   if (response.headersSent) {
     return next(error)
   }
 
-
-  const statusCode = error.statusCode ?? 500
+  const statusCode =
+    error.statusCode ?? 500
 
   const message =
     statusCode === 500
       ? 'Internal server error'
       : error.message
 
-
   return response.status(statusCode).json({
     error: {
-      code: error.code ?? 'INTERNAL_ERROR',
+      code:
+        error.code ??
+        'INTERNAL_ERROR',
       message,
     },
   })
