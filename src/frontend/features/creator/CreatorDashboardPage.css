@@ -3113,10 +3113,30 @@
   line-height: 1.5;
 }
 
+/* =========================================================
+   SUSPENDED HEADER ACTIONS - DESKTOP FIX
+========================================================= */
+
+.creator-header-actions:has(.creator-header-actions-blocked) {
+  grid-template-columns: 1fr;
+  width: 220px;
+}
+
+.creator-header-actions:has(.creator-header-actions-blocked)
+  .creator-header-actions-blocked {
+  width: 100%;
+}
+
+.creator-header-actions:has(.creator-header-actions-blocked)
+  .creator-logout-button {
+  width: 100%;
+}
+
 
 /* =========================================================
    SUSPENDED HEADER ACTIONS
 ========================================================= */
+
 
 .creator-header-actions-blocked {
   position: relative;
