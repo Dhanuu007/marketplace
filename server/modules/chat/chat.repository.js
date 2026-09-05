@@ -25,27 +25,52 @@ let indexesReady = false
 async function ensureChatIndexes() {
   if (indexesReady) return
 
-  await conversationCollection().createIndex({
-    buyerId: 1,
-    creatorId: 1,
-    orderId: 1,
-    productId: 1,
-  }, {
-    unique: true,
-    sparse: true,
-  })
+  const conversations =
+    conversationCollection()
 
-  await conversationCollection().createIndex({
+  const existingIndexes =
+    await conversations.listIndexes().toArray()
+
+  const purchaseIndex =
+    existingIndexes.find(
+      (index) =>
+        index.name ===
+        'buyerId_1_creatorId_1_orderId_1_productId_1',
+    )
+
+  if (
+    purchaseIndex &&
+    purchaseIndex.sparse !== true
+  ) {
+    await conversations.dropIndex(
+      'buyerId_1_creatorId_1_orderId_1_productId_1',
+    )
+  }
+
+  await conversations.createIndex(
+    {
+      buyerId: 1,
+      creatorId: 1,
+      orderId: 1,
+      productId: 1,
+    },
+    {
+      unique: true,
+      sparse: true,
+    },
+  )
+
+  await conversations.createIndex({
     buyerId: 1,
     updatedAt: -1,
   })
 
-  await conversationCollection().createIndex({
+  await conversations.createIndex({
     creatorId: 1,
     updatedAt: -1,
   })
 
-  await conversationCollection().createIndex({
+  await conversations.createIndex({
     updatedAt: -1,
   })
 
@@ -175,6 +200,7 @@ export async function getConversationsByCreatorId(
     .toArray()
 }
 
+
 /*
  * Find the suspension-support conversation
  * for one user.
@@ -275,19 +301,19 @@ export async function updateSuspensionConversationAfterMessage(
   }
 
   if (
-      senderRole === 'BUYER' ||
-      senderRole === 'CREATOR'
-    ) {
-      update.$inc = {
-        adminUnreadCount: 1,
-      }
+    senderRole === 'BUYER' ||
+    senderRole === 'CREATOR'
+  ) {
+    update.$inc = {
+      adminUnreadCount: 1,
     }
+  }
 
-    if (senderRole === 'ADMIN') {
-      update.$inc = {
-        userUnreadCount: 1,
-      }
+  if (senderRole === 'ADMIN') {
+    update.$inc = {
+      userUnreadCount: 1,
     }
+  }
 
   return conversationCollection().findOneAndUpdate(
     {
