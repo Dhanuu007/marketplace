@@ -3931,3 +3931,267 @@
 
   outline-offset: 3px;
 }
+
+
+/* =========================================================
+   FINAL FIX — CREATOR HEADER ACTION LAYOUT
+   CHANGED: The JSX always contains an inner <div> around
+   the marketplace buttons, even when the Creator is NOT
+   suspended. The old CSS treated the outer container as
+   the button grid, so that inner div became one grid item
+   and all buttons stacked vertically.
+
+   NEW STRUCTURE:
+   .creator-header-actions
+     ├── inner button group (<div>)
+     │    └── marketplace buttons
+     └── .creator-logout-button
+========================================================= */
+
+.creator-header-actions {
+  position: relative !important;
+  z-index: 3 !important;
+
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-end !important;
+
+  gap: 9px !important;
+
+  width: auto !important;
+  max-width: 100% !important;
+
+  flex: 0 0 auto !important;
+  align-self: center !important;
+}
+
+/* CHANGED: style the actual JSX wrapper containing
+   Earnings, Orders, Messages, Notifications,
+   Manual Payout Details, Automated Payouts,
+   and Add Website Listing. */
+.creator-header-actions > div {
+  position: relative !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(150px, 1fr)) !important;
+
+  gap: 9px !important;
+
+  width: 360px !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+
+  flex: 0 1 360px !important;
+  align-self: flex-start !important;
+}
+
+/* CHANGED: buttons inside the real inner wrapper
+   fill their grid cells. */
+.creator-header-actions > div > .creator-earnings-button,
+.creator-header-actions > div > .creator-orders-button,
+.creator-header-actions > div > .creator-payment-settings-button,
+.creator-header-actions > div > .creator-automated-payouts-button,
+.creator-header-actions > div > .creator-primary-button {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  min-height: 45px !important;
+}
+
+/* Messages / Notifications / Manual Payout buttons
+   are also direct children of the wrapper. */
+.creator-header-actions > div > * {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+/* CHANGED: Logout is a separate flex item.
+   It must NOT stretch to the height of the 7-button group. */
+.creator-header-actions > .creator-logout-button {
+  width: 180px !important;
+  min-width: 180px !important;
+  max-width: 180px !important;
+
+  height: 45px !important;
+  min-height: 45px !important;
+  max-height: 45px !important;
+
+  flex: 0 0 180px !important;
+  align-self: flex-start !important;
+}
+
+/* =========================================================
+   SUSPENDED CREATOR
+========================================================= */
+
+/* CHANGED: the suspended wrapper uses the same 2-column
+   layout as the normal wrapper. The existing blocked
+   overlay/disabled styles remain intact. */
+.creator-header-actions
+  > .creator-header-actions-blocked {
+  position: relative !important;
+
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(150px, 1fr)) !important;
+
+  gap: 9px !important;
+
+  width: 360px !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+
+  flex: 0 1 360px !important;
+  align-self: flex-start !important;
+}
+
+.creator-header-actions
+  > .creator-header-actions-blocked > * {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.creator-header-actions
+  > .creator-header-actions-blocked
+  > .creator-logout-button {
+  width: 100% !important;
+}
+
+/* =========================================================
+   SUPPORT HEADER ACTIONS
+   CHANGED: proper OPEN/CLOSED + Close Chat positioning
+========================================================= */
+
+.creator-suspension-support-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+
+  gap: 9px !important;
+
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+
+.creator-suspension-support-header-actions
+  .creator-suspension-support-status {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+/* CHANGED: removed the old margin-left positioning hack. */
+.creator-suspension-support-close-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: auto !important;
+  min-width: 88px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+
+  margin: 0 !important;
+  padding: 0 13px !important;
+
+  border: 1px solid #dbe3ef !important;
+  border-radius: 9px !important;
+
+  color: #475569 !important;
+  background: #ffffff !important;
+
+  font-family: inherit !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+
+  white-space: nowrap !important;
+  cursor: pointer !important;
+
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.045) !important;
+
+  flex: 0 0 auto !important;
+}
+
+/* =========================================================
+   RESPONSIVE — HEADER
+========================================================= */
+
+@media (max-width: 1100px) {
+  .creator-header-actions {
+    gap: 8px !important;
+  }
+
+  .creator-header-actions > div,
+  .creator-header-actions > .creator-header-actions-blocked {
+    width: 340px !important;
+    flex-basis: 340px !important;
+  }
+
+  .creator-header-actions > .creator-logout-button {
+    width: 165px !important;
+    min-width: 165px !important;
+    max-width: 165px !important;
+    flex-basis: 165px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .creator-header-actions {
+    align-self: flex-end !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .creator-header-actions {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+
+    gap: 9px !important;
+  }
+
+  .creator-header-actions > div,
+  .creator-header-actions > .creator-header-actions-blocked {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    flex: 0 0 auto !important;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .creator-header-actions > .creator-logout-button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+
+    height: 45px !important;
+    min-height: 45px !important;
+    max-height: 45px !important;
+
+    flex: 0 0 auto !important;
+  }
+
+  .creator-suspension-support-header-actions {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+@media (max-width: 460px) {
+  .creator-header-actions > div,
+  .creator-header-actions > .creator-header-actions-blocked {
+    grid-template-columns: 1fr !important;
+  }
+}
