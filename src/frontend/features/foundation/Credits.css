@@ -14,14 +14,14 @@
   background:
     radial-gradient(
       circle at center,
-      rgba(15, 118, 110, 0.12),
-      rgba(2, 6, 23, 0.82) 45%,
-      rgba(2, 6, 23, 0.94) 100%
+      rgba(15, 118, 110, 0.04),
+      rgba(2, 6, 23, 0.92) 45%,
+      rgba(2, 6, 23, 0.97) 100%
     );
 
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
 
-  -webkit-backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(16px);
 
   animation:
     credits-overlay-in
@@ -58,11 +58,11 @@
   border-radius: 30px;
 
   background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.035)
-    );
+  linear-gradient(
+    145deg,
+    rgba(30, 41, 59, 0.78),
+    rgba(15, 23, 42, 0.72)
+  );
 
   box-shadow:
     0 40px 100px
