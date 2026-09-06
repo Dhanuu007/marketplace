@@ -1,64 +1,74 @@
-# Market Palce
+# Marketplace
 
-Production-ready two-sided website marketplace, built in phases.
+A full-stack marketplace platform that connects buyers and creators through a single web application, with an admin dashboard for managing platform operations.
 
-## Current phase
+## Features
 
-Phase 2 implements authentication only:
+### Buyer
+- User registration and login
+- Browse and search products
+- Product filtering
+- Shopping cart
+- Order placement and order management
+- Online payments
+- Notifications
+- Support and messaging
 
-- Registration for `BUYER` and `CREATOR`
-- Login with password verification
-- Logout for stateless JWT sessions
-- Password hashing
-- JWT issuing and verification
-- Authentication middleware
-- Role-based authorization middleware
-- Protected backend routes
-- Protected frontend routes
+### Creator
+- Creator dashboard
+- Create and manage product listings
+- Submit products for review
+- Track product status
+- Manage orders
+- Support and communication with administrators
+- Account suspension and support handling
 
-This phase does not include marketplace listings, products, payments, creator dashboard, admin dashboard, website uploads, or website builder functionality.
+### Admin
+- Admin dashboard
+- Manage users and creators
+- Manage products and listings
+- Review and approve submitted products
+- Manage orders and platform activity
+- Handle creator support requests
+- Manage account suspension and support cases
 
-## Structure
+## Payment Integration
+
+Integrated **Razorpay** for online payment processing and transaction handling.
+
+## Tech Stack
+
+**Frontend**
+- React.js
+- JavaScript
+- HTML5
+- CSS3
+- Responsive Web Design
+
+**Backend**
+- Node.js
+- Express.js
+- REST APIs
+
+**Database**
+- MongoDB
+
+**Payment**
+- Razorpay
+
+**Deployment**
+- Render
+- Railway
+
+**Version Control**
+- Git
+- GitHub
+
+## Project Structure
 
 ```text
-src/
-  app/
-  config/
-  features/
-    auth/
-    foundation/
-  services/
-server/
-  config/
-  db/
-  middleware/
-  modules/
-    auth/
-    health/
-  utils/
-```
-
-## Scripts
-
-```bash
-npm run dev
-npm run dev:client
-npm run dev:server
-npm run server
-npm run build
-npm run lint
-npm run preview
-```
-
-## Environment variables
-
-Copy `.env.example` to `.env` for local API configuration.
-
-- `PORT`: Express API port
-- `CLIENT_ORIGIN`: allowed frontend origin for CORS
-- `VITE_API_BASE_URL`: frontend API base URL
-- `MONGODB_URI`: MongoDB connection string
-- `MONGODB_DB_NAME`: MongoDB database name
-- `MONGODB_SERVER_SELECTION_TIMEOUT_MS`: MongoDB connection timeout
-- `JWT_SECRET`: secret used to sign and verify JWTs
-- `JWT_EXPIRES_IN`: JWT lifetime
+marketplace/
+├── src/          # Frontend application
+├── server/       # Backend application
+├── public/       # Public assets
+└── README.md
