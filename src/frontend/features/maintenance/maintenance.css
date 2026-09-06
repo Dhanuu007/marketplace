@@ -1,0 +1,164 @@
+.maintenance-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(255, 255, 255, 0.08),
+      transparent 42%
+    ),
+    #f7f7f5;
+  color: #171717;
+  box-sizing: border-box;
+}
+
+.maintenance-card {
+  width: min(520px, 100%);
+  text-align: center;
+  padding: 48px 32px;
+}
+
+.maintenance-clock {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 30px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.maintenance-clock-hand {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  width: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: 50% 100%;
+}
+
+.maintenance-clock-hour {
+  height: 20px;
+  animation: maintenance-clock-fast 4s linear infinite;
+}
+
+.maintenance-clock-minute {
+  height: 28px;
+  animation: maintenance-clock-fast 1.5s linear infinite;
+}
+
+.maintenance-clock-second {
+  height: 32px;
+  width: 1px;
+  animation: maintenance-clock-fast 0.35s linear infinite;
+}
+
+.maintenance-clock-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.maintenance-eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.maintenance-card h1 {
+  margin: 0;
+  font-size: clamp(30px, 6vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.maintenance-message {
+  max-width: 420px;
+  margin: 20px auto 0;
+  font-size: 16px;
+  line-height: 1.6;
+  opacity: 0.7;
+}
+
+.maintenance-submessage {
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.5;
+}
+
+@keyframes maintenance-clock-fast {
+  from {
+    transform: translateX(-50%) rotate(0deg);
+  }
+
+  to {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .maintenance-screen {
+    padding: 20px;
+  }
+
+  .maintenance-card {
+    padding: 32px 20px;
+  }
+
+  .maintenance-clock {
+    width: 68px;
+    height: 68px;
+    margin-bottom: 24px;
+  }
+}
+
+.maintenance-login-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 150px;
+  margin-top: 28px;
+  padding: 13px 22px;
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.maintenance-login-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.18);
+}
+
+.maintenance-login-button:active {
+  transform: translateY(0);
+}
+
+.maintenance-login-button span {
+  font-size: 18px;
+  line-height: 1;
+}

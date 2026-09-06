@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
+import { MaintenanceGate } from '../maintenance/MaintenanceGate.jsx'
 import MarketplaceIntro from "../admin/components/MarketplaceIntro.jsx"
 import CookieConsent from "../admin/components/CookieConsent.jsx"
 
@@ -43,6 +44,7 @@ import { AdminChatPage } from '../admin/AdminChatPage.jsx'
 import { AdminConversationPage } from '../admin/AdminConversationPage.jsx'
 import { AccountSecurityPage } from '../admin/AccountSecurityPage.jsx'
 import { AdminSuspensionSupportPage } from '../admin/AdminSuspensionSupportPage.jsx'
+import { AdminMaintenancePage } from '../admin/AdminMaintenancePage.jsx'
 
 import WebsiteManagementPage from '../admin/pages/WebsiteManagementPage.jsx'
 import HomepagePage from '../admin/pages/website-management/HomepagePage.jsx'
@@ -59,6 +61,8 @@ export function AppRoutes() {
 
   return (
     <>
+
+     <MaintenanceGate>
       <Routes>
 
         {/* =========================
@@ -431,6 +435,15 @@ export function AppRoutes() {
           }
         />
 
+        <Route
+          path="/admin/maintenance"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminMaintenancePage />
+            </ProtectedRoute>
+          }
+        />
+
 
         {/* =========================
             FALLBACK
@@ -442,6 +455,7 @@ export function AppRoutes() {
         />
 
       </Routes>
+      </MaintenanceGate>
 
       {/* =========================
           COOKIE CONSENT

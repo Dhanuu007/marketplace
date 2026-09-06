@@ -3535,3 +3535,321 @@
   }
 
 }
+
+/* =========================================================
+   MAINTENANCE CONTROL
+========================================================= */
+
+.admin-maintenance-panel {
+  overflow: hidden;
+}
+
+
+.admin-maintenance-panel
+.admin-panel-header {
+  align-items: center;
+}
+
+
+.admin-maintenance-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 12px;
+
+  border: 1px solid #dbe4ec;
+  border-radius: 999px;
+
+  background: #f7fafc;
+
+  color: #526273;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+
+.admin-maintenance-badge.active {
+  border-color: #fecaca;
+  background: #fff5f5;
+  color: #b42318;
+}
+
+
+.admin-maintenance-badge-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #16a34a;
+}
+
+
+.admin-maintenance-badge.active
+.admin-maintenance-badge-dot {
+  background: #dc2626;
+
+  box-shadow:
+    0 0 0 4px rgba(220, 38, 38, 0.10);
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.admin-maintenance-body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  padding: 24px;
+}
+
+
+/* =========================================================
+   STATUS CARD
+========================================================= */
+
+.admin-maintenance-status-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  padding: 20px;
+
+  border: 1px solid #dbe4ec;
+  border-radius: 14px;
+
+  background: #f8fafc;
+}
+
+
+.admin-maintenance-status-card.active {
+  border-color: #fecaca;
+  background: #fff7f7;
+}
+
+
+.admin-maintenance-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 42px;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 12px;
+
+  background: #dcfce7;
+  color: #15803d;
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+
+.admin-maintenance-status-card.active
+.admin-maintenance-status-icon {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+
+.admin-maintenance-label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #667085;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+
+.admin-maintenance-status-card h3 {
+  margin: 0;
+
+  color: #102a43;
+
+  font-size: 19px;
+  line-height: 1.3;
+}
+
+
+.admin-maintenance-status-card p {
+  max-width: 760px;
+
+  margin: 7px 0 0;
+
+  color: #627386;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+.admin-maintenance-info {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+
+.admin-maintenance-info > div {
+  padding: 18px;
+
+  border: 1px solid #e5eaf0;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+
+.admin-maintenance-info p {
+  margin: 0;
+
+  color: #627386;
+
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   FOOTER / ACTION
+========================================================= */
+
+.admin-maintenance-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  padding-top: 22px;
+
+  border-top: 1px solid #e5eaf0;
+}
+
+
+.admin-maintenance-footer > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+.admin-maintenance-footer strong {
+  color: #102a43;
+
+  font-size: 14px;
+}
+
+
+.admin-maintenance-footer span {
+  color: #718096;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   ACTION BUTTON
+========================================================= */
+
+.admin-maintenance-action {
+  min-width: 190px;
+
+  padding: 13px 20px;
+
+  border: 0;
+  border-radius: 10px;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
+}
+
+
+.admin-maintenance-action.enable {
+  background: #009b9b;
+
+  box-shadow:
+    0 8px 20px rgba(0, 155, 155, 0.16);
+}
+
+
+.admin-maintenance-action.disable {
+  background: #334155;
+
+  box-shadow:
+    0 8px 20px rgba(51, 65, 85, 0.14);
+}
+
+
+.admin-maintenance-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+
+.admin-maintenance-action:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+
+.admin-maintenance-action:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.6;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 760px) {
+
+  .admin-maintenance-info {
+    grid-template-columns: 1fr;
+  }
+
+
+  .admin-maintenance-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+
+  .admin-maintenance-action {
+    width: 100%;
+  }
+
+}

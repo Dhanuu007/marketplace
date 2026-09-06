@@ -48,6 +48,10 @@ import {
   sendPasswordResetEmail,
 } from './mail.service.js'
 
+import {
+  getMaintenanceState,
+} from '../maintenance/maintenance.repository.js'
+
 
 const router = Router()
 
@@ -64,6 +68,25 @@ router.post(
         validateRegistration(
           request.body,
         )
+
+      /*
+       * Registration is disabled while the marketplace
+       * is under maintenance.
+       *
+       * Admin accounts are managed separately and are
+       * not created through the public registration flow.
+       */
+
+      const maintenance =
+        await getMaintenanceState()
+
+      if (maintenance.enabled) {
+        throw createHttpError(
+          503,
+          'MAINTENANCE_MODE',
+          'Marketplace is currently under maintenance. Please try again later.',
+        )
+      }
 
       const existingUser =
         await findUserByEmail(
@@ -143,6 +166,31 @@ router.post(
           401,
           'INVALID_CREDENTIALS',
           'Email or password is incorrect',
+        )
+      }
+
+      /*
+       * Maintenance protection.
+       *
+       * Admin accounts are always allowed to log in so
+       * the administrator can regain access and disable
+       * maintenance mode if necessary.
+       *
+       * Buyer and Creator accounts cannot establish a
+       * new session while maintenance is active.
+       */
+
+      const maintenance =
+        await getMaintenanceState()
+
+      if (
+        maintenance.enabled &&
+        user.role !== USER_ROLES.ADMIN
+      ) {
+        throw createHttpError(
+          503,
+          'MAINTENANCE_MODE',
+          'Marketplace is currently under maintenance. Please try again later.',
         )
       }
 
@@ -398,7 +446,7 @@ router.post(
         throw createHttpError(
           400,
           'RESET_ACCOUNT_NOT_FOUND',
-          'The account associated with this reset link could not be found.',
+          'The account associated with this password reset link could not be found.',
         )
       }
 

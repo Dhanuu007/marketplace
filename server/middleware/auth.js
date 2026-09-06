@@ -1,4 +1,5 @@
 import { findUserById } from '../modules/auth/user.repository.js'
+import { getMaintenanceState } from '../modules/maintenance/maintenance.repository.js'
 import { verifyAuthToken } from '../modules/auth/token.service.js'
 import { createHttpError } from '../utils/httpError.js'
 
@@ -16,6 +17,7 @@ export async function requireAuth(request, response, next) {
     }
 
     const payload = verifyAuthToken(token)
+
     const user = await findUserById(payload.sub)
 
     if (!user) {
@@ -36,7 +38,48 @@ export async function requireAuth(request, response, next) {
       )
     }
 
+    /*
+     * Maintenance protection
+     *
+     * Admin accounts remain usable so the administrator
+     * can control and disable maintenance mode.
+     *
+     * Buyer and Creator accounts are blocked while
+     * maintenance is active.
+     *
+     * Their tokens are also invalidated permanently
+     * after maintenance is disabled if those tokens
+     * were issued before the maintenance started.
+     */
+    if (user.role !== 'ADMIN') {
+      const maintenance = await getMaintenanceState()
+
+      if (maintenance.enabled) {
+        throw createHttpError(
+          503,
+          'MAINTENANCE_MODE',
+          'Marketplace is currently under maintenance. Please try again later.',
+        )
+      }
+
+      if (maintenance.startedAt && payload.iat) {
+        const maintenanceStartedAt =
+          new Date(maintenance.startedAt).getTime()
+
+        const tokenIssuedAt = payload.iat * 1000
+
+        if (tokenIssuedAt <= maintenanceStartedAt) {
+          throw createHttpError(
+            401,
+            'SESSION_INVALIDATED_BY_MAINTENANCE',
+            'Your session was ended because the marketplace entered maintenance mode. Please log in again.',
+          )
+        }
+      }
+    }
+
     request.user = user
+
     next()
   } catch (error) {
     next(error)
@@ -49,16 +92,10 @@ export async function requireSuspensionSupportAuth(
   next,
 ) {
   try {
-    const authorization =
-      request.get('authorization') ?? ''
+    const authorization = request.get('authorization') ?? ''
+    const [scheme, token] = authorization.split(' ')
 
-    const [scheme, token] =
-      authorization.split(' ')
-
-    if (
-      scheme?.toLowerCase() !== 'bearer' ||
-      !token
-    ) {
+    if (scheme?.toLowerCase() !== 'bearer' || !token) {
       throw createHttpError(
         401,
         'AUTH_REQUIRED',
@@ -66,11 +103,9 @@ export async function requireSuspensionSupportAuth(
       )
     }
 
-    const payload =
-      verifyAuthToken(token)
+    const payload = verifyAuthToken(token)
 
-    const user =
-      await findUserById(payload.sub)
+    const user = await findUserById(payload.sub)
 
     if (!user) {
       throw createHttpError(
@@ -80,10 +115,7 @@ export async function requireSuspensionSupportAuth(
       )
     }
 
-    if (
-      user.role !== 'BUYER' &&
-      user.role !== 'CREATOR'
-    ) {
+    if (user.role !== 'BUYER' && user.role !== 'CREATOR') {
       throw createHttpError(
         403,
         'FORBIDDEN',

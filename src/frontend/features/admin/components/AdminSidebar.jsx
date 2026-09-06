@@ -38,6 +38,12 @@ const navigation = [
     label: 'Account Security',
     path: '/admin/account-security',
   },
+
+  {
+  label: 'Maintenance',
+  path: '/admin/maintenance',
+  },
+
 ]
 
 
