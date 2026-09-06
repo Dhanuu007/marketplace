@@ -729,351 +729,415 @@ export function CheckoutPage() {
         </div>
 
 
-        {!isAuthenticated && (
-          <div
+        {!isAuthenticated ? (
+          <section
             style={{
-              marginBottom: '25px',
-              padding: '16px 18px',
-              borderRadius: '12px',
-              background: '#fff7e6',
-              border: '1px solid #f0d79a',
-              color: '#725719',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '15px',
-              flexWrap: 'wrap',
+              maxWidth: '720px',
+              margin: '0 auto 40px',
+              padding: '40px 30px',
+              borderRadius: '20px',
+              background: '#ffffff',
+              border: '1px solid #dbe7e7',
+              boxShadow:
+                '0 18px 45px rgba(0, 80, 80, 0.08)',
+              textAlign: 'center',
             }}
           >
-            <span>
-              Please log in before placing an order.
-            </span>
-
-
-            <Link
-              to="/login"
+            <div
               style={{
+                width: '64px',
+                height: '64px',
+                margin: '0 auto 20px',
+                borderRadius: '50%',
+                background: '#e8f7f6',
+                display: 'grid',
+                placeItems: 'center',
                 color: '#008080',
+                fontSize: '28px',
                 fontWeight: 800,
-                textDecoration: 'none',
               }}
             >
-              Login
-            </Link>
-          </div>
-        )}
-
-
-        {orderError && (
-          <div
-            style={{
-              marginBottom: '25px',
-              padding: '16px 18px',
-              borderRadius: '12px',
-              background: '#fff1f1',
-              border: '1px solid #e4aaaa',
-              color: '#9b2c2c',
-              fontSize: '0.9rem',
-              fontWeight: 600,
-            }}
-            role="alert"
-          >
-            {orderError}
-          </div>
-        )}
-
-
-        <form
-          className="checkout-content"
-          onSubmit={handleSubmit}
-        >
-          <section className="checkout-form-section">
-            <div className="checkout-card">
-              <div className="checkout-card-heading">
-                <span>
-                  01
-                </span>
-
-
-                <div>
-                  <h2>
-                    Customer Information
-                  </h2>
-
-
-                  <p>
-                    Enter the details we'll use
-                    for your order.
-                  </p>
-                </div>
-              </div>
-
-
-              <div className="checkout-form-grid">
-                <div className="checkout-field checkout-field-full">
-                  <label htmlFor="fullName">
-                    Full Name
-                  </label>
-
-
-                  <input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="Enter your full name"
-                    required
-                  />
-                </div>
-
-
-                <div className="checkout-field">
-                  <label htmlFor="email">
-                    Email Address
-                  </label>
-
-
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="you@example.com"
-                    required
-                  />
-                </div>
-
-
-                <div className="checkout-field">
-                  <label htmlFor="phone">
-                    Phone Number
-                  </label>
-
-
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="Enter phone number"
-                    required
-                  />
-                </div>
-              </div>
+              🔐
             </div>
 
 
-            <div className="checkout-card">
-              <div className="checkout-card-heading">
-                <span>
-                  02
-                </span>
-
-
-                <div>
-                  <h2>
-                    Billing Information
-                  </h2>
-
-
-                  <p>
-                    Enter your billing details.
-                  </p>
-                </div>
-              </div>
-
-
-              <div className="checkout-form-grid">
-                <div className="checkout-field checkout-field-full">
-                  <label htmlFor="address">
-                    Address
-                  </label>
-
-
-                  <textarea
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    placeholder="Enter your complete address"
-                    rows="4"
-                    required
-                  />
-                </div>
-
-
-                <div className="checkout-field">
-                  <label htmlFor="city">
-                    City
-                  </label>
-
-
-                  <input
-                    id="city"
-                    name="city"
-                    type="text"
-                    value={formData.city}
-                    onChange={handleChange}
-                    placeholder="Enter city"
-                    required
-                  />
-                </div>
-
-
-                <div className="checkout-field">
-                  <label htmlFor="state">
-                    State
-                  </label>
-
-
-                  <input
-                    id="state"
-                    name="state"
-                    type="text"
-                    value={formData.state}
-                    onChange={handleChange}
-                    placeholder="Enter state"
-                    required
-                  />
-                </div>
-
-
-                <div className="checkout-field">
-                  <label htmlFor="pincode">
-                    Pincode
-                  </label>
-
-
-                  <input
-                    id="pincode"
-                    name="pincode"
-                    type="text"
-                    value={formData.pincode}
-                    onChange={handleChange}
-                    placeholder="Enter pincode"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-          </section>
-
-
-          <aside className="checkout-summary">
-            <span className="checkout-summary-label">
-              ORDER SUMMARY
+            <span
+              style={{
+                display: 'block',
+                marginBottom: '10px',
+                color: '#008080',
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                letterSpacing: '0.12em',
+              }}
+            >
+              LOGIN REQUIRED
             </span>
 
 
-            <h2>
-              Your Order
+            <h2
+              style={{
+                margin: '0 0 12px',
+                color: '#163636',
+                fontSize: '1.7rem',
+              }}
+            >
+              Please log in to continue
             </h2>
 
 
-            <div className="checkout-summary-items">
-              {cart.map((item) => (
-                <div
-                  key={item.productId}
-                  className="checkout-summary-item"
-                >
-                  <div>
-                    <strong>
-                      {item.name}
-                    </strong>
+            <p
+              style={{
+                maxWidth: '520px',
+                margin: '0 auto 25px',
+                color: '#5f7373',
+                lineHeight: 1.7,
+              }}
+            >
+              You can keep products in your cart as a
+              guest, but you must log in before
+              purchasing.
+            </p>
 
 
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '12px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <Link
+                to="/login"
+                className="checkout-primary-button"
+              >
+                Log In to Continue
+              </Link>
+
+
+              <Link
+                to="/cart"
+                className="checkout-back-cart"
+              >
+                Back to Cart
+              </Link>
+            </div>
+          </section>
+        ) : (
+          <>
+            {orderError && (
+              <div
+                style={{
+                  marginBottom: '25px',
+                  padding: '16px 18px',
+                  borderRadius: '12px',
+                  background: '#fff1f1',
+                  border: '1px solid #e4aaaa',
+                  color: '#9b2c2c',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                }}
+                role="alert"
+              >
+                {orderError}
+              </div>
+            )}
+
+
+            <form
+              className="checkout-content"
+              onSubmit={handleSubmit}
+            >
+              <section className="checkout-form-section">
+                <div className="checkout-card">
+                  <div className="checkout-card-heading">
                     <span>
-                      Qty: {item.quantity}
+                      01
                     </span>
+
+
+                    <div>
+                      <h2>
+                        Customer Information
+                      </h2>
+
+
+                      <p>
+                        Enter the details we'll use
+                        for your order.
+                      </p>
+                    </div>
                   </div>
+
+
+                  <div className="checkout-form-grid">
+                    <div className="checkout-field checkout-field-full">
+                      <label htmlFor="fullName">
+                        Full Name
+                      </label>
+
+
+                      <input
+                        id="fullName"
+                        name="fullName"
+                        type="text"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        placeholder="Enter your full name"
+                        required
+                      />
+                    </div>
+
+
+                    <div className="checkout-field">
+                      <label htmlFor="email">
+                        Email Address
+                      </label>
+
+
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="you@example.com"
+                        required
+                      />
+                    </div>
+
+
+                    <div className="checkout-field">
+                      <label htmlFor="phone">
+                        Phone Number
+                      </label>
+
+
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="Enter phone number"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+
+                <div className="checkout-card">
+                  <div className="checkout-card-heading">
+                    <span>
+                      02
+                    </span>
+
+
+                    <div>
+                      <h2>
+                        Billing Information
+                      </h2>
+
+
+                      <p>
+                        Enter your billing details.
+                      </p>
+                    </div>
+                  </div>
+
+
+                  <div className="checkout-form-grid">
+                    <div className="checkout-field checkout-field-full">
+                      <label htmlFor="address">
+                        Address
+                      </label>
+
+
+                      <textarea
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        placeholder="Enter your complete address"
+                        rows="4"
+                        required
+                      />
+                    </div>
+
+
+                    <div className="checkout-field">
+                      <label htmlFor="city">
+                        City
+                      </label>
+
+
+                      <input
+                        id="city"
+                        name="city"
+                        type="text"
+                        value={formData.city}
+                        onChange={handleChange}
+                        placeholder="Enter city"
+                        required
+                      />
+                    </div>
+
+
+                    <div className="checkout-field">
+                      <label htmlFor="state">
+                        State
+                      </label>
+
+
+                      <input
+                        id="state"
+                        name="state"
+                        type="text"
+                        value={formData.state}
+                        onChange={handleChange}
+                        placeholder="Enter state"
+                        required
+                      />
+                    </div>
+
+
+                    <div className="checkout-field">
+                      <label htmlFor="pincode">
+                        Pincode
+                      </label>
+
+
+                      <input
+                        id="pincode"
+                        name="pincode"
+                        type="text"
+                        value={formData.pincode}
+                        onChange={handleChange}
+                        placeholder="Enter pincode"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+
+              <aside className="checkout-summary">
+                <span className="checkout-summary-label">
+                  ORDER SUMMARY
+                </span>
+
+
+                <h2>
+                  Your Order
+                </h2>
+
+
+                <div className="checkout-summary-items">
+                  {cart.map((item) => (
+                    <div
+                      key={item.productId}
+                      className="checkout-summary-item"
+                    >
+                      <div>
+                        <strong>
+                          {item.name}
+                        </strong>
+
+
+                        <span>
+                          Qty: {item.quantity}
+                        </span>
+                      </div>
+
+
+                      <strong>
+                        ₹{Number(
+                          item.price * item.quantity,
+                        ).toLocaleString('en-IN')}
+                      </strong>
+                    </div>
+                  ))}
+                </div>
+
+
+                <div className="checkout-summary-divider" />
+
+
+                <div className="checkout-summary-row">
+                  <span>
+                    Items
+                  </span>
+
+
+                  <strong>
+                    {totalItems}
+                  </strong>
+                </div>
+
+
+                <div className="checkout-summary-row">
+                  <span>
+                    Subtotal
+                  </span>
 
 
                   <strong>
                     ₹{Number(
-                      item.price * item.quantity,
+                      subtotal,
                     ).toLocaleString('en-IN')}
                   </strong>
                 </div>
-              ))}
-            </div>
 
 
-            <div className="checkout-summary-divider" />
+                <div className="checkout-summary-total">
+                  <span>
+                    Total
+                  </span>
 
 
-            <div className="checkout-summary-row">
-              <span>
-                Items
-              </span>
+                  <strong>
+                    ₹{Number(
+                      subtotal,
+                    ).toLocaleString('en-IN')}
+                  </strong>
+                </div>
 
 
-              <strong>
-                {totalItems}
-              </strong>
-            </div>
+                <button
+                  type="submit"
+                  className="checkout-place-order-button"
+                  disabled={
+                    isSubmitting ||
+                    !isAuthenticated
+                  }
+                >
+                  {isSubmitting
+                    ? 'Starting Payment...'
+                    : pendingOrder
+                      ? 'Retry Payment'
+                      : 'Proceed to Payment'}
+                </button>
 
 
-            <div className="checkout-summary-row">
-              <span>
-                Subtotal
-              </span>
+                <Link
+                  to="/cart"
+                  className="checkout-back-cart"
+                >
+                  ← Back to Cart
+                </Link>
 
 
-              <strong>
-                ₹{Number(
-                  subtotal,
-                ).toLocaleString('en-IN')}
-              </strong>
-            </div>
-
-
-            <div className="checkout-summary-total">
-              <span>
-                Total
-              </span>
-
-
-              <strong>
-                ₹{Number(
-                  subtotal,
-                ).toLocaleString('en-IN')}
-              </strong>
-            </div>
-
-
-            <button
-              type="submit"
-              className="checkout-place-order-button"
-              disabled={
-                isSubmitting ||
-                !isAuthenticated
-              }
-            >
-              {isSubmitting
-                ? 'Starting Payment...'
-                : pendingOrder
-                  ? 'Retry Payment'
-                  : 'Proceed to Payment'}
-            </button>
-
-
-            <Link
-              to="/cart"
-              className="checkout-back-cart"
-            >
-              ← Back to Cart
-            </Link>
-
-
-            <p className="checkout-security-note">
-              Your payment is securely processed
-              through Razorpay.
-            </p>
-          </aside>
-        </form>
+                <p className="checkout-security-note">
+                  Your payment is securely processed
+                  through Razorpay.
+                </p>
+              </aside>
+            </form>
+          </>
+        )}
       </div>
 
 
