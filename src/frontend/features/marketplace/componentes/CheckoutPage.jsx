@@ -14,7 +14,6 @@ import {
 
 import './CheckoutPage.css'
 
-
 export function CheckoutPage() {
   const navigate = useNavigate()
   const { token, isAuthenticated } = useAuth()
@@ -33,6 +32,7 @@ export function CheckoutPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderError, setOrderError] = useState('')
+  const [errors, setErrors] = useState({})
 
   /*
    * Successful Marketplace order.
@@ -54,20 +54,17 @@ export function CheckoutPage() {
    */
   const [pendingOrder, setPendingOrder] = useState(null)
 
-
   const subtotal = cart.reduce(
     (total, item) =>
       total + item.price * item.quantity,
     0,
   )
 
-
   const totalItems = cart.reduce(
     (total, item) =>
       total + item.quantity,
     0,
   )
-
 
   useEffect(() => {
     if (
@@ -78,20 +75,15 @@ export function CheckoutPage() {
       return
     }
 
-
     const script =
       document.createElement('script')
-
 
     script.src =
       'https://checkout.razorpay.com/v1/checkout.js'
 
-
     script.async = true
 
-
     document.body.appendChild(script)
-
 
     return () => {
       if (script.parentNode) {
@@ -102,28 +94,129 @@ export function CheckoutPage() {
     }
   }, [])
 
-
   function handleChange(event) {
     const { name, value } = event.target
-
 
     setFormData((currentData) => ({
       ...currentData,
       [name]: value,
     }))
 
+    setErrors((currentErrors) => ({
+      ...currentErrors,
+      [name]: '',
+    }))
 
     if (orderError) {
       setOrderError('')
     }
   }
 
+  function validateForm() {
+    const validationErrors = {}
+
+    const fullName = formData.fullName.trim()
+    const email = formData.email.trim()
+    const phone = formData.phone.trim()
+    const address = formData.address.trim()
+    const city = formData.city.trim()
+    const state = formData.state.trim()
+    const pincode = formData.pincode.trim()
+
+    if (!fullName) {
+      validationErrors.fullName =
+        'Full name is required.'
+    } else if (fullName.length < 2) {
+      validationErrors.fullName =
+        'Full name must be at least 2 characters.'
+    } else if (
+      fullName.length > 80
+    ) {
+      validationErrors.fullName =
+        'Full name must be 80 characters or less.'
+    } else if (
+      !/^[A-Za-zÀ-ÿ\s.'-]+$/.test(fullName)
+    ) {
+      validationErrors.fullName =
+        'Please enter a valid full name.'
+    }
+
+    if (!email) {
+      validationErrors.email =
+        'Email address is required.'
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        email,
+      )
+    ) {
+      validationErrors.email =
+        'Please enter a valid email address.'
+    }
+
+    if (!phone) {
+      validationErrors.phone =
+        'Phone number is required.'
+    } else if (!/^[6-9]\d{9}$/.test(phone)) {
+      validationErrors.phone =
+        'Enter a valid 10-digit Indian mobile number.'
+    }
+
+    if (!address) {
+      validationErrors.address =
+        'Address is required.'
+    } else if (address.length < 10) {
+      validationErrors.address =
+        'Please enter a complete address.'
+    } else if (address.length > 250) {
+      validationErrors.address =
+        'Address must be 250 characters or less.'
+    }
+
+    if (!city) {
+      validationErrors.city =
+        'City is required.'
+    } else if (
+      city.length < 2 ||
+      city.length > 50
+    ) {
+      validationErrors.city =
+        'Please enter a valid city.'
+    }
+
+    if (!state) {
+      validationErrors.state =
+        'State is required.'
+    } else if (
+      state.length < 2 ||
+      state.length > 50
+    ) {
+      validationErrors.state =
+        'Please enter a valid state.'
+    }
+
+    if (!pincode) {
+      validationErrors.pincode =
+        'Pincode is required.'
+    } else if (!/^\d{6}$/.test(pincode)) {
+      validationErrors.pincode =
+        'Pincode must be exactly 6 digits.'
+    }
+
+    setErrors(validationErrors)
+
+    return (
+      Object.keys(validationErrors).length === 0
+    )
+  }
 
   async function handleSubmit(event) {
     event.preventDefault()
 
     setOrderError('')
 
+    if (!validateForm()) {
+      return
+    }
 
     if (!isAuthenticated || !token) {
       setOrderError(
@@ -133,7 +226,6 @@ export function CheckoutPage() {
       return
     }
 
-
     if (cart.length === 0 && !pendingOrder) {
       setOrderError(
         'Your cart is empty.',
@@ -141,7 +233,6 @@ export function CheckoutPage() {
 
       return
     }
-
 
     if (
       !import.meta.env.VITE_RAZORPAY_KEY_ID
@@ -153,7 +244,6 @@ export function CheckoutPage() {
       return
     }
 
-
     if (!window.Razorpay) {
       setOrderError(
         'Razorpay Checkout is still loading. Please try again in a moment.',
@@ -162,14 +252,11 @@ export function CheckoutPage() {
       return
     }
 
-
     setIsSubmitting(true)
-
 
     try {
       let marketplaceOrder =
         pendingOrder
-
 
       /*
        * First payment attempt:
@@ -188,7 +275,6 @@ export function CheckoutPage() {
           quantity: item.quantity,
         }))
 
-
         const data = await apiRequest(
           '/orders',
           {
@@ -201,17 +287,14 @@ export function CheckoutPage() {
           },
         )
 
-
         marketplaceOrder =
           data?.order ?? null
-
 
         if (!marketplaceOrder) {
           throw new Error(
             'Marketplace order could not be created.',
           )
         }
-
 
         /*
          * Keep the newly created Marketplace order
@@ -222,7 +305,6 @@ export function CheckoutPage() {
           marketplaceOrder,
         )
       }
-
 
       /*
        * Create/recreate the Razorpay payment order
@@ -245,17 +327,14 @@ export function CheckoutPage() {
           },
         )
 
-
       const paymentOrder =
         paymentData?.paymentOrder ?? null
-
 
       if (!paymentOrder) {
         throw new Error(
           'Payment order could not be created.',
         )
       }
-
 
       if (
         !paymentOrder.razorpayOrderId
@@ -264,7 +343,6 @@ export function CheckoutPage() {
           'Razorpay order ID was not returned.',
         )
       }
-
 
       /*
        * Open Razorpay Checkout.
@@ -316,7 +394,6 @@ export function CheckoutPage() {
             try {
               setOrderError('')
 
-
               /*
                * Verify Razorpay payment against
                * the SAME Marketplace order.
@@ -343,10 +420,8 @@ export function CheckoutPage() {
                   },
                 )
 
-
               const verification =
                 verificationData?.verification
-
 
               if (
                 !verification?.verified ||
@@ -357,7 +432,6 @@ export function CheckoutPage() {
                 )
               }
 
-
               /*
                * Payment has now been verified by
                * the backend.
@@ -366,7 +440,6 @@ export function CheckoutPage() {
                * shopping cart.
                */
               clearCart()
-
 
               /*
                * The Marketplace order has now
@@ -384,7 +457,6 @@ export function CheckoutPage() {
                 razorpayPaymentId:
                   verification.razorpayPaymentId,
               })
-
 
               /*
                * No longer keep the order as pending
@@ -415,7 +487,6 @@ export function CheckoutPage() {
                */
               setIsSubmitting(false)
 
-
               setOrderError(
                 'Payment was cancelled. Your order is still pending and you can try again.',
               )
@@ -423,12 +494,10 @@ export function CheckoutPage() {
         },
       }
 
-
       const razorpay =
         new window.Razorpay(
           razorpayOptions,
         )
-
 
       razorpay.on(
         'payment.failed',
@@ -441,18 +510,15 @@ export function CheckoutPage() {
            */
           setIsSubmitting(false)
 
-
           const failureMessage =
             paymentFailure?.error?.description ||
             'Payment failed. Please try again.'
-
 
           setOrderError(
             failureMessage,
           )
         },
       )
-
 
       razorpay.open()
     } catch (requestError) {
@@ -461,11 +527,9 @@ export function CheckoutPage() {
           'Failed to start payment. Please try again.',
       )
 
-
       setIsSubmitting(false)
     }
   }
-
 
   if (cart.length === 0 && !order) {
     return (
@@ -478,7 +542,6 @@ export function CheckoutPage() {
             Market Palce
           </Link>
 
-
           <nav className="checkout-nav">
             <Link to="/">
               Home
@@ -494,23 +557,19 @@ export function CheckoutPage() {
           </nav>
         </header>
 
-
         <section className="checkout-empty">
           <span className="checkout-eyebrow">
             CHECKOUT
           </span>
 
-
           <h1>
             Your cart is empty
           </h1>
-
 
           <p>
             Add a product to your cart before
             continuing to checkout.
           </p>
-
 
           <Link
             to="/products"
@@ -520,7 +579,6 @@ export function CheckoutPage() {
           </Link>
         </section>
 
-
         <footer className="checkout-footer">
           <Link
             to="/"
@@ -529,7 +587,6 @@ export function CheckoutPage() {
             Market Palce
           </Link>
 
-
           <span>
             © {new Date().getFullYear()} Market Palce
           </span>
@@ -537,7 +594,6 @@ export function CheckoutPage() {
       </main>
     )
   }
-
 
   if (order) {
     return (
@@ -550,7 +606,6 @@ export function CheckoutPage() {
             Market Palce
           </Link>
 
-
           <nav className="checkout-nav">
             <Link to="/">
               Home
@@ -566,23 +621,19 @@ export function CheckoutPage() {
           </nav>
         </header>
 
-
         <section className="checkout-empty">
           <span className="checkout-eyebrow">
             PAYMENT SUCCESSFUL
           </span>
 
-
           <h1>
             Payment completed successfully
           </h1>
-
 
           <p>
             Your payment has been verified and
             your website purchase is now confirmed.
           </p>
-
 
           <div
             style={{
@@ -593,7 +644,6 @@ export function CheckoutPage() {
           >
             Order ID: {order.id}
           </div>
-
 
           <div
             style={{
@@ -608,7 +658,6 @@ export function CheckoutPage() {
             ).toLocaleString('en-IN')}
           </div>
 
-
           <div
             style={{
               marginBottom: '30px',
@@ -619,7 +668,6 @@ export function CheckoutPage() {
           >
             Payment Status: PAID
           </div>
-
 
           <div
             style={{
@@ -639,7 +687,6 @@ export function CheckoutPage() {
               View My Orders
             </button>
 
-
             <Link
               to="/products"
               className="checkout-primary-button"
@@ -649,7 +696,6 @@ export function CheckoutPage() {
           </div>
         </section>
 
-
         <footer className="checkout-footer">
           <Link
             to="/"
@@ -658,7 +704,6 @@ export function CheckoutPage() {
             Market Palce
           </Link>
 
-
           <span>
             © {new Date().getFullYear()} Market Palce
           </span>
@@ -666,7 +711,6 @@ export function CheckoutPage() {
       </main>
     )
   }
-
 
   return (
     <main className="checkout-page">
@@ -677,7 +721,6 @@ export function CheckoutPage() {
         >
           Market Palce
         </Link>
-
 
         <nav className="checkout-nav">
           <Link to="/">
@@ -694,40 +737,33 @@ export function CheckoutPage() {
         </nav>
       </header>
 
-
       <div className="checkout-container">
         <div className="checkout-breadcrumb">
           <Link to="/cart">
             Cart
           </Link>
 
-
           <span>/</span>
-
 
           <span>
             Checkout
           </span>
         </div>
 
-
         <div className="checkout-heading">
           <span className="checkout-eyebrow">
             MARKETPLACE
           </span>
 
-
           <h1>
             Checkout
           </h1>
-
 
           <p>
             Complete your details to place your
             order.
           </p>
         </div>
-
 
         {!isAuthenticated ? (
           <section
@@ -760,7 +796,6 @@ export function CheckoutPage() {
               🔐
             </div>
 
-
             <span
               style={{
                 display: 'block',
@@ -774,7 +809,6 @@ export function CheckoutPage() {
               LOGIN REQUIRED
             </span>
 
-
             <h2
               style={{
                 margin: '0 0 12px',
@@ -784,7 +818,6 @@ export function CheckoutPage() {
             >
               Please log in to continue
             </h2>
-
 
             <p
               style={{
@@ -798,7 +831,6 @@ export function CheckoutPage() {
               guest, but you must log in before
               purchasing.
             </p>
-
 
             <div
               style={{
@@ -814,7 +846,6 @@ export function CheckoutPage() {
               >
                 Log In to Continue
               </Link>
-
 
               <Link
                 to="/cart"
@@ -844,7 +875,6 @@ export function CheckoutPage() {
               </div>
             )}
 
-
             <form
               className="checkout-content"
               onSubmit={handleSubmit}
@@ -856,12 +886,10 @@ export function CheckoutPage() {
                       01
                     </span>
 
-
                     <div>
                       <h2>
                         Customer Information
                       </h2>
-
 
                       <p>
                         Enter the details we'll use
@@ -870,13 +898,11 @@ export function CheckoutPage() {
                     </div>
                   </div>
 
-
                   <div className="checkout-form-grid">
                     <div className="checkout-field checkout-field-full">
                       <label htmlFor="fullName">
                         Full Name
                       </label>
-
 
                       <input
                         id="fullName"
@@ -885,16 +911,24 @@ export function CheckoutPage() {
                         value={formData.fullName}
                         onChange={handleChange}
                         placeholder="Enter your full name"
+                        maxLength="80"
                         required
+                        aria-invalid={Boolean(
+                          errors.fullName,
+                        )}
                       />
-                    </div>
 
+                      {errors.fullName && (
+                        <span className="checkout-field-error">
+                          {errors.fullName}
+                        </span>
+                      )}
+                    </div>
 
                     <div className="checkout-field">
                       <label htmlFor="email">
                         Email Address
                       </label>
-
 
                       <input
                         id="email"
@@ -904,15 +938,22 @@ export function CheckoutPage() {
                         onChange={handleChange}
                         placeholder="you@example.com"
                         required
+                        aria-invalid={Boolean(
+                          errors.email,
+                        )}
                       />
-                    </div>
 
+                      {errors.email && (
+                        <span className="checkout-field-error">
+                          {errors.email}
+                        </span>
+                      )}
+                    </div>
 
                     <div className="checkout-field">
                       <label htmlFor="phone">
                         Phone Number
                       </label>
-
 
                       <input
                         id="phone"
@@ -920,13 +961,23 @@ export function CheckoutPage() {
                         type="tel"
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="Enter phone number"
+                        placeholder="Enter 10-digit mobile number"
+                        maxLength="10"
+                        inputMode="numeric"
                         required
+                        aria-invalid={Boolean(
+                          errors.phone,
+                        )}
                       />
+
+                      {errors.phone && (
+                        <span className="checkout-field-error">
+                          {errors.phone}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
-
 
                 <div className="checkout-card">
                   <div className="checkout-card-heading">
@@ -934,12 +985,10 @@ export function CheckoutPage() {
                       02
                     </span>
 
-
                     <div>
                       <h2>
                         Billing Information
                       </h2>
-
 
                       <p>
                         Enter your billing details.
@@ -947,13 +996,11 @@ export function CheckoutPage() {
                     </div>
                   </div>
 
-
                   <div className="checkout-form-grid">
                     <div className="checkout-field checkout-field-full">
                       <label htmlFor="address">
                         Address
                       </label>
-
 
                       <textarea
                         id="address"
@@ -962,16 +1009,24 @@ export function CheckoutPage() {
                         onChange={handleChange}
                         placeholder="Enter your complete address"
                         rows="4"
+                        maxLength="250"
                         required
+                        aria-invalid={Boolean(
+                          errors.address,
+                        )}
                       />
-                    </div>
 
+                      {errors.address && (
+                        <span className="checkout-field-error">
+                          {errors.address}
+                        </span>
+                      )}
+                    </div>
 
                     <div className="checkout-field">
                       <label htmlFor="city">
                         City
                       </label>
-
 
                       <input
                         id="city"
@@ -980,16 +1035,24 @@ export function CheckoutPage() {
                         value={formData.city}
                         onChange={handleChange}
                         placeholder="Enter city"
+                        maxLength="50"
                         required
+                        aria-invalid={Boolean(
+                          errors.city,
+                        )}
                       />
-                    </div>
 
+                      {errors.city && (
+                        <span className="checkout-field-error">
+                          {errors.city}
+                        </span>
+                      )}
+                    </div>
 
                     <div className="checkout-field">
                       <label htmlFor="state">
                         State
                       </label>
-
 
                       <input
                         id="state"
@@ -998,16 +1061,24 @@ export function CheckoutPage() {
                         value={formData.state}
                         onChange={handleChange}
                         placeholder="Enter state"
+                        maxLength="50"
                         required
+                        aria-invalid={Boolean(
+                          errors.state,
+                        )}
                       />
-                    </div>
 
+                      {errors.state && (
+                        <span className="checkout-field-error">
+                          {errors.state}
+                        </span>
+                      )}
+                    </div>
 
                     <div className="checkout-field">
                       <label htmlFor="pincode">
                         Pincode
                       </label>
-
 
                       <input
                         id="pincode"
@@ -1015,25 +1086,33 @@ export function CheckoutPage() {
                         type="text"
                         value={formData.pincode}
                         onChange={handleChange}
-                        placeholder="Enter pincode"
+                        placeholder="Enter 6-digit pincode"
+                        maxLength="6"
+                        inputMode="numeric"
                         required
+                        aria-invalid={Boolean(
+                          errors.pincode,
+                        )}
                       />
+
+                      {errors.pincode && (
+                        <span className="checkout-field-error">
+                          {errors.pincode}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
               </section>
-
 
               <aside className="checkout-summary">
                 <span className="checkout-summary-label">
                   ORDER SUMMARY
                 </span>
 
-
                 <h2>
                   Your Order
                 </h2>
-
 
                 <div className="checkout-summary-items">
                   {cart.map((item) => (
@@ -1046,12 +1125,10 @@ export function CheckoutPage() {
                           {item.name}
                         </strong>
 
-
                         <span>
                           Qty: {item.quantity}
                         </span>
                       </div>
-
 
                       <strong>
                         ₹{Number(
@@ -1062,49 +1139,41 @@ export function CheckoutPage() {
                   ))}
                 </div>
 
-
                 <div className="checkout-summary-divider" />
-
 
                 <div className="checkout-summary-row">
                   <span>
                     Items
                   </span>
 
-
                   <strong>
                     {totalItems}
                   </strong>
                 </div>
-
 
                 <div className="checkout-summary-row">
                   <span>
                     Subtotal
                   </span>
 
-
                   <strong>
                     ₹{Number(
                       subtotal,
                     ).toLocaleString('en-IN')}
                   </strong>
                 </div>
-
 
                 <div className="checkout-summary-total">
                   <span>
                     Total
                   </span>
 
-
                   <strong>
                     ₹{Number(
                       subtotal,
                     ).toLocaleString('en-IN')}
                   </strong>
                 </div>
-
 
                 <button
                   type="submit"
@@ -1121,14 +1190,12 @@ export function CheckoutPage() {
                       : 'Proceed to Payment'}
                 </button>
 
-
                 <Link
                   to="/cart"
                   className="checkout-back-cart"
                 >
                   ← Back to Cart
                 </Link>
-
 
                 <p className="checkout-security-note">
                   Your payment is securely processed
@@ -1140,7 +1207,6 @@ export function CheckoutPage() {
         )}
       </div>
 
-
       <footer className="checkout-footer">
         <Link
           to="/"
@@ -1148,7 +1214,6 @@ export function CheckoutPage() {
         >
           Market Palce
         </Link>
-
 
         <span>
           © {new Date().getFullYear()} Market Palce
