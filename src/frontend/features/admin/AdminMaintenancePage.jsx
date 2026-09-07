@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -13,6 +13,8 @@ export function AdminMaintenancePage() {
   const navigate = useNavigate()
 
   const { token } = useAuth()
+
+  const messageInputRef = useRef(null)
 
   const [enabled, setEnabled] = useState(false)
   const [message, setMessage] = useState('')
@@ -69,6 +71,91 @@ export function AdminMaintenancePage() {
       isMounted = false
     }
   }, [])
+
+
+  function toggleBold() {
+    const textarea =
+      messageInputRef.current
+
+    if (!textarea) {
+      return
+    }
+
+
+    const start =
+      textarea.selectionStart
+
+    const end =
+      textarea.selectionEnd
+
+
+    if (start === end) {
+      return
+    }
+
+
+    const selectedText =
+      message.slice(start, end)
+
+
+    const before =
+      message.slice(0, start)
+
+    const after =
+      message.slice(end)
+
+
+    const alreadyBold =
+      before.endsWith('**') &&
+      after.startsWith('**')
+
+
+    let updatedMessage
+
+
+    if (alreadyBold) {
+      updatedMessage =
+        before.slice(0, -2) +
+        selectedText +
+        after.slice(2)
+    } else {
+      updatedMessage =
+        before +
+        '**' +
+        selectedText +
+        '**' +
+        after
+    }
+
+
+    if (updatedMessage.length > 500) {
+      setError(
+        'Maintenance message must be 500 characters or less.',
+      )
+
+      return
+    }
+
+
+    setMessage(updatedMessage)
+    setMessageSuccess('')
+    setError('')
+
+
+    requestAnimationFrame(() => {
+      textarea.focus()
+
+
+      const offset =
+        alreadyBold ? -4 : 4
+
+
+      textarea.setSelectionRange(
+        start,
+        end + offset,
+      )
+    })
+  }
 
 
   async function saveMessage() {
@@ -358,7 +445,36 @@ export function AdminMaintenancePage() {
                 </div>
 
 
+                {/* FORMATTING TOOLBAR */}
+
+                <div className="admin-maintenance-message-toolbar">
+
+                  <button
+                    type="button"
+                    className="admin-maintenance-format-button"
+                    onMouseDown={(event) => {
+                      event.preventDefault()
+                    }}
+                    onClick={toggleBold}
+                    disabled={
+                      loading ||
+                      messageSaving
+                    }
+                    aria-label="Bold selected text"
+                    title="Bold selected text"
+                  >
+                    <strong>B</strong>
+                  </button>
+
+                  <span>
+                    Select text and click B to make it bold.
+                  </span>
+
+                </div>
+
+
                 <textarea
+                  ref={messageInputRef}
                   value={message}
                   onChange={(event) => {
                     setMessage(
