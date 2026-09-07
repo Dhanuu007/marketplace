@@ -9,6 +9,7 @@ import {
   activateMaintenance,
   deactivateMaintenance,
   getMaintenanceStatus,
+  saveMaintenanceMessage,
 } from './maintenance.service.js'
 
 
@@ -29,6 +30,51 @@ router.get(
 
       return response.json({
         maintenance,
+      })
+    } catch (error) {
+      return next(error)
+    }
+  },
+)
+
+// =========================================================
+// UPDATE MAINTENANCE MESSAGE
+// =========================================================
+
+router.post(
+  '/admin/maintenance/message',
+
+  requireAuth,
+
+  requireRole('ADMIN'),
+
+  async (request, response, next) => {
+    try {
+      const message =
+        typeof request.body?.message === 'string'
+          ? request.body.message.trim()
+          : ''
+
+
+      if (message.length > 500) {
+        return response.status(400).json({
+          message:
+            'Maintenance message must be 500 characters or less.',
+        })
+      }
+
+
+      const maintenance =
+        await saveMaintenanceMessage(
+          message,
+        )
+
+
+      return response.json({
+        maintenance,
+
+        message:
+          'Maintenance message saved successfully.',
       })
     } catch (error) {
       return next(error)

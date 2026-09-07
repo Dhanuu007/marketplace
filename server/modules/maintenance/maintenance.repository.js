@@ -49,6 +49,7 @@ export async function getMaintenanceState() {
   if (!maintenance) {
     return {
       enabled: false,
+      message: '',
       startedAt: null,
     }
   }
@@ -58,12 +59,56 @@ export async function getMaintenanceState() {
     enabled:
       maintenance.enabled === true,
 
+    message:
+      maintenance.message ?? '',
+
     startedAt:
       maintenance.startedAt ?? null,
 
     updatedAt:
       maintenance.updatedAt ?? null,
   }
+}
+
+
+// =========================================================
+// UPDATE MAINTENANCE MESSAGE
+// =========================================================
+
+export async function updateMaintenanceMessage(
+  message,
+) {
+  await ensureMaintenanceIndexes()
+
+
+  const now = new Date()
+
+
+  await maintenanceCollection().updateOne(
+    {
+      key: MAINTENANCE_KEY,
+    },
+
+    {
+      $set: {
+        message,
+        updatedAt: now,
+      },
+
+      $setOnInsert: {
+        key: MAINTENANCE_KEY,
+        enabled: false,
+        createdAt: now,
+      },
+    },
+
+    {
+      upsert: true,
+    },
+  )
+
+
+  return getMaintenanceState()
 }
 
 

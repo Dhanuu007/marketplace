@@ -2,6 +2,7 @@ import {
   disableMaintenance,
   enableMaintenance,
   getMaintenanceState,
+  updateMaintenanceMessage,
 } from './maintenance.repository.js'
 
 
@@ -17,4 +18,13 @@ export async function activateMaintenance() {
 
 export async function deactivateMaintenance() {
   return disableMaintenance()
+}
+
+
+export async function saveMaintenanceMessage(
+  message,
+) {
+  return updateMaintenanceMessage(
+    message,
+  )
 }

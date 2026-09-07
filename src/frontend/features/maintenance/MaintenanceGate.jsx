@@ -18,7 +18,10 @@ export function MaintenanceGate({ children }) {
 
   const { user, logout } = useAuth()
 
-  const [maintenance, setMaintenance] = useState(false)
+  const [maintenance, setMaintenance] = useState({
+  enabled: false,
+  message: '',
+})
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
@@ -34,11 +37,19 @@ export function MaintenanceGate({ children }) {
         const enabled =
           data?.maintenance?.enabled === true
 
+          
+          const message =
+              data?.maintenance?.message ?? ''
+          
+
         if (!isMounted) {
           return
         }
 
-        setMaintenance(enabled)
+        setMaintenance({
+  enabled,
+  message,
+        })
 
         /*
          * If a Buyer or Creator is currently logged in
@@ -125,9 +136,13 @@ export function MaintenanceGate({ children }) {
    * Guests, Buyers and Creators see the maintenance
    * screen while maintenance is active.
    */
-  if (maintenance) {
-    return <MaintenanceScreen />
-  }
+ if (maintenance.enabled) {
+  return (
+    <MaintenanceScreen
+      message={maintenance.message}
+    />
+  )
+}
 
   return children
 }

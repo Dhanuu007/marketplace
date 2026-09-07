@@ -15,8 +15,13 @@ export function AdminMaintenancePage() {
   const { token } = useAuth()
 
   const [enabled, setEnabled] = useState(false)
+  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [messageSaving, setMessageSaving] =
+    useState(false)
+  const [messageSuccess, setMessageSuccess] =
+    useState('')
   const [error, setError] = useState('')
 
 
@@ -36,6 +41,10 @@ export function AdminMaintenancePage() {
         if (isMounted) {
           setEnabled(
             data?.maintenance?.enabled === true,
+          )
+
+          setMessage(
+            data?.maintenance?.message ?? '',
           )
         }
       } catch (requestError) {
@@ -62,6 +71,50 @@ export function AdminMaintenancePage() {
   }, [])
 
 
+  async function saveMessage() {
+    if (!token || messageSaving) {
+      return
+    }
+
+
+    setMessageSaving(true)
+    setError('')
+    setMessageSuccess('')
+
+
+    try {
+      const data =
+        await apiRequest(
+          '/admin/maintenance/message',
+          {
+            method: 'POST',
+            token,
+            body: {
+              message: message.trim(),
+            },
+          },
+        )
+
+
+      setMessage(
+        data?.maintenance?.message ?? '',
+      )
+
+
+      setMessageSuccess(
+        'Maintenance message saved successfully.',
+      )
+    } catch (requestError) {
+      setError(
+        requestError?.message ||
+          'Unable to save maintenance message.',
+      )
+    } finally {
+      setMessageSaving(false)
+    }
+  }
+
+
   async function toggleMaintenance() {
     if (!token || saving) {
       return
@@ -70,6 +123,7 @@ export function AdminMaintenancePage() {
 
     setSaving(true)
     setError('')
+    setMessageSuccess('')
 
 
     try {
@@ -91,6 +145,11 @@ export function AdminMaintenancePage() {
 
       setEnabled(
         data?.maintenance?.enabled === true,
+      )
+
+
+      setMessage(
+        data?.maintenance?.message ?? message,
       )
     } catch (requestError) {
       setError(
@@ -170,6 +229,7 @@ export function AdminMaintenancePage() {
 
               </div>
 
+
               <div
                 className={
                   enabled
@@ -177,6 +237,7 @@ export function AdminMaintenancePage() {
                     : 'admin-maintenance-badge'
                 }
               >
+
                 <span
                   className="admin-maintenance-badge-dot"
                   aria-hidden="true"
@@ -187,6 +248,7 @@ export function AdminMaintenancePage() {
                   : enabled
                     ? 'Active'
                     : 'Online'}
+
               </div>
 
             </div>
@@ -276,6 +338,80 @@ export function AdminMaintenancePage() {
 
 
               {/* =====================================
+                  MAINTENANCE MESSAGE
+              ===================================== */}
+
+              <div className="admin-maintenance-message">
+
+                <div>
+
+                  <span className="admin-maintenance-label">
+                    Maintenance Message
+                  </span>
+
+                  <p>
+                    Write the message that Buyers and
+                    Creators will see while the marketplace
+                    is under maintenance.
+                  </p>
+
+                </div>
+
+
+                <textarea
+                  value={message}
+                  onChange={(event) => {
+                    setMessage(
+                      event.target.value,
+                    )
+
+                    setMessageSuccess('')
+                    setError('')
+                  }}
+                  maxLength={500}
+                  rows={5}
+                  placeholder="Example: We're currently performing scheduled maintenance. Please check back shortly."
+                  aria-label="Maintenance message"
+                />
+
+
+                <div className="admin-maintenance-message-footer">
+
+                  <span>
+                    {message.length}/500
+                  </span>
+
+
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    disabled={
+                      loading ||
+                      messageSaving
+                    }
+                    onClick={saveMessage}
+                  >
+                    {messageSaving
+                      ? 'Saving...'
+                      : 'Save Message'}
+                  </button>
+
+                </div>
+
+
+                {messageSuccess ? (
+                  <div
+                    className="admin-form-success"
+                    role="status"
+                  >
+                    {messageSuccess}
+                  </div>
+                ) : null}
+
+              </div>
+
+
+              {/* =====================================
                   ERROR
               ===================================== */}
 
@@ -320,7 +456,8 @@ export function AdminMaintenancePage() {
                       : 'admin-maintenance-action enable'
                   }
                   disabled={
-                    loading || saving
+                    loading ||
+                    saving
                   }
                   onClick={
                     toggleMaintenance

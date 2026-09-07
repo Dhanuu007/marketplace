@@ -2,12 +2,22 @@ import { useNavigate } from 'react-router-dom'
 
 import './maintenance.css'
 
-export function MaintenanceScreen() {
+
+export function MaintenanceScreen({
+  message = '',
+}) {
   const navigate = useNavigate()
+
+
+  const displayMessage =
+    message.trim() ||
+    "We're making a few improvements to the marketplace."
+
 
   return (
     <main className="maintenance-screen">
       <div className="maintenance-card">
+
         <div
           className="maintenance-clock"
           aria-hidden="true"
@@ -18,22 +28,26 @@ export function MaintenanceScreen() {
           <span className="maintenance-clock-center" />
         </div>
 
+
         <span className="maintenance-eyebrow">
           Marketplace
         </span>
+
 
         <h1>
           Site is on maintenance
         </h1>
 
+
         <p className="maintenance-message">
-          We're making a few improvements to the
-          marketplace.
+          {displayMessage}
         </p>
+
 
         <p className="maintenance-submessage">
           Try again sometime.
         </p>
+
 
         <button
           type="button"
@@ -41,8 +55,12 @@ export function MaintenanceScreen() {
           onClick={() => navigate('/login')}
         >
           Login
-          <span aria-hidden="true">→</span>
+
+          <span aria-hidden="true">
+            →
+          </span>
         </button>
+
       </div>
     </main>
   )
