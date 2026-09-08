@@ -515,3 +515,133 @@
   border-color: #c0392b;
   box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.08);
 }
+
+.checkout-confirmation-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(18, 51, 51, 0.55);
+  backdrop-filter: blur(5px);
+}
+
+.checkout-confirmation-modal {
+  width: min(520px, 100%);
+  padding: 38px 34px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 128, 128, 0.12);
+  box-shadow: 0 25px 70px rgba(0, 50, 50, 0.22);
+  text-align: center;
+}
+
+.checkout-confirmation-icon {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e8f7f6;
+  color: #008080;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.checkout-confirmation-eyebrow {
+  display: block;
+  margin-bottom: 9px;
+  color: #008080;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.checkout-confirmation-modal h2 {
+  margin: 0 0 14px;
+  color: #163636;
+  font-size: 1.7rem;
+}
+
+.checkout-confirmation-message {
+  max-width: 430px;
+  margin: 0 auto 18px;
+  color: #607474;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.checkout-confirmation-email {
+  margin: 0 auto 25px;
+  padding: 13px 16px;
+  border: 1px solid rgba(0, 128, 128, 0.14);
+  border-radius: 10px;
+  background: #f5fbfb;
+  color: #008080;
+  font-size: 0.9rem;
+  font-weight: 800;
+  word-break: break-word;
+}
+
+.checkout-confirmation-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.checkout-confirmation-back,
+.checkout-confirmation-continue {
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.checkout-confirmation-back {
+  border: 1px solid rgba(0, 128, 128, 0.2);
+  background: #ffffff;
+  color: #315353;
+}
+
+.checkout-confirmation-back:hover {
+  background: #f4fafa;
+  transform: translateY(-1px);
+}
+
+.checkout-confirmation-continue {
+  border: 0;
+  background: #008080;
+  color: #ffffff;
+}
+
+.checkout-confirmation-continue:hover {
+  background: #006d6d;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 128, 128, 0.2);
+}
+
+@media (max-width: 500px) {
+  .checkout-confirmation-modal {
+    padding: 30px 22px;
+  }
+
+  .checkout-confirmation-actions {
+    flex-direction: column;
+  }
+
+  .checkout-confirmation-back,
+  .checkout-confirmation-continue {
+    width: 100%;
+  }
+}

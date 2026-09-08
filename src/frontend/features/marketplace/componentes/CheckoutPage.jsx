@@ -31,6 +31,7 @@ export function CheckoutPage() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false)
   const [orderError, setOrderError] = useState('')
   const [errors, setErrors] = useState({})
 
@@ -209,49 +210,8 @@ export function CheckoutPage() {
     )
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault()
-
-    setOrderError('')
-
-    if (!validateForm()) {
-      return
-    }
-
-    if (!isAuthenticated || !token) {
-      setOrderError(
-        'Please log in before placing your order.',
-      )
-
-      return
-    }
-
-    if (cart.length === 0 && !pendingOrder) {
-      setOrderError(
-        'Your cart is empty.',
-      )
-
-      return
-    }
-
-    if (
-      !import.meta.env.VITE_RAZORPAY_KEY_ID
-    ) {
-      setOrderError(
-        'Razorpay is not configured. Please contact support.',
-      )
-
-      return
-    }
-
-    if (!window.Razorpay) {
-      setOrderError(
-        'Razorpay Checkout is still loading. Please try again in a moment.',
-      )
-
-      return
-    }
-
+  async function startPayment() {
+    setShowPaymentConfirmation(false)
     setIsSubmitting(true)
 
     try {
@@ -529,6 +489,58 @@ export function CheckoutPage() {
 
       setIsSubmitting(false)
     }
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+
+    setOrderError('')
+
+    if (!validateForm()) {
+      return
+    }
+
+    if (!isAuthenticated || !token) {
+      setOrderError(
+        'Please log in before placing your order.',
+      )
+
+      return
+    }
+
+    if (cart.length === 0 && !pendingOrder) {
+      setOrderError(
+        'Your cart is empty.',
+      )
+
+      return
+    }
+
+    if (
+      !import.meta.env.VITE_RAZORPAY_KEY_ID
+    ) {
+      setOrderError(
+        'Razorpay is not configured. Please contact support.',
+      )
+
+      return
+    }
+
+    if (!window.Razorpay) {
+      setOrderError(
+        'Razorpay Checkout is still loading. Please try again in a moment.',
+      )
+
+      return
+    }
+
+    /*
+     * Do not start payment immediately.
+     *
+     * First show the buyer a final confirmation
+     * asking them to check their details.
+     */
+    setShowPaymentConfirmation(true)
   }
 
   if (cart.length === 0 && !order) {
@@ -1219,6 +1231,60 @@ export function CheckoutPage() {
           © {new Date().getFullYear()} Market Palce
         </span>
       </footer>
+
+      {showPaymentConfirmation && (
+        <div
+          className="checkout-confirmation-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="checkout-confirmation-title"
+        >
+          <div className="checkout-confirmation-modal">
+            <div className="checkout-confirmation-icon">
+              !
+            </div>
+
+            <span className="checkout-confirmation-eyebrow">
+              BEFORE PAYMENT
+            </span>
+
+            <h2 id="checkout-confirmation-title">
+              Please check your details
+            </h2>
+
+            <p className="checkout-confirmation-message">
+              Please make sure you entered the correct
+              details. Your payment receipt and order
+              confirmation will be sent to this email
+              address.
+            </p>
+
+            <div className="checkout-confirmation-email">
+              {formData.email.trim()}
+            </div>
+
+            <div className="checkout-confirmation-actions">
+              <button
+                type="button"
+                className="checkout-confirmation-back"
+                onClick={() =>
+                  setShowPaymentConfirmation(false)
+                }
+              >
+                Go Back
+              </button>
+
+              <button
+                type="button"
+                className="checkout-confirmation-continue"
+                onClick={startPayment}
+              >
+                Continue to Payment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
