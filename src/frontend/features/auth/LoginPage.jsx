@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 
 import { useAuth } from './useAuth.js'
 
-import './auth.css'
+import './LoginPage.css'
 
 
 export function LoginPage() {
