@@ -35,17 +35,6 @@ export function CheckoutPage() {
   const [errors, setErrors] = useState({})
 
   /*
-   * Payment confirmation popup.
-   *
-   * This is shown after the checkout form is valid
-   * and before Razorpay is opened.
-   */
-  const [
-    showPaymentConfirmation,
-    setShowPaymentConfirmation,
-  ] = useState(false)
-
-  /*
    * Successful Marketplace order.
    *
    * This is only populated after Razorpay payment
@@ -140,7 +129,9 @@ export function CheckoutPage() {
     } else if (fullName.length < 2) {
       validationErrors.fullName =
         'Full name must be at least 2 characters.'
-    } else if (fullName.length > 80) {
+    } else if (
+      fullName.length > 80
+    ) {
       validationErrors.fullName =
         'Full name must be 80 characters or less.'
     } else if (
@@ -218,15 +209,49 @@ export function CheckoutPage() {
     )
   }
 
-  /*
-   * Starts the actual Marketplace + Razorpay payment.
-   *
-   * This function is called only after the buyer
-   * confirms the payment-details popup.
-   */
-  async function startPayment() {
-    setShowPaymentConfirmation(false)
+  async function handleSubmit(event) {
+    event.preventDefault()
+
     setOrderError('')
+
+    if (!validateForm()) {
+      return
+    }
+
+    if (!isAuthenticated || !token) {
+      setOrderError(
+        'Please log in before placing your order.',
+      )
+
+      return
+    }
+
+    if (cart.length === 0 && !pendingOrder) {
+      setOrderError(
+        'Your cart is empty.',
+      )
+
+      return
+    }
+
+    if (
+      !import.meta.env.VITE_RAZORPAY_KEY_ID
+    ) {
+      setOrderError(
+        'Razorpay is not configured. Please contact support.',
+      )
+
+      return
+    }
+
+    if (!window.Razorpay) {
+      setOrderError(
+        'Razorpay Checkout is still loading. Please try again in a moment.',
+      )
+
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
@@ -504,59 +529,6 @@ export function CheckoutPage() {
 
       setIsSubmitting(false)
     }
-  }
-
-  /*
-   * Form submit:
-   *
-   * Validate everything first.
-   * Then show the confirmation popup.
-   *
-   * Razorpay does NOT open until the buyer
-   * clicks "Continue to Payment".
-   */
-  async function handleSubmit(event) {
-    event.preventDefault()
-
-    setOrderError('')
-
-    if (!validateForm()) {
-      return
-    }
-
-    if (!isAuthenticated || !token) {
-      setOrderError(
-        'Please log in before placing your order.',
-      )
-
-      return
-    }
-
-    if (cart.length === 0 && !pendingOrder) {
-      setOrderError(
-        'Your cart is empty.',
-      )
-
-      return
-    }
-
-    if (!import.meta.env.VITE_RAZORPAY_KEY_ID) {
-      setOrderError(
-        'Razorpay is not configured. Please contact support.',
-      )
-
-      return
-    }
-
-    if (!window.Razorpay) {
-      setOrderError(
-        'Razorpay Checkout is still loading. Please try again in a moment.',
-      )
-
-      return
-    }
-
-    setShowPaymentConfirmation(true)
   }
 
   if (cart.length === 0 && !order) {
@@ -1234,74 +1206,6 @@ export function CheckoutPage() {
           </>
         )}
       </div>
-
-      {showPaymentConfirmation && (
-        <div
-          className="checkout-confirmation-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="payment-confirmation-title"
-        >
-          <div className="checkout-confirmation-modal">
-            <button
-              type="button"
-              className="checkout-confirmation-close"
-              onClick={() =>
-                setShowPaymentConfirmation(false)
-              }
-              aria-label="Close payment confirmation"
-            >
-              ×
-            </button>
-
-            <div className="checkout-confirmation-icon">
-              !
-            </div>
-
-            <span className="checkout-confirmation-eyebrow">
-              BEFORE PAYMENT
-            </span>
-
-            <h2 id="payment-confirmation-title">
-              Please check your details
-            </h2>
-
-            <p>
-              Please make sure you entered the correct
-              details. Your payment receipt and order
-              confirmation will be sent to this email
-              address.
-            </p>
-
-            <div className="checkout-confirmation-email">
-              {formData.email.trim()}
-            </div>
-
-            <div className="checkout-confirmation-actions">
-              <button
-                type="button"
-                className="checkout-confirmation-cancel"
-                onClick={() =>
-                  setShowPaymentConfirmation(false)
-                }
-              >
-                Go Back
-              </button>
-
-              <button
-                type="button"
-                className="checkout-confirmation-continue"
-                onClick={startPayment}
-              >
-                Continue to Payment
-                <span>
-                  →
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <footer className="checkout-footer">
         <Link
