@@ -336,3 +336,88 @@ export async function markOrderItemsDelivered(
     ? result
     : null
 }
+
+// =========================================================
+// ORDER RECEIPT EMAIL TRACKING
+// =========================================================
+
+export async function claimOrderReceiptEmail(
+  orderId,
+) {
+  await ensureOrderIndexes()
+
+  if (!ObjectId.isValid(orderId)) {
+    return false
+  }
+
+  const result =
+    await orderCollection().findOneAndUpdate(
+      {
+        _id: new ObjectId(orderId),
+
+        /*
+         * Only one payment-processing path may
+         * claim the receipt email.
+         *
+         * Existing orders without this field are
+         * also allowed to claim it.
+         */
+        $or: [
+          {
+            receiptEmailSent: {
+              $exists: false,
+            },
+          },
+          {
+            receiptEmailSent: false,
+          },
+        ],
+      },
+      {
+        $set: {
+          receiptEmailSent: true,
+          receiptEmailSentAt: new Date(),
+          updatedAt: new Date(),
+        },
+      },
+      {
+        returnDocument: 'after',
+      },
+    )
+
+  return Boolean(result)
+}
+
+
+export async function releaseOrderReceiptEmail(
+  orderId,
+) {
+  await ensureOrderIndexes()
+
+  if (!ObjectId.isValid(orderId)) {
+    return false
+  }
+
+  const result =
+    await orderCollection().findOneAndUpdate(
+      {
+        _id: new ObjectId(orderId),
+        receiptEmailSent: true,
+      },
+      {
+        $set: {
+          receiptEmailSent: false,
+          updatedAt: new Date(),
+        },
+
+        $unset: {
+          receiptEmailSentAt: '',
+        },
+      },
+      {
+        returnDocument: 'after',
+      },
+    )
+
+  return Boolean(result)
+}

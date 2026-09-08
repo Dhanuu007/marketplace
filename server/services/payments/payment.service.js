@@ -15,7 +15,14 @@ import {
   updateOrderPayment,
   updateOrderStatus,
   markOrderItemsDelivered,
+  claimOrderReceiptEmail,
+  releaseOrderReceiptEmail,
 } from '../../modules/order/order.repository.js'
+
+
+import {
+  sendOrderConfirmationEmail,
+} from './email.service.js'
 
 
 import {
@@ -106,6 +113,118 @@ export async function createPaymentOrder(
 
     razorpayOrderId:
       razorpayOrder.id,
+  }
+}
+
+
+
+/*
+ * Send the order confirmation / payment
+ * receipt email after successful payment.
+ *
+ * The MongoDB claim makes this safe when
+ * browser verification and Razorpay webhook
+ * processing happen for the same payment.
+ */
+async function sendReceiptIfNeeded(
+  order,
+  razorpayPayment,
+) {
+  if (!order) {
+    return
+  }
+
+
+  const email =
+    typeof order.customer?.email === 'string'
+      ? order.customer.email.trim()
+      : ''
+
+
+  if (email === '') {
+    console.error(
+      'Order confirmation email skipped: customer email is missing.',
+      order._id?.toString?.(),
+    )
+
+    return
+  }
+
+
+  const paymentId =
+    typeof razorpayPayment?.id === 'string'
+      ? razorpayPayment.id.trim()
+      : ''
+
+
+  if (paymentId === '') {
+    console.error(
+      'Order confirmation email skipped: Razorpay payment ID is missing.',
+      order._id?.toString?.(),
+    )
+
+    return
+  }
+
+
+  /*
+   * Atomically claim the receipt email.
+   *
+   * Only one payment-processing path can
+   * successfully claim the email.
+   */
+  const claimed =
+    await claimOrderReceiptEmail(
+      order._id.toString(),
+    )
+
+
+  if (!claimed) {
+    console.log(
+      'Order confirmation email already processed:',
+      order._id.toString(),
+    )
+
+    return
+  }
+
+
+  try {
+    await sendOrderConfirmationEmail({
+      to:
+        email,
+
+      order,
+
+      razorpayPaymentId:
+        paymentId,
+    })
+  } catch (error) {
+    /*
+     * Payment has already succeeded.
+     *
+     * Email failure must NOT turn a successful
+     * payment into a failed payment.
+     *
+     * Release the claim so another payment
+     * processing attempt can retry the email.
+     */
+    console.error(
+      'Order confirmation email failed:',
+      error,
+    )
+
+
+    try {
+      await releaseOrderReceiptEmail(
+        order._id.toString(),
+      )
+    } catch (releaseError) {
+      console.error(
+        'Failed to release order confirmation email claim:',
+        releaseError,
+      )
+    }
   }
 }
 
@@ -311,15 +430,24 @@ export async function fulfillCapturedPayment({
    * If the Marketplace order is already PAID,
    * the payment has already been fulfilled.
    *
-   * This makes browser verification and webhook
-   * delivery idempotent.
+   * We still check the receipt email here so
+   * an email that previously failed can be
+   * retried by a later webhook/payment attempt.
    */
   if (
     order.status === 'PAID'
   ) {
+    await sendReceiptIfNeeded(
+      order,
+      razorpayPayment,
+    )
+
+
     return {
       order,
-      alreadyProcessed: true,
+
+      alreadyProcessed:
+        true,
     }
   }
 
@@ -360,6 +488,20 @@ export async function fulfillCapturedPayment({
 
     throw error
   }
+
+
+  /*
+   * Send the payment receipt after the
+   * Marketplace order has successfully
+   * become PAID.
+   *
+   * Email failure does NOT invalidate the
+   * successful payment.
+   */
+  await sendReceiptIfNeeded(
+    updatedOrder,
+    razorpayPayment,
+  )
 
 
   /*
@@ -442,7 +584,8 @@ export async function fulfillCapturedPayment({
     order:
       deliveredOrder,
 
-    alreadyProcessed: false,
+    alreadyProcessed:
+      false,
   }
 }
 
@@ -489,9 +632,11 @@ export async function verifyPayment(
       orderId:
         order._id.toString(),
 
-      verified: true,
+      verified:
+        true,
 
-      status: 'PAID',
+      status:
+        'PAID',
 
       razorpayOrderId:
         typeof order.razorpayOrderId === 'string'
@@ -580,7 +725,8 @@ export async function verifyPayment(
 
     paymentError.statusCode = 502
 
-    paymentError.cause = error
+    paymentError.cause =
+      error
 
     throw paymentError
   }
@@ -598,9 +744,11 @@ export async function verifyPayment(
     orderId:
       result.order._id.toString(),
 
-    verified: true,
+    verified:
+      true,
 
-    status: 'PAID',
+    status:
+      'PAID',
 
     razorpayOrderId:
       razorpayOrderId.trim(),
@@ -651,7 +799,8 @@ export async function processRazorpayPayment(
 
     paymentError.statusCode = 502
 
-    paymentError.cause = error
+    paymentError.cause =
+      error
 
     throw paymentError
   }
@@ -673,7 +822,8 @@ export async function processRazorpayPayment(
     'captured'
   ) {
     return {
-      processed: false,
+      processed:
+        false,
 
       status:
         razorpayPayment.status ||
@@ -730,12 +880,14 @@ export async function processRazorpayPayment(
 
 
   return {
-    processed: true,
+    processed:
+      true,
 
     alreadyProcessed:
       result.alreadyProcessed,
 
-    status: 'PAID',
+    status:
+      'PAID',
 
     orderId:
       result.order._id.toString(),
