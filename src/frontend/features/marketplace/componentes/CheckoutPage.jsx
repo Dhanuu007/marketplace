@@ -1253,10 +1253,8 @@ export function CheckoutPage() {
             </h2>
 
             <p className="checkout-confirmation-message">
-              Please make sure you entered the correct
-              details. Your payment receipt and order
-              confirmation will be sent to this email
-              address.
+              Please make sure all your details are correct
+              before proceeding with payment.
             </p>
 
             <div className="checkout-confirmation-email">
@@ -1279,7 +1277,7 @@ export function CheckoutPage() {
                 className="checkout-confirmation-continue"
                 onClick={startPayment}
               >
-                Continue to Payment
+                Proceed to Payment
               </button>
             </div>
           </div>
