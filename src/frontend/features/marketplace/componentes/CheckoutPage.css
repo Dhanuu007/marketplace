@@ -114,6 +114,7 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
+  margin-top: 70px;
 }
 
 .checkout-card {
@@ -324,28 +325,175 @@
   font-size: 1.45rem;
 }
 
+
+/* =========================================================
+   3D PAYMENT BUTTON
+   ========================================================= */
+
 .checkout-place-order-button {
+  position: relative;
   width: 100%;
-  min-height: 52px;
+  min-height: 54px;
+  padding: 0 22px;
+
   border: 0;
-  border-radius: 11px;
-  background: #008080;
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00b8a9 0%,
+      #009f9f 45%,
+      #007f83 100%
+    );
+
   color: #ffffff;
+
   cursor: pointer;
+  overflow: hidden;
+
   font-family: inherit;
-  font-size: 0.92rem;
+  font-size: 0.94rem;
   font-weight: 800;
+  letter-spacing: -0.01em;
+
+  box-shadow:
+    0 8px 0 #006d70,
+    0 14px 25px rgba(0, 128, 128, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+  transform: translateY(0);
+
   transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
 }
 
-.checkout-place-order-button:hover {
-  background: #006d6d;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 128, 128, 0.2);
+
+/* Glossy light across the button */
+.checkout-place-order-button::before {
+  content: "";
+  position: absolute;
+  top: -70%;
+  left: -20%;
+
+  width: 55%;
+  height: 240%;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.28),
+    transparent
+  );
+
+  transform: rotate(20deg);
+  pointer-events: none;
+
+  transition:
+    left 0.55s ease;
 }
+
+
+/* Subtle lower glow */
+.checkout-place-order-button::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -8px;
+
+  height: 14px;
+
+  border-radius: 50%;
+
+  background: rgba(0, 128, 128, 0.28);
+
+  filter: blur(10px);
+
+  z-index: -1;
+}
+
+
+/* Hover */
+.checkout-place-order-button:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #00c9b8 0%,
+      #00aaa8 45%,
+      #008b8e 100%
+    );
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 11px 0 #006d70,
+    0 20px 35px rgba(0, 128, 128, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+
+  filter: saturate(1.08);
+}
+
+
+/* Move glossy highlight on hover */
+.checkout-place-order-button:hover::before {
+  left: 115%;
+}
+
+
+/* Pressed state */
+.checkout-place-order-button:active {
+  transform: translateY(4px);
+
+  box-shadow:
+    0 3px 0 #006d70,
+    0 7px 14px rgba(0, 128, 128, 0.18),
+    inset 0 2px 4px rgba(0, 70, 70, 0.2);
+}
+
+
+/* Keyboard accessibility */
+.checkout-place-order-button:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 8px 0 #006d70,
+    0 14px 25px rgba(0, 128, 128, 0.24),
+    0 0 0 4px rgba(0, 128, 128, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+
+/* Disabled state */
+.checkout-place-order-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+
+  transform: none;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8ab8b8,
+      #709f9f
+    );
+
+  box-shadow:
+    0 5px 0 #527979,
+    0 8px 18px rgba(0, 80, 80, 0.12);
+}
+
+.checkout-place-order-button:disabled::before,
+.checkout-place-order-button:disabled::after {
+  display: none;
+}
+
+
+/* =========================================================
+   BACK TO CART
+   ========================================================= */
 
 .checkout-back-cart {
   display: block;
@@ -469,6 +617,10 @@
   .checkout-summary {
     padding: 22px;
   }
+
+  .checkout-form-section {
+    margin-top: 35px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -493,7 +645,17 @@
   .checkout-card-heading h2 {
     font-size: 1.15rem;
   }
+
+  .checkout-place-order-button {
+    min-height: 52px;
+    font-size: 0.9rem;
+  }
 }
+
+
+/* =========================================================
+   FIELD ERRORS
+   ========================================================= */
 
 .checkout-field-error {
   display: block;
@@ -515,6 +677,11 @@
   border-color: #c0392b;
   box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.08);
 }
+
+
+/* =========================================================
+   CONFIRMATION OVERLAY
+   ========================================================= */
 
 .checkout-confirmation-overlay {
   position: fixed;

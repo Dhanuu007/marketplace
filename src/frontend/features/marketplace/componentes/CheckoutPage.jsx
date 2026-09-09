@@ -24,14 +24,11 @@ export function CheckoutPage() {
     fullName: '',
     email: '',
     phone: '',
-    address: '',
-    city: '',
-    state: '',
-    pincode: '',
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false)
+  const [showPaymentConfirmation, setShowPaymentConfirmation] =
+    useState(false)
   const [orderError, setOrderError] = useState('')
   const [errors, setErrors] = useState({})
 
@@ -88,9 +85,7 @@ export function CheckoutPage() {
 
     return () => {
       if (script.parentNode) {
-        script.parentNode.removeChild(
-          script,
-        )
+        script.parentNode.removeChild(script)
       }
     }
   }, [])
@@ -119,10 +114,6 @@ export function CheckoutPage() {
     const fullName = formData.fullName.trim()
     const email = formData.email.trim()
     const phone = formData.phone.trim()
-    const address = formData.address.trim()
-    const city = formData.city.trim()
-    const state = formData.state.trim()
-    const pincode = formData.pincode.trim()
 
     if (!fullName) {
       validationErrors.fullName =
@@ -130,9 +121,7 @@ export function CheckoutPage() {
     } else if (fullName.length < 2) {
       validationErrors.fullName =
         'Full name must be at least 2 characters.'
-    } else if (
-      fullName.length > 80
-    ) {
+    } else if (fullName.length > 80) {
       validationErrors.fullName =
         'Full name must be 80 characters or less.'
     } else if (
@@ -146,9 +135,7 @@ export function CheckoutPage() {
       validationErrors.email =
         'Email address is required.'
     } else if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        email,
-      )
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     ) {
       validationErrors.email =
         'Please enter a valid email address.'
@@ -160,47 +147,6 @@ export function CheckoutPage() {
     } else if (!/^[6-9]\d{9}$/.test(phone)) {
       validationErrors.phone =
         'Enter a valid 10-digit Indian mobile number.'
-    }
-
-    if (!address) {
-      validationErrors.address =
-        'Address is required.'
-    } else if (address.length < 10) {
-      validationErrors.address =
-        'Please enter a complete address.'
-    } else if (address.length > 250) {
-      validationErrors.address =
-        'Address must be 250 characters or less.'
-    }
-
-    if (!city) {
-      validationErrors.city =
-        'City is required.'
-    } else if (
-      city.length < 2 ||
-      city.length > 50
-    ) {
-      validationErrors.city =
-        'Please enter a valid city.'
-    }
-
-    if (!state) {
-      validationErrors.state =
-        'State is required.'
-    } else if (
-      state.length < 2 ||
-      state.length > 50
-    ) {
-      validationErrors.state =
-        'Please enter a valid state.'
-    }
-
-    if (!pincode) {
-      validationErrors.pincode =
-        'Pincode is required.'
-    } else if (!/^\d{6}$/.test(pincode)) {
-      validationErrors.pincode =
-        'Pincode must be exactly 6 digits.'
     }
 
     setErrors(validationErrors)
@@ -241,7 +187,17 @@ export function CheckoutPage() {
             method: 'POST',
             token,
             body: {
-              customer: formData,
+              customer: {
+                fullName:
+                  formData.fullName.trim(),
+
+                email:
+                  formData.email.trim(),
+
+                phone:
+                  formData.phone.trim(),
+              },
+
               items: orderItems,
             },
           },
@@ -329,13 +285,13 @@ export function CheckoutPage() {
 
         prefill: {
           name:
-            formData.fullName,
+            formData.fullName.trim(),
 
           email:
-            formData.email,
+            formData.email.trim(),
 
           contact:
-            formData.phone,
+            formData.phone.trim(),
         },
 
         notes: {
@@ -369,13 +325,16 @@ export function CheckoutPage() {
                         marketplaceOrder.id,
 
                       razorpayOrderId:
-                        razorpayResponse.razorpay_order_id,
+                        razorpayResponse
+                          .razorpay_order_id,
 
                       razorpayPaymentId:
-                        razorpayResponse.razorpay_payment_id,
+                        razorpayResponse
+                          .razorpay_payment_id,
 
                       razorpaySignature:
-                        razorpayResponse.razorpay_signature,
+                        razorpayResponse
+                          .razorpay_signature,
                     },
                   },
                 )
@@ -543,6 +502,9 @@ export function CheckoutPage() {
     setShowPaymentConfirmation(true)
   }
 
+  /*
+   * Empty cart screen.
+   */
   if (cart.length === 0 && !order) {
     return (
       <main className="checkout-page">
@@ -607,6 +569,9 @@ export function CheckoutPage() {
     )
   }
 
+  /*
+   * Successful payment screen.
+   */
   if (order) {
     return (
       <main className="checkout-page">
@@ -665,7 +630,8 @@ export function CheckoutPage() {
               fontWeight: 700,
             }}
           >
-            Total: ₹{Number(
+            Total: ₹
+            {Number(
               order.totalAmount,
             ).toLocaleString('en-IN')}
           </div>
@@ -990,131 +956,6 @@ export function CheckoutPage() {
                     </div>
                   </div>
                 </div>
-
-                <div className="checkout-card">
-                  <div className="checkout-card-heading">
-                    <span>
-                      02
-                    </span>
-
-                    <div>
-                      <h2>
-                        Billing Information
-                      </h2>
-
-                      <p>
-                        Enter your billing details.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="checkout-form-grid">
-                    <div className="checkout-field checkout-field-full">
-                      <label htmlFor="address">
-                        Address
-                      </label>
-
-                      <textarea
-                        id="address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        placeholder="Enter your complete address"
-                        rows="4"
-                        maxLength="250"
-                        required
-                        aria-invalid={Boolean(
-                          errors.address,
-                        )}
-                      />
-
-                      {errors.address && (
-                        <span className="checkout-field-error">
-                          {errors.address}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="checkout-field">
-                      <label htmlFor="city">
-                        City
-                      </label>
-
-                      <input
-                        id="city"
-                        name="city"
-                        type="text"
-                        value={formData.city}
-                        onChange={handleChange}
-                        placeholder="Enter city"
-                        maxLength="50"
-                        required
-                        aria-invalid={Boolean(
-                          errors.city,
-                        )}
-                      />
-
-                      {errors.city && (
-                        <span className="checkout-field-error">
-                          {errors.city}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="checkout-field">
-                      <label htmlFor="state">
-                        State
-                      </label>
-
-                      <input
-                        id="state"
-                        name="state"
-                        type="text"
-                        value={formData.state}
-                        onChange={handleChange}
-                        placeholder="Enter state"
-                        maxLength="50"
-                        required
-                        aria-invalid={Boolean(
-                          errors.state,
-                        )}
-                      />
-
-                      {errors.state && (
-                        <span className="checkout-field-error">
-                          {errors.state}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="checkout-field">
-                      <label htmlFor="pincode">
-                        Pincode
-                      </label>
-
-                      <input
-                        id="pincode"
-                        name="pincode"
-                        type="text"
-                        value={formData.pincode}
-                        onChange={handleChange}
-                        placeholder="Enter 6-digit pincode"
-                        maxLength="6"
-                        inputMode="numeric"
-                        required
-                        aria-invalid={Boolean(
-                          errors.pincode,
-                        )}
-                      />
-
-                      {errors.pincode && (
-                        <span className="checkout-field-error">
-                          {errors.pincode}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
               </section>
 
               <aside className="checkout-summary">
@@ -1143,8 +984,10 @@ export function CheckoutPage() {
                       </div>
 
                       <strong>
-                        ₹{Number(
-                          item.price * item.quantity,
+                        ₹
+                        {Number(
+                          item.price *
+                            item.quantity,
                         ).toLocaleString('en-IN')}
                       </strong>
                     </div>
@@ -1169,7 +1012,8 @@ export function CheckoutPage() {
                   </span>
 
                   <strong>
-                    ₹{Number(
+                    ₹
+                    {Number(
                       subtotal,
                     ).toLocaleString('en-IN')}
                   </strong>
@@ -1181,7 +1025,8 @@ export function CheckoutPage() {
                   </span>
 
                   <strong>
-                    ₹{Number(
+                    ₹
+                    {Number(
                       subtotal,
                     ).toLocaleString('en-IN')}
                   </strong>
