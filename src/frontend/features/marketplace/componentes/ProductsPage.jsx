@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { apiRequest } from '../../../../services/apiClient.js'
+import { useAuth } from '../../auth/useAuth.js'
 
 import './ProductsPage.css'
 
 export function ProductsPage() {
+  const { token } = useAuth()
+
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -18,7 +21,10 @@ export function ProductsPage() {
         setLoading(true)
         setError('')
 
-        const data = await apiRequest('/products/public')
+        const data = await apiRequest(
+          '/products/public',
+          token ? { token } : undefined,
+        )
 
         if (isMounted) {
           setProducts(data?.products ?? [])
@@ -42,7 +48,7 @@ export function ProductsPage() {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [token])
 
   if (loading) {
     return (
@@ -294,9 +300,11 @@ export function ProductsPage() {
                       </span>
 
                       <strong>
-                        ₹{Number(
-                          product.price,
-                        ).toLocaleString('en-IN')}
+                        {product.price != null
+                          ? `₹${Number(
+                              product.price,
+                            ).toLocaleString('en-IN')}`
+                          : 'Login to view price'}
                       </strong>
 
                     </div>

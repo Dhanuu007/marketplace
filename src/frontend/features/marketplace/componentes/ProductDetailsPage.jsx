@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 
 import { apiRequest } from '../../../../services/apiClient.js'
+import { useAuth } from '../../auth/useAuth.js'
 
 import {
   addToCart,
@@ -22,6 +23,7 @@ const API_ORIGIN =
 export function ProductDetailsPage() {
   const { productId } = useParams()
   const navigate = useNavigate()
+  const { token } = useAuth()
 
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -43,6 +45,7 @@ export function ProductDetailsPage() {
 
         const data = await apiRequest(
           `/products/${productId}`,
+          token ? { token } : undefined,
         )
 
         if (isMounted) {
@@ -67,11 +70,11 @@ export function ProductDetailsPage() {
     return () => {
       isMounted = false
     }
-  }, [productId])
+  }, [productId, token])
 
 
   function handleAddToCart() {
-    if (!product) {
+    if (!product || product.price == null) {
       return
     }
 
@@ -179,6 +182,10 @@ export function ProductDetailsPage() {
       </main>
     )
   }
+
+
+  const priceVisible =
+    product.price != null
 
 
   return (
@@ -328,7 +335,9 @@ export function ProductDetailsPage() {
               </span>
 
               <strong>
-                {formatCurrency(product.price)}
+                {priceVisible
+                  ? formatCurrency(product.price)
+                  : 'Login to view price'}
               </strong>
 
             </div>
@@ -336,13 +345,22 @@ export function ProductDetailsPage() {
 
             <div className="product-details-actions">
 
-              <button
-                type="button"
-                className="product-details-primary-button"
-                onClick={handleAddToCart}
-              >
-                Add to Cart
-              </button>
+              {priceVisible ? (
+                <button
+                  type="button"
+                  className="product-details-primary-button"
+                  onClick={handleAddToCart}
+                >
+                  Add to Cart
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  className="product-details-primary-button"
+                >
+                  Login to Purchase
+                </Link>
+              )}
 
 
               {product.demoUrl && (

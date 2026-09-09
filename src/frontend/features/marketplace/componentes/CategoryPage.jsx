@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { apiRequest } from '../../../../services/apiClient.js'
+import { useAuth } from '../../auth/useAuth.js'
 
 import './CategoryPage.css'
 
 
 export function CategoryPage() {
   const { slug } = useParams()
+  const { token } = useAuth()
 
   const [category, setCategory] = useState(null)
   const [products, setProducts] = useState([])
@@ -41,6 +43,7 @@ export function CategoryPage() {
 
         const productData = await apiRequest(
           `/products/category/${categoryResult._id}`,
+          token ? { token } : undefined,
         )
 
         if (isMounted) {
@@ -68,7 +71,7 @@ export function CategoryPage() {
     return () => {
       isMounted = false
     }
-  }, [slug])
+  }, [slug, token])
 
 
   if (loading) {
@@ -315,9 +318,11 @@ export function CategoryPage() {
                       </span>
 
                       <strong>
-                        ₹{Number(
-                          product.price,
-                        ).toLocaleString('en-IN')}
+                        {product.price != null
+                          ? `₹${Number(
+                              product.price,
+                            ).toLocaleString('en-IN')}`
+                          : 'Login to view price'}
                       </strong>
 
                     </div>

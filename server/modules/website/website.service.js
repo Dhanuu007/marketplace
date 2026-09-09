@@ -6,7 +6,7 @@ import {
 } from './website.repository.js'
 
 import { getCategories } from '../category/category.repository.js'
-import { getProducts } from '../product/product.repository.js'
+import { getPublicProducts } from '../product/product.service.js'
 
 
 export async function getHomepageContent() {
@@ -21,6 +21,10 @@ export async function getHomepageContent() {
 
       featuredCategoryIds: [],
       featuredProductIds: [],
+
+      priceVisibility: {
+        loginRequired: false,
+      },
 
       banner: {
         label: 'PROMOTION',
@@ -50,6 +54,11 @@ export async function getHomepageContent() {
 
     featuredProductIds:
       homepage.featuredProductIds ?? [],
+
+    priceVisibility: {
+      loginRequired:
+        homepage.priceVisibility?.loginRequired ?? false,
+    },
 
     banner: {
       label: homepage.banner?.label ?? 'PROMOTION',
@@ -87,11 +96,20 @@ export async function getHomepageContent() {
 }
 
 
-export async function getPublicHomepageContent() {
+export async function getPublicHomepageContent(
+  user,
+) {
   const homepage = await getHomepage()
 
   const categories = await getCategories()
-  const products = await getProducts()
+
+  /*
+   * Use the public product service so homepage
+   * featured products follow the same price
+   * visibility rules as the marketplace product APIs.
+   */
+  const products =
+    await getPublicProducts(user)
 
   const homepageContent = homepage
     ? {
@@ -104,6 +122,11 @@ export async function getPublicHomepageContent() {
 
         featuredProductIds:
           homepage.featuredProductIds ?? [],
+
+        priceVisibility: {
+          loginRequired:
+            homepage.priceVisibility?.loginRequired ?? false,
+        },
 
         banner: {
           label:
@@ -150,6 +173,10 @@ export async function getPublicHomepageContent() {
 
         featuredCategoryIds: [],
         featuredProductIds: [],
+
+        priceVisibility: {
+          loginRequired: false,
+        },
 
         banner: {
           label: 'PROMOTION',
@@ -205,13 +232,19 @@ export async function updateHomepageContent(input) {
     heading: homepage.heading,
     description: homepage.description,
 
-    buttonText: homepage.buttonText,
+    buttonText:
+      homepage.buttonText,
 
     featuredCategoryIds:
       homepage.featuredCategoryIds ?? [],
 
     featuredProductIds:
       homepage.featuredProductIds ?? [],
+
+    priceVisibility: {
+      loginRequired:
+        homepage.priceVisibility?.loginRequired ?? false,
+    },
 
     banner: {
       label:

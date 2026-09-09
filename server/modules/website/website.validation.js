@@ -105,6 +105,23 @@ function validateSections(input = {}) {
   return sections
 }
 
+function validatePriceVisibility(input = {}) {
+  const loginRequired =
+    input.loginRequired ?? false
+
+  if (typeof loginRequired !== 'boolean') {
+    throw createHttpError(
+      400,
+      'INVALID_INPUT',
+      'Price visibility login requirement must be a boolean',
+    )
+  }
+
+  return {
+    loginRequired,
+  }
+}
+
 export function validateHomepage(input = {}) {
   const heading = cleanString(
     input.heading ?? '',
@@ -134,7 +151,7 @@ export function validateHomepage(input = {}) {
       400,
       'INVALID_INPUT',
       'Homepage description is required',
-    )
+  )
   }
 
   if (!buttonText) {
@@ -201,6 +218,11 @@ export function validateHomepage(input = {}) {
     input.sections ?? {},
   )
 
+  const priceVisibility =
+    validatePriceVisibility(
+      input.priceVisibility ?? {},
+    )
+
   return {
     heading,
     description,
@@ -209,6 +231,7 @@ export function validateHomepage(input = {}) {
     featuredProductIds,
     banner,
     sections,
+    priceVisibility,
   }
 }
 

@@ -15,6 +15,106 @@ import {
 
 import { getCategoryById } from '../category/category.repository.js'
 import { findUserById } from '../auth/user.repository.js'
+import { getHomepage } from '../website/website.repository.js'
+
+
+async function canViewPublicProductPrice(user) {
+  const homepage = await getHomepage()
+
+  const loginRequired =
+    homepage?.priceVisibility?.loginRequired ??
+    false
+
+  if (!loginRequired) {
+    return true
+  }
+
+  return Boolean(user)
+}
+
+
+function sanitizePublicProduct(
+  product,
+  canViewPrice,
+) {
+  if (!product) {
+    return product
+  }
+
+  if (canViewPrice) {
+    return product
+  }
+
+  const safeProduct = {
+    ...product,
+  }
+
+  delete safeProduct.price
+
+  return safeProduct
+}
+
+
+export async function getPublicProducts(user) {
+  const products =
+    await getProducts()
+
+  const canViewPrice =
+    await canViewPublicProductPrice(
+      user,
+    )
+
+  return products.map((product) =>
+    sanitizePublicProduct(
+      product,
+      canViewPrice,
+    ),
+  )
+}
+
+
+export async function getPublicProduct(
+  productId,
+  user,
+) {
+  const product =
+    await getProductById(
+      productId,
+    )
+
+  const canViewPrice =
+    await canViewPublicProductPrice(
+      user,
+    )
+
+  return sanitizePublicProduct(
+    product,
+    canViewPrice,
+  )
+}
+
+
+export async function getPublicProductsByCategory(
+  categoryId,
+  user,
+) {
+  const products =
+    await getProductsByCategory(
+      categoryId,
+    )
+
+  const canViewPrice =
+    await canViewPublicProductPrice(
+      user,
+    )
+
+  return products.map((product) =>
+    sanitizePublicProduct(
+      product,
+      canViewPrice,
+    ),
+  )
+}
 
 
 export async function getAllProducts() {

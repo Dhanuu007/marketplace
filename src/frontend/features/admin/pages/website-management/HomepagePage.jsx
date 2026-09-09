@@ -42,6 +42,11 @@ const DEFAULT_SECTIONS = {
 }
 
 
+const DEFAULT_PRICE_VISIBILITY = {
+  loginRequired: false,
+}
+
+
 function HomepagePage() {
   const { token } = useAuth()
 
@@ -72,6 +77,10 @@ function HomepagePage() {
 
   const [sections, setSections] =
     useState(DEFAULT_SECTIONS)
+
+
+  const [priceVisibility, setPriceVisibility] =
+    useState(DEFAULT_PRICE_VISIBILITY)
 
 
   const [loading, setLoading] =
@@ -193,6 +202,12 @@ function HomepagePage() {
               savedHomepage.sections?.banner ??
               true,
           })
+
+
+          setPriceVisibility({
+            ...DEFAULT_PRICE_VISIBILITY,
+            ...(savedHomepage.priceVisibility ?? {}),
+          })
         }
 
 
@@ -232,6 +247,15 @@ function HomepagePage() {
       ...current,
       [section]:
         !current[section],
+    }))
+  }
+
+
+  const togglePriceVisibility = () => {
+    setPriceVisibility((current) => ({
+      ...current,
+      loginRequired:
+        !current.loginRequired,
     }))
   }
 
@@ -365,6 +389,8 @@ function HomepagePage() {
               },
 
               sections,
+
+              priceVisibility,
             },
           },
         )
@@ -436,6 +462,12 @@ function HomepagePage() {
         banner:
           savedHomepage.sections?.banner ??
           true,
+      })
+
+
+      setPriceVisibility({
+        ...DEFAULT_PRICE_VISIBILITY,
+        ...(savedHomepage.priceVisibility ?? {}),
       })
 
 
@@ -638,6 +670,81 @@ function HomepagePage() {
             />
 
           </div>
+
+        </div>
+
+      </section>
+
+
+      {/* Price Visibility */}
+
+      <section className="homepage-management-panel">
+
+        <div className="homepage-panel-header">
+
+          <div>
+
+            <p className="homepage-panel-label">
+              Marketplace
+            </p>
+
+
+            <h2>
+              Listing Price Visibility
+            </h2>
+
+
+            <p>
+              Choose whether visitors must be logged in to see website
+              listing prices.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            className={`homepage-toggle ${
+              priceVisibility.loginRequired
+                ? 'active'
+                : ''
+            }`}
+            onClick={
+              togglePriceVisibility
+            }
+            disabled={
+              loading ||
+              saving
+            }
+            aria-label={
+              priceVisibility.loginRequired
+                ? 'Require login to view listing prices'
+                : 'Allow everyone to view listing prices'
+            }
+            aria-pressed={
+              priceVisibility.loginRequired
+            }
+          >
+            <span />
+          </button>
+
+        </div>
+
+
+        <div className="homepage-price-visibility-status">
+
+          <strong>
+            {priceVisibility.loginRequired
+              ? 'Login required to view prices'
+              : 'Prices visible to everyone'}
+          </strong>
+
+
+          <p>
+            {priceVisibility.loginRequired
+              ? 'Guests and logged-out visitors will not see listing prices. Logged-in Buyers, Creators, and Admins can still see them.'
+              : 'All visitors, including guests and logged-out users, can see listing prices.'}
+          </p>
 
         </div>
 

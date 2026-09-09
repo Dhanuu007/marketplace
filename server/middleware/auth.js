@@ -86,6 +86,113 @@ export async function requireAuth(request, response, next) {
   }
 }
 
+
+export async function optionalAuth(request, response, next) {
+  try {
+    const authorization =
+      request.get('authorization') ?? ''
+
+    /*
+     * No Authorization header means the visitor
+     * is simply browsing as a guest.
+     */
+    if (!authorization) {
+      return next()
+    }
+
+    const [scheme, token] =
+      authorization.split(' ')
+
+    /*
+     * If an Authorization header was supplied,
+     * it must be a valid Bearer token.
+     */
+    if (
+      scheme?.toLowerCase() !== 'bearer' ||
+      !token
+    ) {
+      throw createHttpError(
+        401,
+        'INVALID_AUTH',
+        'Invalid authorization header',
+      )
+    }
+
+    const payload =
+      verifyAuthToken(token)
+
+    const user =
+      await findUserById(payload.sub)
+
+    if (!user) {
+      throw createHttpError(
+        401,
+        'USER_NOT_FOUND',
+        'Authenticated user no longer exists',
+      )
+    }
+
+    if (user.suspended) {
+      throw createHttpError(
+        403,
+        'ACCOUNT_SUSPENDED',
+        user.suspensionReason
+          ? `Your account is suspended. Reason: ${user.suspensionReason}`
+          : 'Your account has been suspended. Please contact the administrator.',
+      )
+    }
+
+    /*
+     * Keep the same maintenance/session rules
+     * used by requireAuth().
+     *
+     * Admin accounts remain usable.
+     */
+    if (user.role !== 'ADMIN') {
+      const maintenance =
+        await getMaintenanceState()
+
+      if (maintenance.enabled) {
+        throw createHttpError(
+          503,
+          'MAINTENANCE_MODE',
+          'Marketplace is currently under maintenance. Please try again later.',
+        )
+      }
+
+      if (
+        maintenance.startedAt &&
+        payload.iat
+      ) {
+        const maintenanceStartedAt =
+          new Date(
+            maintenance.startedAt,
+          ).getTime()
+
+        const tokenIssuedAt =
+          payload.iat * 1000
+
+        if (
+          tokenIssuedAt <=
+          maintenanceStartedAt
+        ) {
+          throw createHttpError(
+            401,
+            'SESSION_INVALIDATED_BY_MAINTENANCE',
+            'Your session was ended because the marketplace entered maintenance mode. Please log in again.',
+          )
+        }
+      }
+    }
+
+    request.user = user
+
+    return next()
+  } catch (error) {
+    return next(error)
+  }
+}
+
 export async function requireSuspensionSupportAuth(
   request,
   response,

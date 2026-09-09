@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   requireAuth,
   requireRole,
+  optionalAuth,
 } from '../../middleware/auth.js'
 
 import { USER_ROLES } from '../auth/auth.constants.js'
@@ -26,9 +27,13 @@ const router = Router()
 // Public Marketplace Homepage
 router.get(
   '/website/homepage/public',
+  optionalAuth,
   async (request, response, next) => {
     try {
-      const homepage = await getPublicHomepageContent()
+      const homepage =
+        await getPublicHomepageContent(
+          request.user,
+        )
 
       response.json({
         homepage,

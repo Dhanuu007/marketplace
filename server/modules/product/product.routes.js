@@ -4,6 +4,7 @@ import { Router } from 'express'
 import {
   requireAuth,
   requireRole,
+  optionalAuth,
 } from '../../middleware/auth.js'
 
 import {
@@ -21,8 +22,9 @@ import {
 import {
   getAllProducts,
   getAllAdminProducts,
-  getSingleProduct,
-  getProductsForCategory,
+  getPublicProducts,
+  getPublicProduct,
+  getPublicProductsByCategory,
   getCreatorProducts,
   getSingleCreatorProduct,
   addProduct,
@@ -41,9 +43,13 @@ const router = Router()
 // Public marketplace products
 router.get(
   '/products/public',
+  optionalAuth,
   async (request, response, next) => {
     try {
-      const products = await getAllProducts()
+      const products =
+        await getPublicProducts(
+          request.user,
+        )
 
       response.json({
         products,
@@ -99,11 +105,14 @@ router.get(
 // Public single-product lookup
 router.get(
   '/products/:productId',
+  optionalAuth,
   async (request, response, next) => {
     try {
-      const product = await getSingleProduct(
-        request.params.productId,
-      )
+      const product =
+        await getPublicProduct(
+          request.params.productId,
+          request.user,
+        )
 
       if (!product) {
         return response.status(404).json({
@@ -124,11 +133,14 @@ router.get(
 // Public products by category
 router.get(
   '/products/category/:categoryId',
+  optionalAuth,
   async (request, response, next) => {
     try {
-      const products = await getProductsForCategory(
-        request.params.categoryId,
-      )
+      const products =
+        await getPublicProductsByCategory(
+          request.params.categoryId,
+          request.user,
+        )
 
       response.json({
         products,

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import * as THREE from 'three'
 
 import { apiRequest } from '../../../services/apiClient.js'
+import { useAuth } from '../auth/useAuth.js'
 import Credits from './Credits.jsx'
 
 import './foundation.css'
@@ -52,6 +53,8 @@ const DEFAULT_HOMEPAGE = {
 
 
 export function FoundationPage() {
+
+  const { token } = useAuth()
 
   /* =====================================================
      HOMEPAGE STATE
@@ -129,6 +132,7 @@ export function FoundationPage() {
         const data =
           await apiRequest(
             '/website/homepage/public',
+            token ? { token } : undefined,
           )
 
 
@@ -194,7 +198,7 @@ export function FoundationPage() {
       isMounted = false
     }
 
-  }, [])
+  }, [token])
 
 
   /* =====================================================
@@ -565,6 +569,7 @@ export function FoundationPage() {
 
     let animationFrame
 
+
     const clock =
       new THREE.Clock()
 
@@ -889,9 +894,9 @@ export function FoundationPage() {
             Creators
           </a>
 
-          <a href="#how-it-works">
+          <Link to="/how-it-works">
             How It Works
-          </a>
+          </Link>
 
         </nav>
 
@@ -1265,8 +1270,6 @@ export function FoundationPage() {
       )}
 
 
-
-
       {/* =====================================================
           CATEGORIES
       ====================================================== */}
@@ -1511,11 +1514,13 @@ export function FoundationPage() {
 
 
                           <strong>
-                            ₹{Number(
-                              product.price ?? 0,
-                            ).toLocaleString(
-                              'en-IN',
-                            )}
+                            {product.price != null
+                              ? `₹${Number(
+                                  product.price,
+                                ).toLocaleString(
+                                  'en-IN',
+                                )}`
+                              : 'Login to view price'}
                           </strong>
 
                         </div>
