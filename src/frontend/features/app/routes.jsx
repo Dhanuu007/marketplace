@@ -14,6 +14,8 @@ import { RegisterPage } from '../auth/RegisterPage.jsx'
 
 import { FoundationPage } from '../foundation/FoundationPage.jsx'
 
+import HowItWorksPage from '../how-it-works/HowItWorksPage.jsx'
+
 import { CategoryPage } from '../marketplace/componentes/CategoryPage.jsx'
 import { ProductsPage } from '../marketplace/componentes/ProductsPage.jsx'
 import { ProductDetailsPage } from '../marketplace/componentes/ProductDetailsPage.jsx'
@@ -89,6 +91,11 @@ export function AppRoutes() {
               <FoundationPage />
             )
           }
+        />
+
+        <Route
+          path="/how-it-works"
+          element={<HowItWorksPage />}
         />
 
         <Route
