@@ -14,6 +14,8 @@ import orderRoutes from './order/order.routes.js'
 
 import chatRoutes from './chat/chat.routes.js'
 
+import chatbotRoutes from './chatbot/chatbot.routes.js'
+
 import notificationRoutes from './notification/notification.routes.js'
 
 import adminRoutes from './admin/admin.routes.js'
@@ -57,6 +59,8 @@ router.use(categoryRoutes)
 router.use(productRoutes)
 
 router.use(chatRoutes)
+
+router.use(chatbotRoutes)
 
 router.use(notificationRoutes)
 

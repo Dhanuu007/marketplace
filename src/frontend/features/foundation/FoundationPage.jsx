@@ -5,6 +5,7 @@ import {
 } from 'react'
 
 import { Link } from 'react-router-dom'
+import MarketplaceAssistant from '../chatbot/MarketplaceAssistant'
 
 import * as THREE from 'three'
 
@@ -1859,6 +1860,13 @@ export function FoundationPage() {
         </button>
 
       )}
+
+
+      {/* =====================================================
+          MARKETPLACE AI ASSISTANT
+      ====================================================== */}
+
+      <MarketplaceAssistant />
 
     </main>
 

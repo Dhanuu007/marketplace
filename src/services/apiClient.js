@@ -56,3 +56,90 @@ export async function apiRequest(path, options = {}) {
 export async function getHealthStatus() {
   return apiRequest('/health')
 }
+
+export async function apiStreamRequest(
+  path,
+  options = {},
+) {
+  const headers =
+    new Headers(options.headers)
+
+  const isFormData =
+    options.body instanceof FormData
+
+
+  if (
+    options.body &&
+    !isFormData
+  ) {
+    headers.set(
+      'Content-Type',
+      'application/json',
+    )
+  }
+
+
+  if (options.token) {
+    headers.set(
+      'Authorization',
+      `Bearer ${options.token}`,
+    )
+  }
+
+
+  const response =
+    await fetch(
+      `${env.apiBaseUrl}${path}`,
+      {
+        method:
+          options.method ?? 'GET',
+
+        headers,
+
+        body:
+          isFormData
+            ? options.body
+            : options.body
+              ? JSON.stringify(
+                  options.body,
+                )
+              : undefined,
+      },
+    )
+
+
+  if (!response.ok) {
+
+    const data =
+      await response
+        .json()
+        .catch(() => null)
+
+
+    const error =
+      new Error(
+        data?.error?.message ??
+          data?.message ??
+          `Request failed with status ${response.status}`,
+      )
+
+
+    error.code =
+      data?.error?.code ??
+      data?.code
+
+
+    throw error
+
+  }
+
+
+  if (!response.body) {
+    throw new Error(
+      'Streaming response body is not available.',
+    )
+  }
+
+
+  return response
+}

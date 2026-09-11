@@ -24,11 +24,15 @@ export function createApp() {
     ? [
         env.clientOrigin,
         'http://localhost:5173',
+        'http://localhost:5174',
         'http://192.168.1.8:5173',
+        'http://192.168.1.8:5174',
       ]
     : [
         'http://localhost:5173',
+        'http://localhost:5174',
         'http://192.168.1.8:5173',
+        'http://192.168.1.8:5174',
       ]
 
 
