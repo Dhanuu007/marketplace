@@ -392,22 +392,51 @@ export default function MarketplaceAssistant() {
       )}
 
       <button
-        type="button"
-        className={`marketplace-assistant__floating-button ${
-          isOpen
-            ? "marketplace-assistant__floating-button--open"
-            : ""
-        }`}
-        onClick={() =>
-          setIsOpen(
-            (previous) =>
-              !previous,
-          )
-        }
-        aria-label="Open MarketPalce Assistant"
-      >
-        {isOpen ? "×" : "🤖"}
-      </button>
+  type="button"
+  className={`marketplace-assistant__floating-button ${
+    isOpen
+      ? "marketplace-assistant__floating-button--open"
+      : ""
+  }`}
+  onClick={() =>
+    setIsOpen((previous) => !previous)
+  }
+  aria-label={
+    isOpen
+      ? "Close MarketPalce Assistant"
+      : "Open MarketPalce Assistant"
+  }
+>
+  {isOpen ? (
+    <span className="marketplace-assistant__close-icon">
+      ×
+    </span>
+  ) : (
+    <span
+      className="marketplace-assistant__bot"
+      aria-hidden="true"
+    >
+      <span className="marketplace-assistant__bot-antenna">
+        <span className="marketplace-assistant__bot-antenna-light" />
+      </span>
+
+      <span className="marketplace-assistant__bot-head">
+        <span className="marketplace-assistant__bot-ear marketplace-assistant__bot-ear--left" />
+        <span className="marketplace-assistant__bot-ear marketplace-assistant__bot-ear--right" />
+
+        <span className="marketplace-assistant__bot-face">
+          <span className="marketplace-assistant__bot-eye marketplace-assistant__bot-eye--left" />
+          <span className="marketplace-assistant__bot-eye marketplace-assistant__bot-eye--right" />
+
+          <span className="marketplace-assistant__bot-smile" />
+        </span>
+      </span>
+
+      <span className="marketplace-assistant__bot-neck" />
+      <span className="marketplace-assistant__bot-base" />
+    </span>
+  )}
+</button>
     </>
   );
 }
