@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { apiStreamRequest } from "../../../services/apiClient.js";
-import "./marketplaceAssistant.css";
+import "./MarketplaceAssistant.css";
 
 let messageId = 1;
 
