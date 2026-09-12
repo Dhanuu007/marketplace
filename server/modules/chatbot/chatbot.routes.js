@@ -8,6 +8,8 @@ import {
   streamChatbotMessage,
 } from './chatbot.service.js'
 
+import { optionalAuth } from '../../middleware/auth.js'
+
 
 const router = Router()
 
@@ -22,6 +24,7 @@ const router = Router()
  */
 router.post(
   '/chatbot/message',
+  optionalAuth,
   async (request, response, next) => {
 
     try {
@@ -35,6 +38,7 @@ router.post(
       const stream =
         await streamChatbotMessage(
           input.message,
+          request.user,
         )
 
 

@@ -1,5 +1,13 @@
 import { GoogleGenAI } from '@google/genai'
 
+import {
+  getUserMemories,
+} from './chatbotMemory.repository.js'
+
+import {
+  processUserMemory,
+} from './chatbotMemory.service.js'
+
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -44,13 +52,47 @@ If a user asks something completely unrelated to MarketPalce, politely explain t
 
 export async function streamChatbotMessage(
   message,
+  user,
 ) {
+
+    await processUserMemory({
+    user,
+    message,
+  })
+
+  let memoryContext = ''
+
+  if (user?.id) {
+    const memories =
+      await getUserMemories(
+        user.id,
+      )
+
+    if (memories.length > 0) {
+      memoryContext =
+        `
+
+Known information about the user:
+${memories
+  .map(
+    (memory) =>
+      `- ${memory.key}: ${memory.value}`,
+  )
+  .join('\n')}
+`
+    }
+  }
+
 
   const stream =
     await ai.interactions.create({
       model: 'gemini-3.6-flash',
 
-      input: message,
+      input:
+        `${memoryContext}
+
+User message:
+${message}`,
 
       system_instruction:
         MARKETPALCE_INSTRUCTIONS,

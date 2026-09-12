@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { apiStreamRequest } from "../../../services/apiClient.js";
 import "./MarketplaceAssistant.css";
+import { useAuth } from "../auth/useAuth.js";
 
 let messageId = 1;
 
@@ -81,7 +82,11 @@ function renderFormattedText(text) {
   });
 }
 
+
+
 export default function MarketplaceAssistant() {
+
+  const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const [message, setMessage] = useState("");
@@ -149,6 +154,8 @@ export default function MarketplaceAssistant() {
           "/chatbot/message",
           {
             method: "POST",
+
+            token: auth.token,
 
             body: {
               message: trimmedMessage,
