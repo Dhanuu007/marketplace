@@ -197,6 +197,48 @@
 }
 
 /* =========================================================
+   Contact Admin
+   ========================================================= */
+
+.marketplace-assistant__message--assistant button {
+  width: 100%;
+
+  margin-top: 8px;
+
+  padding: 10px 12px;
+
+  border: 1px solid #ddd6fe;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #5b21b6;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.marketplace-assistant__message--assistant button:hover {
+  background: #f5f3ff;
+  border-color: #a78bfa;
+
+  transform: translateY(-1px);
+}
+
+.marketplace-assistant__message--assistant button:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
    Typing Indicator
    ========================================================= */
 

@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { apiStreamRequest } from "../../../services/apiClient.js";
+import {
+  apiRequest,
+  apiStreamRequest,
+} from "../../../services/apiClient.js";
 import "./MarketplaceAssistant.css";
 import { useAuth } from "../auth/useAuth.js";
+import { updateDashboardColor } from "../auth/authApi.js";
 
 let messageId = 1;
 
-const quickQuestions = [
-  "What is MarketPalce?",
-  "How does this website work?",
-  "How do I buy a product?",
-  "How do I access my purchase?",
-];
 
 function renderFormattedText(text) {
   const lines = String(text ?? "").split("\n");
@@ -83,10 +81,49 @@ function renderFormattedText(text) {
 }
 
 
-
 export default function MarketplaceAssistant() {
 
   const auth = useAuth();
+
+  const userRole = auth.user?.role;
+
+  const defaultDashboardColor = "#008080";
+
+  const dashboardColorOptions = [
+    "#008080",
+    "#2563eb",
+    "#7c3aed",
+    "#16a34a",
+    "#ea580c",
+    "#db2777",
+    "#dc2626",
+  ];
+
+  const quickQuestions =
+    userRole === "BUYER"
+      ? [
+          "How do I contact Admin?",
+          "How do I buy a product?",
+          "How do I access my purchase?",
+          "How do I check my orders?",
+          "How do I contact a creator?",
+        ]
+      : userRole === "CREATOR"
+        ? [
+            "How do I contact Admin?",
+            "How do I create a website listing?",
+            "How do I manage my products?",
+            "How do I check my orders?",
+            "How do I check my earnings?",
+          ]
+        : [
+            "How do I contact Admin?",
+            "What is MarketPalce?",
+            "How does this website work?",
+            "How do I buy a product?",
+            "How do I access my purchase?",
+          ];
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [message, setMessage] = useState("");
@@ -94,17 +131,145 @@ export default function MarketplaceAssistant() {
   const [isStreaming, setIsStreaming] =
     useState(false);
 
+  const [adminEmail, setAdminEmail] =
+    useState(null);
+
+  const [isLoadingAdminEmail, setIsLoadingAdminEmail] =
+    useState(false);
+
+  const [adminEmailError, setAdminEmailError] =
+    useState("");
+
   const [streamingMessageId, setStreamingMessageId] =
     useState(null);
+
+  const [dashboardColor, setDashboardColor] =
+    useState(
+      auth.user?.dashboardColor ??
+        defaultDashboardColor,
+    );
+
+  const [isSavingDashboardColor, setIsSavingDashboardColor] =
+    useState(false);
+
+  const [dashboardColorMessage, setDashboardColorMessage] =
+    useState("");
+
+  const [dashboardColorError, setDashboardColorError] =
+    useState("");
 
   const [messages, setMessages] = useState([
     {
       id: messageId++,
       sender: "assistant",
       text:
-        "Hi! 👋 I'm the MarketPalce Assistant. How can I help you?",
+        userRole === "BUYER"
+          ? "Hi! 👋 I'm your MarketPalce Assistant for Buyers. How can I help you?"
+          : userRole === "CREATOR"
+            ? "Hi! 👋 I'm your MarketPalce Assistant for Creators. How can I help you?"
+            : "Hi! 👋 I'm the MarketPalce Assistant. How can I help you?",
     },
   ]);
+
+
+  const handleContactAdmin = async () => {
+    if (isLoadingAdminEmail) {
+      return;
+    }
+
+    setIsLoadingAdminEmail(true);
+    setAdminEmailError("");
+
+    try {
+      const data =
+        await apiRequest(
+          "/auth/admin-contact",
+        );
+
+      setAdminEmail(
+        data?.email ?? null,
+      );
+    } catch (error) {
+      setAdminEmailError(
+        error?.message ??
+          "Admin contact information is currently unavailable.",
+      );
+    } finally {
+      setIsLoadingAdminEmail(false);
+    }
+  };
+
+
+  const handleSaveDashboardColor = async () => {
+    if (
+      !auth.token ||
+      userRole === "ADMIN" ||
+      isSavingDashboardColor
+    ) {
+      return;
+    }
+
+    setIsSavingDashboardColor(true);
+    setDashboardColorMessage("");
+    setDashboardColorError("");
+
+    try {
+      await updateDashboardColor(
+        auth.token,
+        dashboardColor,
+      );
+
+      setDashboardColorMessage(
+        "Dashboard color saved.",
+      );
+    } catch (error) {
+      setDashboardColorError(
+        error?.message ??
+          "Unable to save dashboard color.",
+      );
+    } finally {
+      setIsSavingDashboardColor(false);
+    }
+  };
+
+
+  const handleResetDashboardColor = async () => {
+    if (
+      !auth.token ||
+      userRole === "ADMIN" ||
+      isSavingDashboardColor
+    ) {
+      return;
+    }
+
+    const defaultColor =
+      defaultDashboardColor;
+
+    setDashboardColor(defaultColor);
+    setDashboardColorMessage("");
+    setDashboardColorError("");
+
+    setIsSavingDashboardColor(true);
+
+    try {
+      await updateDashboardColor(
+        auth.token,
+        defaultColor,
+      );
+
+      setDashboardColorMessage(
+        "Dashboard color reset to default.",
+      );
+    } catch (error) {
+      setDashboardColorError(
+        error?.message ??
+          "Unable to reset dashboard color.",
+      );
+    } finally {
+      setIsSavingDashboardColor(false);
+    }
+  };
+
 
   const sendMessage = async (
     text = message,
@@ -269,11 +434,13 @@ export default function MarketplaceAssistant() {
     }
   };
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     sendMessage();
   };
+
 
   const streamingMessage =
     messages.find(
@@ -281,6 +448,7 @@ export default function MarketplaceAssistant() {
         item.id ===
         streamingMessageId,
     );
+
 
   return (
     <>
@@ -309,6 +477,7 @@ export default function MarketplaceAssistant() {
             </button>
           </div>
 
+
           <div className="marketplace-assistant__messages">
             {messages.map((item) => {
               if (
@@ -330,6 +499,7 @@ export default function MarketplaceAssistant() {
               );
             })}
 
+
             {isStreaming &&
               streamingMessage &&
               !streamingMessage.text && (
@@ -343,19 +513,166 @@ export default function MarketplaceAssistant() {
                 </div>
               )}
 
+
             {messages.length === 1 &&
               !isStreaming && (
                 <div className="marketplace-assistant__quick-questions">
+
+                  {(userRole === "BUYER" ||
+                    userRole === "CREATOR") && (
+                    <div className="marketplace-assistant__dashboard-color">
+                      <div>
+                        <strong>
+                          Customize Dashboard
+                        </strong>
+                      </div>
+
+                      <div className="marketplace-assistant__message-line">
+                        Choose your dashboard accent color.
+                      </div>
+
+                      <div className="marketplace-assistant__color-options">
+                        {dashboardColorOptions.map(
+                          (color) => (
+                            <button
+                              key={color}
+                              type="button"
+                              className={
+                                dashboardColor === color
+                                  ? "marketplace-assistant__color-option marketplace-assistant__color-option--selected"
+                                  : "marketplace-assistant__color-option"
+                              }
+                              style={{
+                                backgroundColor:
+                                  color,
+                              }}
+                              onClick={() => {
+                                setDashboardColor(
+                                  color,
+                                );
+                                setDashboardColorMessage(
+                                  "",
+                                );
+                                setDashboardColorError(
+                                  "",
+                                );
+                              }}
+                              aria-label={`Select dashboard color ${color}`}
+                              aria-pressed={
+                                dashboardColor === color
+                              }
+                            />
+                          ),
+                        )}
+                      </div>
+
+                      <div className="marketplace-assistant__dashboard-color-actions">
+                        <button
+                          type="button"
+                          onClick={
+                            handleSaveDashboardColor
+                          }
+                          disabled={
+                            isSavingDashboardColor
+                          }
+                        >
+                          {isSavingDashboardColor
+                            ? "Saving..."
+                            : "Save Color"}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={
+                            handleResetDashboardColor
+                          }
+                          disabled={
+                            isSavingDashboardColor
+                          }
+                        >
+                          Reset to Default
+                        </button>
+                      </div>
+
+                      {dashboardColorMessage && (
+                        <div className="marketplace-assistant__message-line">
+                          {dashboardColorMessage}
+                        </div>
+                      )}
+
+                      {dashboardColorError && (
+                        <div className="marketplace-assistant__message-line">
+                          {dashboardColorError}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+
+                  {isLoadingAdminEmail && (
+                    <div className="marketplace-assistant__message marketplace-assistant__message--assistant">
+                      Getting the MarketPalce Admin contact...
+                    </div>
+                  )}
+
+
+                  {adminEmailError && (
+                    <div className="marketplace-assistant__message marketplace-assistant__message--assistant">
+                      {adminEmailError}
+                    </div>
+                  )}
+
+
+                  {adminEmail && (
+                    <div className="marketplace-assistant__message marketplace-assistant__message--assistant">
+                      <div>
+                        <strong>
+                          Contact MarketPalce Admin
+                        </strong>
+                      </div>
+
+                      <div className="marketplace-assistant__message-line">
+                        You can contact the MarketPalce Admin by email:
+                      </div>
+
+                      <div className="marketplace-assistant__message-line">
+                        <strong>{adminEmail}</strong>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(
+                              adminEmail,
+                            );
+                          } catch {
+                            // Clipboard access may be unavailable
+                          }
+                        }}
+                      >
+                        Copy Email
+                      </button>
+                    </div>
+                  )}
+
+
                   {quickQuestions.map(
                     (question) => (
                       <button
                         key={question}
                         type="button"
-                        onClick={() =>
-                          sendMessage(
-                            question,
-                          )
-                        }
+                        onClick={() => {
+                          if (
+                            question ===
+                            "How do I contact Admin?"
+                          ) {
+                            handleContactAdmin();
+                            return;
+                          }
+
+                          sendMessage(question);
+                        }}
                       >
                         {question}
                       </button>
@@ -364,6 +681,7 @@ export default function MarketplaceAssistant() {
                 </div>
               )}
           </div>
+
 
           <form
             className="marketplace-assistant__input-area"
@@ -398,52 +716,53 @@ export default function MarketplaceAssistant() {
         </div>
       )}
 
+
       <button
-  type="button"
-  className={`marketplace-assistant__floating-button ${
-    isOpen
-      ? "marketplace-assistant__floating-button--open"
-      : ""
-  }`}
-  onClick={() =>
-    setIsOpen((previous) => !previous)
-  }
-  aria-label={
-    isOpen
-      ? "Close MarketPalce Assistant"
-      : "Open MarketPalce Assistant"
-  }
->
-  {isOpen ? (
-    <span className="marketplace-assistant__close-icon">
-      ×
-    </span>
-  ) : (
-    <span
-      className="marketplace-assistant__bot"
-      aria-hidden="true"
-    >
-      <span className="marketplace-assistant__bot-antenna">
-        <span className="marketplace-assistant__bot-antenna-light" />
-      </span>
+        type="button"
+        className={`marketplace-assistant__floating-button ${
+          isOpen
+            ? "marketplace-assistant__floating-button--open"
+            : ""
+        }`}
+        onClick={() =>
+          setIsOpen((previous) => !previous)
+        }
+        aria-label={
+          isOpen
+            ? "Close MarketPalce Assistant"
+            : "Open MarketPalce Assistant"
+        }
+      >
+        {isOpen ? (
+          <span className="marketplace-assistant__close-icon">
+            ×
+          </span>
+        ) : (
+          <span
+            className="marketplace-assistant__bot"
+            aria-hidden="true"
+          >
+            <span className="marketplace-assistant__bot-antenna">
+              <span className="marketplace-assistant__bot-antenna-light" />
+            </span>
 
-      <span className="marketplace-assistant__bot-head">
-        <span className="marketplace-assistant__bot-ear marketplace-assistant__bot-ear--left" />
-        <span className="marketplace-assistant__bot-ear marketplace-assistant__bot-ear--right" />
+            <span className="marketplace-assistant__bot-head">
+              <span className="marketplace-assistant__bot-ear marketplace-assistant__bot-ear--left" />
+              <span className="marketplace-assistant__bot-ear marketplace-assistant__bot-ear--right" />
 
-        <span className="marketplace-assistant__bot-face">
-          <span className="marketplace-assistant__bot-eye marketplace-assistant__bot-eye--left" />
-          <span className="marketplace-assistant__bot-eye marketplace-assistant__bot-eye--right" />
+              <span className="marketplace-assistant__bot-face">
+                <span className="marketplace-assistant__bot-eye marketplace-assistant__bot-eye--left" />
+                <span className="marketplace-assistant__bot-eye marketplace-assistant__bot-eye--right" />
 
-          <span className="marketplace-assistant__bot-smile" />
-        </span>
-      </span>
+                <span className="marketplace-assistant__bot-smile" />
+              </span>
+            </span>
 
-      <span className="marketplace-assistant__bot-neck" />
-      <span className="marketplace-assistant__bot-base" />
-    </span>
-  )}
-</button>
+            <span className="marketplace-assistant__bot-neck" />
+            <span className="marketplace-assistant__bot-base" />
+          </span>
+        )}
+      </button>
     </>
   );
 }

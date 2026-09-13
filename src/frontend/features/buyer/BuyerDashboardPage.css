@@ -3,13 +3,19 @@
 ========================================================= */
 
 .buyer-dashboard-shell {
+  --buyer-dashboard-color: #008080;
+
   min-height: 100svh;
   padding: 50px 0 80px;
 
   background:
     radial-gradient(
       circle at 10% 5%,
-      rgba(0, 128, 128, 0.10),
+      color-mix(
+        in srgb,
+        var(--buyer-dashboard-color) 10%,
+        transparent
+      ),
       transparent 28%
     ),
     radial-gradient(
@@ -19,7 +25,11 @@
     ),
     linear-gradient(
       180deg,
-      #f0fafa 0%,
+      color-mix(
+        in srgb,
+        var(--buyer-dashboard-color) 5%,
+        #ffffff
+      ) 0%,
       #f8fbfb 35%,
       #ffffff 100%
     );
@@ -192,6 +202,7 @@
   line-height: 1.6;
 }
 
+
 .buyer-suspension-contact-button {
   display: inline-flex;
 
@@ -229,6 +240,7 @@
     box-shadow 0.2s ease;
 }
 
+
 .buyer-suspension-contact-button:hover {
   background: #991b1b;
 
@@ -237,9 +249,11 @@
   box-shadow: 0 7px 18px rgba(127, 29, 29, 0.2);
 }
 
+
 .buyer-suspension-contact-button:active {
   transform: translateY(0);
 }
+
 
 .buyer-suspension-contact-button span {
   font-size: 15px;
@@ -254,7 +268,9 @@
 
 .buyer-dashboard-header {
   display: flex;
+
   align-items: flex-end;
+
   justify-content: space-between;
 
   gap: 40px;
@@ -263,13 +279,23 @@
 
   margin-bottom: 45px;
 
-  border: 1px solid #dbeaea;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 20%,
+      #dbeaea
+    );
+
   border-radius: 24px;
 
   background:
     linear-gradient(
       135deg,
-      #eafafa,
+      color-mix(
+        in srgb,
+        var(--buyer-dashboard-color) 9%,
+        #ffffff
+      ),
       #ffffff
     );
 
@@ -286,9 +312,10 @@
 .buyer-eyebrow {
   margin: 0 0 8px;
 
-  color: #008080;
+  color: var(--buyer-dashboard-color);
 
   font-size: 10px;
+
   font-weight: 900;
 
   letter-spacing: 0.13em;
@@ -347,14 +374,6 @@
   gap: 10px;
 }
 
-
-/*
- * The blocked wrapper contains every dashboard action
- * except Logout.
- *
- * pointer-events: none prevents navigation while the
- * account is suspended.
- */
 
 .buyer-dashboard-actions-blocked {
   display: flex;
@@ -415,19 +434,28 @@
 
 
 .buyer-primary-button {
-  border: 1px solid #008080;
+  border: 1px solid var(--buyer-dashboard-color);
 
   color: #ffffff;
 
   background:
     linear-gradient(
       135deg,
-      #008080,
-      #006b6b
+      var(--buyer-dashboard-color),
+      color-mix(
+        in srgb,
+        var(--buyer-dashboard-color) 82%,
+        #000000
+      )
     );
 
   box-shadow:
-    0 8px 20px rgba(0, 128, 128, 0.18);
+    0 8px 20px
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 18%,
+      transparent
+    );
 }
 
 
@@ -435,7 +463,12 @@
   transform: translateY(-2px);
 
   box-shadow:
-    0 13px 28px rgba(0, 128, 128, 0.24);
+    0 13px 28px
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 24%,
+      transparent
+    );
 }
 
 
@@ -451,11 +484,26 @@
 .buyer-secondary-button:hover {
   transform: translateY(-2px);
 
-  border-color: #99f6e4;
+  border-color:
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 45%,
+      #ffffff
+    );
 
-  color: #007373;
+  color:
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 88%,
+      #000000
+    );
 
-  background: #f0fdfa;
+  background:
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 6%,
+      #ffffff
+    );
 }
 
 
@@ -483,12 +531,6 @@
    SUSPENDED DASHBOARD CONTENT
 ========================================================= */
 
-/*
- * The content remains visible enough for the user to
- * understand what is unavailable, but all interaction
- * is disabled.
- */
-
 .buyer-dashboard-content-suspended {
   position: relative;
 
@@ -503,11 +545,6 @@
   user-select: none;
 }
 
-
-/*
- * Add a subtle blocked-state overlay above the disabled
- * dashboard content.
- */
 
 .buyer-dashboard-content-suspended::after {
   content: '🔒  Marketplace actions unavailable';
@@ -637,7 +674,12 @@
 .buyer-action-card:hover {
   transform: translateY(-4px);
 
-  border-color: #99f6e4;
+  border-color:
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 45%,
+      #ffffff
+    );
 
   box-shadow:
     0 18px 40px rgba(15, 23, 42, 0.09);
@@ -652,13 +694,24 @@
   width: 43px;
   height: 43px;
 
-  border: 1px solid #b2e5e5;
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 35%,
+      #ffffff
+    );
 
   border-radius: 12px;
 
-  color: #008080;
+  color: var(--buyer-dashboard-color);
 
-  background: #eafafa;
+  background:
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 9%,
+      #ffffff
+    );
 
   font-size: 17px;
 
@@ -687,7 +740,7 @@
 
 
 .buyer-action-arrow {
-  color: #008080;
+  color: var(--buyer-dashboard-color);
 
   font-size: 20px;
 
@@ -710,14 +763,24 @@
 
   padding: 32px;
 
-  border: 1px solid #cce7e7;
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 25%,
+      #cce7e7
+    );
 
   border-radius: 20px;
 
   background:
     linear-gradient(
       135deg,
-      #f0fdfa,
+      color-mix(
+        in srgb,
+        var(--buyer-dashboard-color) 7%,
+        #ffffff
+      ),
       #ffffff
     );
 
@@ -755,17 +818,27 @@
 
   color: #ffffff;
 
-  background: #008080;
+  background: var(--buyer-dashboard-color);
 }
 
 
 .buyer-info-button:hover {
   transform: translateY(-2px);
 
-  background: #006b6b;
+  background:
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 82%,
+      #000000
+    );
 
   box-shadow:
-    0 10px 24px rgba(0, 128, 128, 0.18);
+    0 10px 24px
+    color-mix(
+      in srgb,
+      var(--buyer-dashboard-color) 18%,
+      transparent
+    );
 }
 
 
@@ -904,3 +977,4 @@
   }
 
 }
+

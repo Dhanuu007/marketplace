@@ -90,6 +90,52 @@ export async function findUsersByRole(role) {
   return users.map((user) => serializeUser(user))
 }
 
+
+export async function findAdminEmail() {
+  await ensureUsersIndexes()
+
+  const admin = await usersCollection().findOne(
+    { role: 'ADMIN' },
+    {
+      projection: {
+        _id: 0,
+        email: 1,
+      },
+    },
+  )
+
+  return admin?.email ?? null
+}
+
+export async function updateUserDashboardColor(
+  userId,
+  color,
+) {
+  if (!ObjectId.isValid(userId)) {
+    return null
+  }
+
+  await ensureUsersIndexes()
+
+  const result =
+    await usersCollection().findOneAndUpdate(
+      {
+        _id: new ObjectId(userId),
+      },
+      {
+        $set: {
+          dashboardColor: color,
+          updatedAt: new Date(),
+        },
+      },
+      {
+        returnDocument: 'after',
+      },
+    )
+
+  return result ? serializeUser(result) : null
+}
+
 export function serializeUser(
   user,
   { includePasswordHash = false } = {},
@@ -99,6 +145,7 @@ export function serializeUser(
     email: user.email,
     name: user.name,
     role: user.role,
+    dashboardColor: user.dashboardColor ?? null,
 
     // Existing users without these fields remain active
     suspended: user.suspended === true,

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../auth/useAuth.js'
+import MarketplaceAssistant from '../chatbot/MarketplaceAssistant.jsx'
 
 import './BuyerDashboardPage.css'
 
@@ -11,6 +12,9 @@ export function BuyerDashboardPage() {
 
   const isSuspended =
     auth.user?.suspended === true
+
+  const dashboardColor =
+    auth.user?.dashboardColor || '#008080'
 
 
   async function handleLogout() {
@@ -31,7 +35,12 @@ export function BuyerDashboardPage() {
 
 
   return (
-    <main className="buyer-dashboard-shell">
+    <main
+      className="buyer-dashboard-shell"
+      style={{
+        '--buyer-dashboard-color': dashboardColor,
+      }}
+    >
 
       <section className="buyer-dashboard-container">
 
@@ -92,15 +101,15 @@ export function BuyerDashboardPage() {
               </p>
 
               <button
-                  type="button"
-                  className="buyer-suspension-contact-button"
-                  onClick={() =>
-                    navigate('/buyer/suspension-support')
-                  }
-                >
-                  Contact Admin
-                  <span>→</span>
-               </button>
+                type="button"
+                className="buyer-suspension-contact-button"
+                onClick={() =>
+                  navigate('/buyer/suspension-support')
+                }
+              >
+                Contact Admin
+                <span>→</span>
+              </button>
 
             </div>
 
@@ -424,6 +433,9 @@ export function BuyerDashboardPage() {
 
       </section>
 
+      <MarketplaceAssistant />
+
     </main>
   )
 }
+

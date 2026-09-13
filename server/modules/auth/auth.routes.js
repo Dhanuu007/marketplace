@@ -25,7 +25,9 @@ import {
   createUser,
   findUserByEmail,
   findUserById,
+  findAdminEmail,
   updateUserPassword,
+  updateUserDashboardColor,
   setUserOnline,
   setUserOffline,
 } from './user.repository.js'
@@ -506,6 +508,95 @@ router.get(
     response.json({
       user: request.user,
     })
+  },
+)
+
+// =========================================================
+// ADMIN CONTACT
+// =========================================================
+//
+// This endpoint intentionally does not require authentication.
+// The Admin contact email is public support information and
+// is used by the MarketPalce Assistant.
+//
+
+router.get(
+  '/auth/admin-contact',
+  async (request, response, next) => {
+    try {
+      const email =
+        await findAdminEmail()
+
+      if (!email) {
+        throw createHttpError(
+          404,
+          'ADMIN_CONTACT_NOT_FOUND',
+          'MarketPalce Admin contact information is currently unavailable.',
+        )
+      }
+
+      response.json({
+        email,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+// =========================================================
+// DASHBOARD COLOR
+// =========================================================
+//
+// Allows authenticated Buyers and Creators to save their
+// personal dashboard accent color.
+//
+// Admin accounts are intentionally excluded.
+//
+
+router.put(
+  '/auth/dashboard-color',
+  requireAuth,
+  requireRole(
+    USER_ROLES.BUYER,
+    USER_ROLES.CREATOR,
+  ),
+  async (request, response, next) => {
+    try {
+      const color =
+        request.body?.color
+
+      if (
+        typeof color !== 'string' ||
+        color.trim() === ''
+      ) {
+        throw createHttpError(
+          400,
+          'INVALID_DASHBOARD_COLOR',
+          'Dashboard color is required.',
+        )
+      }
+
+      const updatedUser =
+        await updateUserDashboardColor(
+          request.user.id,
+          color.trim(),
+        )
+
+      if (!updatedUser) {
+        throw createHttpError(
+          404,
+          'USER_NOT_FOUND',
+          'User could not be found.',
+        )
+      }
+
+      response.json({
+        user: updatedUser,
+      })
+    } catch (error) {
+      next(error)
+    }
   },
 )
 

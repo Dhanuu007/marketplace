@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { CreatorDashboardScene } from './CreatorDashboardScene.jsx'
 
 import { useAuth } from '../auth/useAuth.js'
+import MarketplaceAssistant from '../chatbot/MarketplaceAssistant.jsx'
+
 import { apiRequest } from '../../../services/apiClient.js'
 
 import { env } from '../../config/env.js'
@@ -2336,6 +2338,8 @@ export function CreatorDashboardPage() {
         </div>
 
       </section>
+
+      <MarketplaceAssistant />
 
     </main>
   )

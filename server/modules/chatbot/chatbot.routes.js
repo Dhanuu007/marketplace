@@ -67,24 +67,26 @@ router.post(
 
       for await (const event of stream) {
 
-        if (
-          event?.event_type ===
-            'step.delta' &&
-          event?.delta?.type ===
-            'text' &&
-          event?.delta?.text
-        ) {
+  if (event?.event_type === 'error') {
+    response.write(
+      `data: ${JSON.stringify({
+        text: "I'm temporarily unavailable. Please try again in a little while.",
+      })}\n\n`,
+    )
 
-          response.write(
-            `data: ${JSON.stringify({
-              text: event.delta.text,
-            })}\n\n`,
-          )
+    break
+  }
 
-        }
-
-      }
-
+  if (
+    event?.event_type === 'step.delta' &&
+    event?.delta?.type === 'text' &&
+    event?.delta?.text
+  ) {
+    response.write(
+      `data: ${JSON.stringify({ text: event.delta.text })}\n\n`,
+    )
+  }
+}
 
       response.write(
         `data: ${JSON.stringify({

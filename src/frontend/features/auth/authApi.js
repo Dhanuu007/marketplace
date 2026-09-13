@@ -95,3 +95,19 @@ export function checkAdminAccess(token) {
     },
   )
 }
+
+export function updateDashboardColor(
+  token,
+  color,
+) {
+  return apiRequest(
+    '/auth/dashboard-color',
+    {
+      method: 'PUT',
+      token,
+      body: {
+        color,
+      },
+    },
+  )
+}
