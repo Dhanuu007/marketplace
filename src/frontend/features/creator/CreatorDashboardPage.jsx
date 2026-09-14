@@ -31,6 +31,42 @@ export function CreatorDashboardPage() {
   const [ordersLoading, setOrdersLoading] = useState(true)
   const [ordersError, setOrdersError] = useState('')
 
+  // =========================================================
+  // DASHBOARD COLOR CUSTOMIZATION
+  // =========================================================
+
+  const defaultDashboardColor = '#008080'
+
+  const [dashboardColor, setDashboardColor] = useState(
+    () =>
+      auth.user?.dashboardColor ||
+      defaultDashboardColor,
+  )
+
+  useEffect(() => {
+    function handleDashboardColorChange(event) {
+      const color = event?.detail?.color
+
+      if (!color) {
+        return
+      }
+
+      setDashboardColor(color)
+    }
+
+    window.addEventListener(
+      'marketplace-dashboard-color-change',
+      handleDashboardColorChange,
+    )
+
+    return () => {
+      window.removeEventListener(
+        'marketplace-dashboard-color-change',
+        handleDashboardColorChange,
+      )
+    }
+  }, [])
+
 
   // =========================================================
   // NOTIFICATIONS
@@ -782,7 +818,12 @@ export function CreatorDashboardPage() {
 
 
   return (
-    <main className="creator-shell">
+    <main
+      className="creator-shell"
+      style={{
+        '--creator-dashboard-color': dashboardColor,
+      }}
+    >
 
       <section className="creator-container">
 

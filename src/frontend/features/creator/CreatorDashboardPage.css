@@ -4195,3 +4195,693 @@
     grid-template-columns: 1fr !important;
   }
 }
+/* =========================================================
+   DASHBOARD COLOR CUSTOMIZATION
+   =========================================================
+   The Marketplace Assistant provides:
+   --creator-dashboard-color
+
+   This block connects that selected color to the
+   existing Creator Dashboard theme without rewriting
+   the original 4K+ stylesheet.
+========================================================= */
+
+.creator-shell {
+  /* Selected dashboard color */
+  --creator-accent: var(--creator-dashboard-color, #008080);
+
+  /* Automatically generate a darker companion color */
+  --creator-accent-dark:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 78%,
+      #000000
+    );
+
+  /* Selected color with transparency */
+  --creator-accent-soft:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 10%,
+      transparent
+    );
+
+  --creator-accent-soft-strong:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 16%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   MAIN PAGE BACKGROUND
+========================================================= */
+
+.creator-shell {
+  background:
+    radial-gradient(
+      circle at 12% 8%,
+      var(--creator-accent-soft),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 88% 12%,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 7%,
+        transparent
+      ),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 7%,
+        #f8fafc
+      ) 0%,
+      #f8fbff 28%,
+      #ffffff 62%,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 4%,
+        #f7fbff
+      ) 100%
+    );
+}
+
+
+/* =========================================================
+   HERO / HEADER
+========================================================= */
+
+.creator-header {
+  background:
+    radial-gradient(
+      circle at 82% 22%,
+      rgba(255, 255, 255, 0.94),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 94% 78%,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 8%,
+        transparent
+      ),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 9%,
+        #f8fafc
+      ) 0%,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 4%,
+        #ffffff
+      ) 48%,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 8%,
+        #f8fafc
+      ) 100%
+    );
+}
+
+
+/* Hero decorative glow */
+
+.creator-header::before {
+  background:
+    radial-gradient(
+      circle,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 12%,
+        transparent
+      ),
+      transparent 68%
+    );
+}
+
+
+/* =========================================================
+   HERO ACCENTS
+========================================================= */
+
+.creator-eyebrow-dot {
+  background: var(--creator-accent);
+
+  box-shadow:
+    0 0 0 5px var(--creator-accent-soft);
+}
+
+.creator-header-eyebrow {
+  color: var(--creator-accent);
+}
+
+.creator-shell .eyebrow {
+  color: var(--creator-accent);
+}
+
+
+/* =========================================================
+   CREATOR ID
+========================================================= */
+
+.creator-id {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 16%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   PRIMARY BUTTONS
+========================================================= */
+
+.creator-primary-button {
+  border-color: var(--creator-accent);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--creator-accent),
+      var(--creator-accent-dark)
+    );
+
+  box-shadow:
+    0 8px 20px
+    color-mix(
+      in srgb,
+      var(--creator-accent) 17%,
+      transparent
+    );
+}
+
+.creator-primary-button:hover {
+  box-shadow:
+    0 13px 28px
+    color-mix(
+      in srgb,
+      var(--creator-accent) 23%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   SECONDARY CREATOR ACTIONS
+========================================================= */
+
+.creator-earnings-button {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 20%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 6%,
+      #ffffff
+    );
+}
+
+.creator-earnings-button:hover {
+  border-color: var(--creator-accent);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--creator-accent),
+      var(--creator-accent-dark)
+    );
+
+  box-shadow:
+    0 11px 24px
+    color-mix(
+      in srgb,
+      var(--creator-accent) 17%,
+      transparent
+    );
+}
+
+
+.creator-payment-settings-button {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 16%,
+      transparent
+    );
+}
+
+.creator-payment-settings-button:hover {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 35%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 6%,
+      #ffffff
+    );
+}
+
+
+.creator-automated-payouts-button {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 20%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 6%,
+      transparent
+    );
+}
+
+.creator-automated-payouts-button:hover {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 40%,
+      transparent
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 11%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.creator-stat-card {
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 7%,
+        transparent
+      ),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.99),
+      rgba(248, 250, 252, 0.97)
+    );
+}
+
+
+/* =========================================================
+   TOTAL STAT — SELECTED COLOR
+========================================================= */
+
+.creator-stat-total::before {
+  background:
+    linear-gradient(
+      90deg,
+      var(--creator-accent),
+      color-mix(
+        in srgb,
+        var(--creator-accent) 45%,
+        #ffffff
+      )
+    );
+}
+
+.creator-stat-total .creator-stat-icon {
+  color: var(--creator-accent);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 18%,
+      transparent
+    );
+
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 7%,
+        #ffffff
+      ),
+      color-mix(
+        in srgb,
+        var(--creator-accent) 4%,
+        #ffffff
+      )
+    );
+}
+
+
+/* =========================================================
+   LISTING PREVIEW AREA
+========================================================= */
+
+.creator-listing-visual {
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 8%,
+        #f8fafc
+      ),
+      #f5f8fc
+    );
+}
+
+.creator-image-placeholder {
+  color: var(--creator-accent);
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 11%,
+        transparent
+      ),
+      transparent 50%
+    ),
+    color-mix(
+      in srgb,
+      var(--creator-accent) 5%,
+      #ffffff
+    );
+}
+
+
+/* =========================================================
+   LISTING ACTIONS
+========================================================= */
+
+.creator-action-icon {
+  color: var(--creator-accent);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 7%,
+      #ffffff
+    );
+}
+
+.creator-demo-link:hover {
+  color: var(--creator-accent);
+}
+
+.creator-edit-button {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 18%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 6%,
+      #ffffff
+    );
+}
+
+.creator-edit-button:hover {
+  border-color: var(--creator-accent);
+
+  color: #fff;
+
+  background: var(--creator-accent);
+
+  box-shadow:
+    0 8px 18px
+    color-mix(
+      in srgb,
+      var(--creator-accent) 16%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   SECTION ADD BUTTON
+========================================================= */
+
+.creator-section-add {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 18%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 6%,
+      #ffffff
+    );
+}
+
+.creator-section-add:hover {
+  border-color: var(--creator-accent);
+
+  background: #fff;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.creator-empty-icon {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 20%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 6%,
+      #ffffff
+    );
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.creator-loading-spinner {
+  border-top-color: var(--creator-accent);
+
+  border-right-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 20%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+.creator-notification-button:hover {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 28%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 6%,
+        #ffffff
+      )
+    );
+}
+
+.creator-notification-icon {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 14%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 7%,
+        #ffffff
+      ),
+      color-mix(
+        in srgb,
+        var(--creator-accent) 4%,
+        #ffffff
+      )
+    );
+}
+
+.creator-notification-read-all {
+  color: var(--creator-accent);
+}
+
+.creator-notification-item-icon {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 14%,
+      transparent
+    );
+
+  color: var(--creator-accent);
+
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(
+        in srgb,
+        var(--creator-accent) 7%,
+        #ffffff
+      ),
+      color-mix(
+        in srgb,
+        var(--creator-accent) 4%,
+        #ffffff
+      )
+    );
+}
+
+.creator-notification-unread-dot {
+  background: var(--creator-accent);
+
+  box-shadow:
+    0 0 0 4px
+    color-mix(
+      in srgb,
+      var(--creator-accent) 8%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   SUPPORT CHAT
+========================================================= */
+
+.creator-suspension-support-eyebrow {
+  color: var(--creator-accent);
+}
+
+.creator-suspension-support-message-row-own
+.creator-suspension-support-message {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 16%,
+      transparent
+    );
+
+  background:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 5%,
+      #ffffff
+    );
+}
+
+.creator-suspension-support-composer textarea:focus {
+  border-color:
+    color-mix(
+      in srgb,
+      var(--creator-accent) 45%,
+      transparent
+    );
+
+  box-shadow:
+    0 0 0 3px
+    color-mix(
+      in srgb,
+      var(--creator-accent) 8%,
+      transparent
+    );
+}
+
+.creator-suspension-support-composer-footer button {
+  border-color: var(--creator-accent);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--creator-accent),
+      var(--creator-accent-dark)
+    );
+
+  box-shadow:
+    0 6px 16px
+    color-mix(
+      in srgb,
+      var(--creator-accent) 15%,
+      transparent
+    );
+}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../auth/useAuth.js'
@@ -13,8 +14,37 @@ export function BuyerDashboardPage() {
   const isSuspended =
     auth.user?.suspended === true
 
-  const dashboardColor =
-    auth.user?.dashboardColor || '#008080'
+  const [dashboardColor, setDashboardColor] =
+  useState(
+    auth.user?.dashboardColor || '#008080',
+  )
+
+
+useEffect(() => {
+  function handleDashboardColorChange(event) {
+    const color = event?.detail?.color
+
+    if (!color) {
+      return
+    }
+
+    setDashboardColor(color)
+  }
+
+
+  window.addEventListener(
+    'marketplace-dashboard-color-change',
+    handleDashboardColorChange,
+  )
+
+
+  return () => {
+    window.removeEventListener(
+      'marketplace-dashboard-color-change',
+      handleDashboardColorChange,
+    )
+  }
+}, [])
 
 
   async function handleLogout() {

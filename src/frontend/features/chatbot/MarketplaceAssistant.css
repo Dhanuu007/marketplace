@@ -870,3 +870,585 @@
     padding: 10px;
   }
 }
+
+/* =========================================================
+   DASHBOARD COLOR CUSTOMIZATION
+========================================================= */
+
+.marketplace-assistant__dashboard-color {
+  margin: 10px 0 18px;
+
+  padding: 18px;
+
+  border: 1px solid #e4e0ff;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #faf9ff 0%,
+      #ffffff 100%
+    );
+
+  box-shadow:
+    0 8px 24px rgba(79, 70, 229, 0.06);
+}
+
+
+/* =========================================================
+   COLOR HEADER
+========================================================= */
+
+.marketplace-assistant__dashboard-color-heading {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+.marketplace-assistant__dashboard-color-icon {
+  display: grid;
+
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6d28d9,
+      #4f46e5
+    );
+
+  color: #ffffff;
+
+  font-size: 20px;
+
+  box-shadow:
+    0 7px 16px rgba(79, 70, 229, 0.20);
+}
+
+
+.marketplace-assistant__dashboard-color-heading strong {
+  display: block;
+
+  color: #111827;
+
+  font-size: 15px;
+
+  font-weight: 900;
+
+  line-height: 1.25;
+}
+
+
+.marketplace-assistant__dashboard-color-heading span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #6b7280;
+
+  font-size: 11px;
+
+  line-height: 1.4;
+}
+
+
+.marketplace-assistant__dashboard-color-description {
+  margin-top: 17px;
+
+  color: #27324a;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   OPEN COLOR EDITOR BUTTON
+========================================================= */
+
+.marketplace-assistant__dashboard-color-open {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  width: 100%;
+
+  min-height: 43px;
+
+  margin-top: 13px;
+
+  padding: 0 14px;
+
+  border: 1px solid #ddd6fe;
+
+  border-radius: 11px;
+
+  color: #5b21b6;
+
+  background: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+
+.marketplace-assistant__dashboard-color-open:hover {
+  transform: translateY(-1px);
+
+  border-color: #a78bfa;
+
+  background: #faf5ff;
+
+  box-shadow:
+    0 6px 16px rgba(124, 58, 237, 0.10);
+}
+
+
+.marketplace-assistant__dashboard-color-open span:last-child {
+  font-size: 16px;
+
+  line-height: 1;
+
+  transition:
+    transform 180ms ease;
+}
+
+
+.marketplace-assistant__dashboard-color-open:hover span:last-child {
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   COLOR EDITOR
+========================================================= */
+
+.marketplace-assistant__dashboard-color-editor {
+  margin-top: 16px;
+}
+
+
+.marketplace-assistant__color-options {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding: 13px 12px;
+
+  border: 1px solid #eceaf7;
+
+  border-radius: 15px;
+
+  background: #ffffff;
+}
+
+
+.marketplace-assistant__color-option {
+  position: relative;
+
+  flex: 1 1 0;
+
+  width: 34px;
+  height: 34px;
+
+  min-width: 0;
+
+  padding: 0;
+
+  border: 3px solid #ffffff;
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.16);
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+
+.marketplace-assistant__color-option:hover {
+  transform: scale(1.08);
+
+  box-shadow:
+    0 5px 12px rgba(15, 23, 42, 0.22);
+}
+
+
+.marketplace-assistant__color-option--selected {
+  transform: scale(1.10);
+
+  box-shadow:
+    0 0 0 3px #ffffff,
+    0 0 0 5px currentColor,
+    0 6px 14px rgba(15, 23, 42, 0.20);
+}
+
+
+/* =========================================================
+   SAVE / RESET ACTIONS
+========================================================= */
+
+.marketplace-assistant__dashboard-color-actions {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  gap: 9px;
+
+  margin-top: 13px;
+}
+
+
+.marketplace-assistant__dashboard-color-actions button {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  min-height: 42px;
+
+  padding: 0 10px;
+
+  border-radius: 11px;
+
+  font-family: inherit;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+
+.marketplace-assistant__dashboard-color-actions button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+
+.marketplace-assistant__dashboard-color-save {
+  border: 1px solid #008080;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #008080,
+      #006b6b
+    );
+
+  box-shadow:
+    0 6px 15px rgba(0, 128, 128, 0.16);
+}
+
+
+.marketplace-assistant__dashboard-color-save:hover:not(:disabled) {
+  box-shadow:
+    0 9px 20px rgba(0, 128, 128, 0.22);
+}
+
+
+.marketplace-assistant__dashboard-color-reset {
+  border: 1px solid #c4b5fd;
+
+  color: #5b21b6;
+
+  background: #ffffff;
+}
+
+
+.marketplace-assistant__dashboard-color-reset:hover:not(:disabled) {
+  border-color: #8b5cf6;
+
+  background: #faf5ff;
+}
+
+
+.marketplace-assistant__dashboard-color-actions button:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.marketplace-assistant__dashboard-color-success {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  margin-top: 13px;
+
+  padding: 12px 13px;
+
+  border: 1px solid #bbf7d0;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0fdf4,
+      #ffffff
+    );
+
+  animation:
+    marketplace-dashboard-status-in 220ms ease;
+}
+
+
+.marketplace-assistant__dashboard-color-status-icon {
+  display: grid;
+
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  background: #16a34a;
+
+  font-size: 15px;
+
+  font-weight: 900;
+}
+
+
+.marketplace-assistant__dashboard-color-success strong,
+.marketplace-assistant__dashboard-color-success span,
+.marketplace-assistant__dashboard-color-error strong,
+.marketplace-assistant__dashboard-color-error span {
+  display: block;
+}
+
+
+.marketplace-assistant__dashboard-color-success strong {
+  color: #15803d;
+
+  font-size: 11px;
+
+  font-weight: 900;
+}
+
+
+.marketplace-assistant__dashboard-color-success div span {
+  margin-top: 2px;
+
+  color: #64748b;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.marketplace-assistant__dashboard-color-error {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  margin-top: 13px;
+
+  padding: 12px 13px;
+
+  border: 1px solid #fecaca;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff1f2,
+      #ffffff
+    );
+
+  animation:
+    marketplace-dashboard-status-in 220ms ease;
+}
+
+
+.marketplace-assistant__dashboard-color-error
+  .marketplace-assistant__dashboard-color-status-icon {
+  background: #dc2626;
+}
+
+
+.marketplace-assistant__dashboard-color-error strong {
+  color: #b91c1c;
+
+  font-size: 11px;
+
+  font-weight: 900;
+}
+
+
+.marketplace-assistant__dashboard-color-error div span {
+  margin-top: 2px;
+
+  color: #7f1d1d;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.marketplace-assistant__dashboard-color-info {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 8px;
+
+  margin-top: 13px;
+
+  color: #64748b;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+
+.marketplace-assistant__dashboard-color-info > span:first-child {
+  display: grid;
+
+  place-items: center;
+
+  flex: 0 0 auto;
+
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  color: #ffffff;
+
+  background: #6366f1;
+
+  font-size: 10px;
+
+  font-weight: 900;
+}
+
+
+/* =========================================================
+   STATUS ANIMATION
+========================================================= */
+
+@keyframes marketplace-dashboard-status-in {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .marketplace-assistant__dashboard-color {
+    padding: 15px;
+  }
+
+
+  .marketplace-assistant__dashboard-color-actions {
+    grid-template-columns: 1fr;
+  }
+
+
+  .marketplace-assistant__color-options {
+    gap: 6px;
+
+    padding: 11px 9px;
+  }
+
+
+  .marketplace-assistant__color-option {
+    width: 31px;
+    height: 31px;
+  }
+
+}
