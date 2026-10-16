@@ -1459,57 +1459,109 @@ export function FoundationPage() {
 
 
   if (loading) {
-
-
-
     return (
-
       <main
-
         className={`marketplace-homepage ${
-
-          darkMode
-
-            ? 'marketplace-dark'
-
-            : 'marketplace-light'
-
-        }`}
-
+          darkMode ? 'marketplace-dark' : 'marketplace-light'
+        } marketplace-shimmer-page`}
+        aria-busy="true"
+        aria-label="Loading MarketPalce homepage"
       >
+        <header className="marketplace-header marketplace-shimmer-header" aria-hidden="true">
+          <div className="marketplace-header-left">
+            <div className="marketplace-shimmer-brand-mark marketplace-skeleton" />
+            <div className="marketplace-shimmer-brand-name marketplace-skeleton" />
+            <div className="marketplace-shimmer-credits marketplace-skeleton" />
+          </div>
+          <div className="marketplace-shimmer-nav">
+            <span className="marketplace-skeleton" />
+            <span className="marketplace-skeleton" />
+            <span className="marketplace-skeleton" />
+            <span className="marketplace-skeleton" />
+          </div>
+          <div className="marketplace-shimmer-header-actions">
+            <span className="marketplace-shimmer-search marketplace-skeleton" />
+            <span className="marketplace-shimmer-login marketplace-skeleton" />
+            <span className="marketplace-shimmer-button marketplace-skeleton" />
+          </div>
+        </header>
 
+        <section className="marketplace-hero marketplace-hero-new marketplace-shimmer-hero" aria-hidden="true">
+          <div className="marketplace-shimmer-hero-copy">
+            <div className="marketplace-shimmer-pill marketplace-skeleton" />
+            <div className="marketplace-shimmer-kicker marketplace-skeleton" />
+            <div className="marketplace-shimmer-title">
+              <span className="marketplace-skeleton" />
+              <span className="marketplace-skeleton" />
+            </div>
+            <div className="marketplace-shimmer-description">
+              <span className="marketplace-skeleton" />
+              <span className="marketplace-skeleton" />
+            </div>
+            <div className="marketplace-shimmer-hero-buttons">
+              <span className="marketplace-skeleton" />
+              <span className="marketplace-skeleton" />
+            </div>
+            <div className="marketplace-shimmer-trust">
+              <div><span className="marketplace-skeleton" /><span className="marketplace-skeleton" /></div>
+              <div><span className="marketplace-skeleton" /><span className="marketplace-skeleton" /></div>
+            </div>
+          </div>
 
-
-        <section className="marketplace-loading">
-
-
-
-          <div className="marketplace-loading-spinner" />
-
-
-
-          <p>
-
-            Loading marketplace...
-
-          </p>
-
-
-
+          <div className="marketplace-shimmer-hero-visual">
+            <div className="marketplace-shimmer-workflow-card">
+              <span className="marketplace-shimmer-line short" />
+              <div className="marketplace-shimmer-file-row">
+                <span className="marketplace-shimmer-file-icon marketplace-skeleton" />
+                <div><span className="marketplace-shimmer-line medium" /><span className="marketplace-shimmer-line small" /></div>
+              </div>
+              <span className="marketplace-shimmer-progress marketplace-skeleton" />
+              <span className="marketplace-shimmer-line medium" />
+            </div>
+            <div className="marketplace-shimmer-status marketplace-skeleton">
+              <span />
+              <div><i /><i /></div>
+            </div>
+            <div className="marketplace-shimmer-sale marketplace-skeleton">
+              <i /><span />
+            </div>
+            <div className="marketplace-shimmer-download">
+              <span className="marketplace-shimmer-line short" />
+              <span className="marketplace-shimmer-line medium" />
+              <span className="marketplace-shimmer-line long" />
+              <span className="marketplace-shimmer-download-button marketplace-skeleton" />
+            </div>
+          </div>
         </section>
 
+        <section className="marketplace-section marketplace-shimmer-section" aria-hidden="true">
+          <div className="marketplace-shimmer-section-heading">
+            <span className="marketplace-shimmer-line short marketplace-skeleton" />
+            <span className="marketplace-shimmer-line heading marketplace-skeleton" />
+            <span className="marketplace-shimmer-line description marketplace-skeleton" />
+          </div>
+          <div className="marketplace-shimmer-card-grid">
+            <div className="marketplace-shimmer-category-card"><i className="marketplace-skeleton" /><span className="marketplace-skeleton" /><span className="marketplace-skeleton" /></div>
+            <div className="marketplace-shimmer-category-card"><i className="marketplace-skeleton" /><span className="marketplace-skeleton" /><span className="marketplace-skeleton" /></div>
+            <div className="marketplace-shimmer-category-card"><i className="marketplace-skeleton" /><span className="marketplace-skeleton" /><span className="marketplace-skeleton" /></div>
+          </div>
+        </section>
 
-
+        <section className="marketplace-section marketplace-shimmer-products" aria-hidden="true">
+          <div className="marketplace-shimmer-section-heading align-left">
+            <span className="marketplace-shimmer-line short marketplace-skeleton" />
+            <span className="marketplace-shimmer-line heading marketplace-skeleton" />
+          </div>
+          <div className="marketplace-shimmer-product-grid">
+            <div className="marketplace-shimmer-product-card"><span /><i className="marketplace-skeleton" /><i className="marketplace-skeleton" /><b className="marketplace-skeleton" /></div>
+            <div className="marketplace-shimmer-product-card"><span /><i className="marketplace-skeleton" /><i className="marketplace-skeleton" /><b className="marketplace-skeleton" /></div>
+            <div className="marketplace-shimmer-product-card"><span /><i className="marketplace-skeleton" /><i className="marketplace-skeleton" /><b className="marketplace-skeleton" /></div>
+          </div>
+        </section>
+        <p className="marketplace-shimmer-sr-only">Loading marketplace content…</p>
       </main>
-
     )
-
-
-
   }
-
-
-
 
 
   /* =====================================================
