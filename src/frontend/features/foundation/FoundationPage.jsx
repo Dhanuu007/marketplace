@@ -235,12 +235,10 @@ export function FoundationPage() {
   ====================================================== */
 
 
-
   useEffect(() => {
-
-
-
-    let isMounted = true
+  let isMounted = true
+  let loadingTimer
+  const shimmerStartTime = Date.now()
 
 
 
@@ -364,19 +362,18 @@ export function FoundationPage() {
 
 
 
+     
       } finally {
+        const elapsed = Date.now() - shimmerStartTime
+        const remaining = Math.max(0, 1500 - elapsed)
 
-
-
-        if (isMounted) {
-
-          setLoading(false)
-
-        }
-
-
-
+        loadingTimer = setTimeout(() => {
+          if (isMounted) {
+            setLoading(false)
+          }
+        }, remaining)
       }
+
 
 
 
@@ -392,11 +389,10 @@ export function FoundationPage() {
 
 
 
-    return () => {
-
-      isMounted = false
-
-    }
+   return () => {
+  isMounted = false
+  clearTimeout(loadingTimer)
+}
 
 
 
