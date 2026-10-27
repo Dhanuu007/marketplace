@@ -31,6 +31,9 @@ export function CheckoutPage() {
     useState(false)
   const [orderError, setOrderError] = useState('')
   const [errors, setErrors] = useState({})
+  const [paymentsEnabled, setPaymentsEnabled] = useState(true)
+  const [paymentSettingsLoaded, setPaymentSettingsLoaded] = useState(false)
+  const [paymentAnnouncement, setPaymentAnnouncement] = useState('')
 
   /*
    * Successful Marketplace order.
@@ -63,6 +66,38 @@ export function CheckoutPage() {
       total + item.quantity,
     0,
   )
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadPaymentSettings() {
+      try {
+        const data = await apiRequest('/website/settings/public')
+        const settings = data?.settings ?? data
+
+        if (!isMounted) return
+
+        setPaymentsEnabled(settings?.paymentsEnabled !== false)
+        setPaymentAnnouncement(
+          settings?.announcementEnabled &&
+          settings?.paymentsEnabled === false
+            ? String(settings?.announcementMessage ?? '').trim()
+            : '',
+        )
+      } catch {
+        // Keep payments enabled if the public settings request fails.
+        // The backend remains authoritative and blocks disabled payments.
+      } finally {
+        if (isMounted) setPaymentSettingsLoaded(true)
+      }
+    }
+
+    loadPaymentSettings()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   useEffect(() => {
     if (
@@ -157,6 +192,15 @@ export function CheckoutPage() {
   }
 
   async function startPayment() {
+    if (!paymentsEnabled) {
+      setShowPaymentConfirmation(false)
+      setOrderError(
+        paymentAnnouncement ||
+          'Payments are temporarily unavailable due to maintenance. Please try again later.',
+      )
+      return
+    }
+
     setShowPaymentConfirmation(false)
     setIsSubmitting(true)
 
@@ -454,6 +498,14 @@ export function CheckoutPage() {
     event.preventDefault()
 
     setOrderError('')
+
+    if (!paymentsEnabled) {
+      setOrderError(
+        paymentAnnouncement ||
+          'Payments are temporarily unavailable due to maintenance. Please try again later.',
+      )
+      return
+    }
 
     if (!validateForm()) {
       return
@@ -835,6 +887,21 @@ export function CheckoutPage() {
           </section>
         ) : (
           <>
+            {!paymentsEnabled && (
+              <div className="checkout-payment-maintenance" role="status">
+                <span className="checkout-payment-maintenance-icon" aria-hidden="true">
+                  🚫
+                </span>
+                <div>
+                  <strong>Payments temporarily unavailable</strong>
+                  <p>
+                    {paymentAnnouncement ||
+                      'Payments are temporarily unavailable due to maintenance. Please try again later.'}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {orderError && (
               <div
                 style={{
@@ -1034,17 +1101,37 @@ export function CheckoutPage() {
 
                 <button
                   type="submit"
-                  className="checkout-place-order-button"
+                  className={`checkout-place-order-button ${
+                    !paymentsEnabled ? 'checkout-payment-disabled' : ''
+                  }`}
                   disabled={
                     isSubmitting ||
-                    !isAuthenticated
+                    !isAuthenticated ||
+                    !paymentsEnabled ||
+                    !paymentSettingsLoaded
+                  }
+                  title={
+                    !paymentsEnabled
+                      ? 'Payments are temporarily unavailable'
+                      : undefined
+                  }
+                  style={
+                    !paymentsEnabled
+                      ? {
+                          filter: 'blur(0.4px)',
+                          opacity: 0.55,
+                          cursor: 'not-allowed',
+                        }
+                      : undefined
                   }
                 >
-                  {isSubmitting
-                    ? 'Starting Payment...'
-                    : pendingOrder
-                      ? 'Retry Payment'
-                      : 'Proceed to Payment'}
+                  {!paymentsEnabled
+                    ? '🚫 Payments Unavailable'
+                    : isSubmitting
+                      ? 'Starting Payment...'
+                      : pendingOrder
+                        ? 'Retry Payment'
+                        : 'Proceed to Payment'}
                 </button>
 
                 <Link
@@ -1119,10 +1206,22 @@ export function CheckoutPage() {
 
               <button
                 type="button"
-                className="checkout-confirmation-continue"
+                className={`checkout-confirmation-continue ${
+                  !paymentsEnabled ? 'checkout-payment-disabled' : ''
+                }`}
                 onClick={startPayment}
+                disabled={!paymentsEnabled || isSubmitting}
+                style={
+                  !paymentsEnabled
+                    ? {
+                        filter: 'blur(0.4px)',
+                        opacity: 0.55,
+                        cursor: 'not-allowed',
+                      }
+                    : undefined
+                }
               >
-                Proceed to Payment
+                {!paymentsEnabled ? '🚫 Payments Unavailable' : 'Proceed to Payment'}
               </button>
             </div>
           </div>

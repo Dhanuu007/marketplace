@@ -1,3 +1,4 @@
+
 import { Router } from 'express'
 
 import {
@@ -84,10 +85,38 @@ router.put(
   },
 )
 
-// =========================
-// Admin Website Settings
-// =========================
 
+// Public Website Settings
+// Expose only settings needed by public-facing pages.
+router.get(
+  '/website/settings/public',
+  async (request, response, next) => {
+    try {
+      const settings =
+        await getWebsiteSettingsContent()
+
+      response.set('Cache-Control', 'no-store')
+
+      response.json({
+        settings: {
+          paymentsEnabled:
+            settings.paymentsEnabled ?? true,
+
+          announcementEnabled:
+            settings.announcementEnabled ?? false,
+
+          announcementMessage:
+            settings.announcementMessage ?? '',
+        },
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+
+// Admin Website Settings
 router.get(
   '/website/settings',
   requireAuth,
@@ -107,6 +136,7 @@ router.get(
 )
 
 
+// Admin Website Settings Update
 router.put(
   '/website/settings',
   requireAuth,
@@ -131,6 +161,5 @@ router.put(
     }
   },
 )
-
 
 export default router

@@ -1,4 +1,8 @@
 import {
+  getWebsiteSettingsContent,
+} from '../../modules/website/website.service.js'
+
+import {
   createRazorpayOrder,
   getRazorpayPayment,
 } from './razorpay.js'
@@ -53,6 +57,22 @@ export async function createPaymentOrder(
     )
 
     error.statusCode = 400
+
+    throw error
+  }
+
+    // Block new payment orders during payment maintenance.
+  const websiteSettings =
+    await getWebsiteSettingsContent()
+
+  if (websiteSettings.paymentsEnabled === false) {
+    const error = new Error(
+      websiteSettings.announcementMessage?.trim() ||
+        'Payments are temporarily unavailable due to maintenance. Please try again later.',
+    )
+
+    error.statusCode = 503
+    error.code = 'PAYMENTS_DISABLED'
 
     throw error
   }

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { AdminLayout } from '../../components/AdminLayout.jsx'
+
 import { useAuth } from '../../../auth/useAuth.js'
 import { apiRequest } from '../../../../../services/apiClient.js'
 
@@ -486,6 +488,8 @@ function HomepagePage() {
 
 
   return (
+
+  <AdminLayout>
     <div className="homepage-management-page">
 
       {/* Header */}
@@ -998,7 +1002,6 @@ function HomepagePage() {
                 )
               },
             )
-
           )}
 
         </div>
@@ -1006,8 +1009,8 @@ function HomepagePage() {
       </section>
 
     </div>
+  </AdminLayout>
   )
 }
-
 
 export default HomepagePage

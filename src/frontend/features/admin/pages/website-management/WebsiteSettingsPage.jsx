@@ -20,6 +20,11 @@ const DEFAULT_SETTINGS = {
 
   marketplaceActive: true,
 
+  paymentsEnabled: true,
+  announcementEnabled: false,
+  announcementMessage:
+    'Payment mode is under maintenance. Please do not perform any payments.',
+
   contactEmail: '',
 
   phone: '',
@@ -115,6 +120,16 @@ function WebsiteSettingsPage() {
             marketplaceActive:
               savedSettings.marketplaceActive ??
               DEFAULT_SETTINGS.marketplaceActive,
+
+            paymentsEnabled:
+              savedSettings.paymentsEnabled ?? true,
+
+            announcementEnabled:
+              savedSettings.announcementEnabled ?? false,
+
+            announcementMessage:
+              savedSettings.announcementMessage ??
+              DEFAULT_SETTINGS.announcementMessage,
 
             contactEmail:
               savedSettings.contactEmail ??
@@ -280,6 +295,16 @@ function WebsiteSettingsPage() {
         marketplaceActive:
           savedSettings.marketplaceActive ??
           DEFAULT_SETTINGS.marketplaceActive,
+
+        paymentsEnabled:
+          savedSettings.paymentsEnabled ?? true,
+
+        announcementEnabled:
+          savedSettings.announcementEnabled ?? false,
+
+        announcementMessage:
+          savedSettings.announcementMessage ??
+          DEFAULT_SETTINGS.announcementMessage,
 
         contactEmail:
           savedSettings.contactEmail ??
@@ -605,6 +630,117 @@ function WebsiteSettingsPage() {
 
       </section>
 
+
+      {/* Payment Maintenance & Announcement */}
+
+      <section className="website-settings-panel">
+        <div className="website-settings-panel-header">
+          <div>
+            <p className="website-settings-panel-label">
+              Payments
+            </p>
+
+            <h2>Payment Maintenance</h2>
+
+            <p>
+              Control new payments and display a maintenance
+              announcement on the public homepage.
+            </p>
+          </div>
+        </div>
+
+        <div className="website-settings-form-grid">
+          <div className="website-settings-form-group full-width">
+            <div className="website-settings-panel-header">
+              <div>
+                <label>Accept New Payments</label>
+                <p>
+                  {settings.paymentsEnabled
+                    ? 'Payments are enabled.'
+                    : 'New payments are disabled.'}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={settings.paymentsEnabled}
+                aria-label="Accept new payments"
+                className={`website-settings-toggle ${
+                  settings.paymentsEnabled ? 'active' : ''
+                }`}
+                onClick={() =>
+                  handleChange(
+                    'paymentsEnabled',
+                    !settings.paymentsEnabled,
+                  )
+                }
+                disabled={loading || saving}
+              >
+                <span />
+              </button>
+            </div>
+          </div>
+
+          <div className="website-settings-form-group full-width">
+            <div className="website-settings-panel-header">
+              <div>
+                <label>Homepage Announcement</label>
+                <p>
+                  Enable or hide the public maintenance message.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={settings.announcementEnabled}
+                aria-label="Enable homepage announcement"
+                className={`website-settings-toggle ${
+                  settings.announcementEnabled ? 'active' : ''
+                }`}
+                onClick={() =>
+                  handleChange(
+                    'announcementEnabled',
+                    !settings.announcementEnabled,
+                  )
+                }
+                disabled={loading || saving}
+              >
+                <span />
+              </button>
+            </div>
+          </div>
+
+          <div className="website-settings-form-group full-width">
+            <label htmlFor="announcementMessage">
+              Announcement Message
+            </label>
+
+            <textarea
+              id="announcementMessage"
+              rows={3}
+              maxLength={300}
+              value={settings.announcementMessage}
+              onChange={(event) =>
+                handleChange(
+                  'announcementMessage',
+                  event.target.value,
+                )
+              }
+              placeholder="Enter the message shown on the homepage..."
+              disabled={loading || saving}
+            />
+
+            <small>
+              {settings.announcementMessage.length}/300 characters.
+              {' '}
+              The message appears when both payments are disabled
+              and the announcement is enabled.
+            </small>
+          </div>
+        </div>
+      </section>
 
       {/* Contact */}
 

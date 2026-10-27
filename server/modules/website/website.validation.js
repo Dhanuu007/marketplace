@@ -284,6 +284,41 @@ export function validateWebsiteSettings(input = {}) {
   const marketplaceActive =
     input.marketplaceActive ?? true
 
+      const paymentsEnabled =
+    input.paymentsEnabled ?? true
+
+  if (typeof paymentsEnabled !== 'boolean') {
+    throw createHttpError(
+      400,
+      'INVALID_INPUT',
+      'Payments enabled status must be a boolean',
+    )
+  }
+
+  const announcementEnabled =
+    input.announcementEnabled ?? false
+
+  if (typeof announcementEnabled !== 'boolean') {
+    throw createHttpError(
+      400,
+      'INVALID_INPUT',
+      'Announcement enabled status must be a boolean',
+    )
+  }
+
+  const announcementMessage = cleanString(
+    input.announcementMessage ?? '',
+    'Announcement message',
+  )
+
+  if (announcementMessage.length > 300) {
+    throw createHttpError(
+      400,
+      'INVALID_INPUT',
+      'Announcement message must not exceed 300 characters',
+    )
+  }
+
   if (typeof marketplaceActive !== 'boolean') {
     throw createHttpError(
       400,
@@ -335,6 +370,9 @@ export function validateWebsiteSettings(input = {}) {
     currency,
     commissionPercentage,
     marketplaceActive,
+    paymentsEnabled,
+    announcementEnabled,
+    announcementMessage,
     contactEmail,
     phone,
 

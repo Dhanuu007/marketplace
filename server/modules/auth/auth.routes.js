@@ -163,6 +163,12 @@ router.post(
           user.passwordHash,
         )
 
+        console.log('[LOGIN DEBUG]', {
+  userFound: Boolean(user),
+  passwordHashPresent: Boolean(user.passwordHash),
+  passwordValid: isPasswordValid,
+})
+
       if (!isPasswordValid) {
         throw createHttpError(
           401,

@@ -96,11 +96,8 @@ export async function getHomepageContent() {
 }
 
 
-export async function getPublicHomepageContent(
-  user,
-) {
+export async function getPublicHomepageContent(user) {
   const homepage = await getHomepage()
-
   const categories = await getCategories()
 
   /*
@@ -108,8 +105,7 @@ export async function getPublicHomepageContent(
    * featured products follow the same price
    * visibility rules as the marketplace product APIs.
    */
-  const products =
-    await getPublicProducts(user)
+  const products = await getPublicProducts(user)
 
   const homepageContent = homepage
     ? {
@@ -148,8 +144,7 @@ export async function getPublicHomepageContent(
         },
 
         sections: {
-          hero:
-            homepage.sections?.hero ?? true,
+          hero: homepage.sections?.hero ?? true,
 
           categories:
             homepage.sections?.categories ?? true,
@@ -168,8 +163,7 @@ export async function getPublicHomepageContent(
         description:
           'Discover premium websites, templates, and digital products from trusted sellers.',
 
-        buttonText:
-          'Explore Websites',
+        buttonText: 'Explore Websites',
 
         featuredCategoryIds: [],
         featuredProductIds: [],
@@ -180,16 +174,10 @@ export async function getPublicHomepageContent(
 
         banner: {
           label: 'PROMOTION',
-
-          heading:
-            'Build your online presence today.',
-
+          heading: 'Build your online presence today.',
           description:
             'Discover premium websites from our marketplace.',
-
-          buttonText:
-            'Explore Now',
-
+          buttonText: 'Explore Now',
           isActive: true,
         },
 
@@ -215,11 +203,23 @@ export async function getPublicHomepageContent(
     featuredProductIds.includes(String(product._id)),
   )
 
+  // Public announcement and payment status come
+  // from the existing Website Settings document.
+  const settings = await getWebsiteSettings()
+
   return {
     ...homepageContent,
 
-    categories: featuredCategories,
+    paymentsEnabled:
+      settings?.paymentsEnabled ?? true,
 
+    announcementEnabled:
+      settings?.announcementEnabled ?? false,
+
+    announcementMessage:
+      settings?.announcementMessage ?? '',
+
+    categories: featuredCategories,
     products: featuredProducts,
   }
 }
@@ -232,8 +232,7 @@ export async function updateHomepageContent(input) {
     heading: homepage.heading,
     description: homepage.description,
 
-    buttonText:
-      homepage.buttonText,
+    buttonText: homepage.buttonText,
 
     featuredCategoryIds:
       homepage.featuredCategoryIds ?? [],
@@ -283,6 +282,7 @@ export async function updateHomepageContent(input) {
   }
 }
 
+
 // =========================
 // WEBSITE SETTINGS
 // =========================
@@ -304,6 +304,14 @@ export async function getWebsiteSettingsContent() {
       commissionPercentage: 5,
 
       marketplaceActive: true,
+
+      // Payments are enabled by default.
+      paymentsEnabled: true,
+
+      // Announcements are hidden by default.
+      announcementEnabled: false,
+
+      announcementMessage: '',
 
       contactEmail: '',
 
@@ -344,6 +352,15 @@ export async function getWebsiteSettingsContent() {
     marketplaceActive:
       settings.marketplaceActive ?? true,
 
+    paymentsEnabled:
+      settings.paymentsEnabled ?? true,
+
+    announcementEnabled:
+      settings.announcementEnabled ?? false,
+
+    announcementMessage:
+      settings.announcementMessage ?? '',
+
     contactEmail:
       settings.contactEmail ?? '',
 
@@ -366,8 +383,7 @@ export async function getWebsiteSettingsContent() {
 
     seo: {
       metaTitle:
-        settings.seo?.metaTitle ??
-        'Marketplace',
+        settings.seo?.metaTitle ?? 'Marketplace',
 
       metaDescription:
         settings.seo?.metaDescription ??
@@ -379,36 +395,43 @@ export async function getWebsiteSettingsContent() {
 }
 
 
-export async function updateWebsiteSettingsContent(
-  input,
-) {
-  const settings =
-    await saveWebsiteSettings(input)
+export async function updateWebsiteSettingsContent(input) {
+  const settings = await saveWebsiteSettings(input)
 
   return {
     marketplaceName:
-      settings.marketplaceName,
+      settings.marketplaceName ?? 'Marketplace',
 
     marketplaceDescription:
-      settings.marketplaceDescription,
+      settings.marketplaceDescription ??
+      'Discover premium websites from trusted creators.',
 
     supportEmail:
-      settings.supportEmail,
+      settings.supportEmail ?? '',
 
     currency:
-      settings.currency,
+      settings.currency ?? 'INR',
 
     commissionPercentage:
-      settings.commissionPercentage,
+      settings.commissionPercentage ?? 5,
 
     marketplaceActive:
-      settings.marketplaceActive,
+      settings.marketplaceActive ?? true,
+
+    paymentsEnabled:
+      settings.paymentsEnabled ?? true,
+
+    announcementEnabled:
+      settings.announcementEnabled ?? false,
+
+    announcementMessage:
+      settings.announcementMessage ?? '',
 
     contactEmail:
-      settings.contactEmail,
+      settings.contactEmail ?? '',
 
     phone:
-      settings.phone,
+      settings.phone ?? '',
 
     socialLinks: {
       instagram:
@@ -426,13 +449,13 @@ export async function updateWebsiteSettingsContent(
 
     seo: {
       metaTitle:
-        settings.seo?.metaTitle ?? '',
+        settings.seo?.metaTitle ?? 'Marketplace',
 
       metaDescription:
-        settings.seo?.metaDescription ?? '',
+        settings.seo?.metaDescription ??
+        'Discover premium websites from trusted creators.',
     },
 
-    updatedAt:
-      settings.updatedAt,
+    updatedAt: settings.updatedAt,
   }
 }

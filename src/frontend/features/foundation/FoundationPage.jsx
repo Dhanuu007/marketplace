@@ -260,82 +260,57 @@ export function FoundationPage() {
 
 
 
-        const data =
+        const data = await apiRequest(
+          '/website/homepage/public',
+          token ? { token } : undefined,
+        )
 
-          await apiRequest(
+        // Payment maintenance settings are public, separate from homepage content.
+        // If this request fails, the homepage should still load normally.
+        let publicSettings = {}
 
-            '/website/homepage/public',
-
-            token ? { token } : undefined,
-
+        try {
+          const settingsResponse = await apiRequest(
+            '/website/settings/public',
           )
 
+          publicSettings =
+            settingsResponse?.settings ??
+            settingsResponse ??
+            {}
+        } catch (settingsError) {
+          console.warn(
+            'Could not load public payment settings:',
+            settingsError.message || settingsError,
+          )
+        }
 
-
-
-
-        if (
-
-          isMounted &&
-
-          data?.homepage
-
-        ) {
-
-
-
+        if (isMounted && data?.homepage) {
           setHomepage({
-
-
-
             ...DEFAULT_HOMEPAGE,
-
-
-
             ...data.homepage,
 
-
-
             banner: {
-
               ...DEFAULT_HOMEPAGE.banner,
-
               ...(data.homepage.banner ?? {}),
-
             },
-
-
 
             sections: {
-
               ...DEFAULT_HOMEPAGE.sections,
-
               ...(data.homepage.sections ?? {}),
-
             },
 
+            categories: data.homepage.categories ?? [],
+            products: data.homepage.products ?? [],
 
-
-            categories:
-
-              data.homepage.categories ??
-
-              [],
-
-
-
-            products:
-
-              data.homepage.products ??
-
-              [],
-
-
-
+            // Keep payments enabled by default if the public settings are missing.
+            paymentsEnabled:
+              publicSettings.paymentsEnabled ?? true,
+            announcementEnabled:
+              publicSettings.announcementEnabled ?? false,
+            announcementMessage:
+              publicSettings.announcementMessage ?? '',
           })
-
-
-
         }
 
 
@@ -1681,7 +1656,9 @@ export function FoundationPage() {
     categories,
 
     products,
-
+    paymentsEnabled = true,
+    announcementEnabled = false,
+    announcementMessage = '',
   } = homepage
 
 
@@ -1949,6 +1926,34 @@ export function FoundationPage() {
 
 
       </header>
+
+      {/* PAYMENT MAINTENANCE ANNOUNCEMENT */}
+      {!paymentsEnabled &&
+        announcementEnabled &&
+        announcementMessage?.trim() && (
+          <section
+            className="marketplace-payment-announcement"
+            role="status"
+            aria-live="polite"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '14px 24px',
+                margin: '16px 24px 0',
+                border: '1px solid #f2c078',
+                borderRadius: '12px',
+                background: darkMode ? '#3b2a16' : '#fff7e8',
+                color: darkMode ? '#ffffff' : '#78350f',
+                lineHeight: 1.5,
+              }}
+
+          >
+            <span aria-hidden="true" style={{ fontSize: '22px' }}>⚠️</span>
+            <p style={{ margin: 0 }}>{announcementMessage}</p>
+          </section>
+        )}
+
 
 
 
