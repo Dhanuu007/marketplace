@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { AdminLayout } from './components/AdminLayout.jsx'
+
 import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../auth/useAuth.js'
@@ -401,6 +403,7 @@ export function AdminMaintenancePage() {
 
 
   return (
+      <AdminLayout>
     <div className="admin-layout">
       <div className="admin-main">
 
@@ -900,5 +903,7 @@ export function AdminMaintenancePage() {
 
       </div>
     </div>
+
+    </AdminLayout>
   )
 }
