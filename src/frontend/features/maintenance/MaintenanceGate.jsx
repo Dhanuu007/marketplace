@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react'
 
 import {
@@ -19,9 +20,13 @@ export function MaintenanceGate({ children }) {
   const { user, logout } = useAuth()
 
   const [maintenance, setMaintenance] = useState({
-  enabled: false,
-  message: '',
-})
+    enabled: false,
+    message: '',
+    startedAt: null,
+    endAt: null,
+    appearance: {},
+  })
+
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
@@ -29,44 +34,30 @@ export function MaintenanceGate({ children }) {
 
     async function checkMaintenance() {
       try {
-        const data =
-          await apiRequest(
-            '/maintenance/status',
-          )
+        const data = await apiRequest('/maintenance/status')
+        const status = data?.maintenance
 
-        const enabled =
-          data?.maintenance?.enabled === true
+        if (!isMounted) return
 
-          
-          const message =
-              data?.maintenance?.message ?? ''
-          
-
-        if (!isMounted) {
-          return
-        }
+        const enabled = status?.enabled === true
 
         setMaintenance({
-  enabled,
-  message,
+          enabled,
+          message: status?.message ?? '',
+          startedAt: status?.startedAt ?? null,
+          endAt: status?.endAt ?? null,
+          appearance: status?.appearance ?? {},
         })
 
         /*
-         * If a Buyer or Creator is currently logged in
-         * when maintenance starts, clear their session
-         * and send them to the marketplace home.
+         * Clear Buyer and Creator sessions when
+         * maintenance mode is active.
          */
-        if (
-          enabled &&
-          user &&
-          user.role !== 'ADMIN'
-        ) {
+        if (enabled && user && user.role !== 'ADMIN') {
           await logout()
 
           if (isMounted) {
-            navigate('/', {
-              replace: true,
-            })
+            navigate('/', { replace: true })
           }
 
           return
@@ -85,64 +76,42 @@ export function MaintenanceGate({ children }) {
 
     checkMaintenance()
 
-    const intervalId =
-      window.setInterval(
-        checkMaintenance,
-        CHECK_INTERVAL,
-      )
+    const intervalId = window.setInterval(
+      checkMaintenance,
+      CHECK_INTERVAL,
+    )
 
     return () => {
       isMounted = false
-      window.clearInterval(
-        intervalId,
-      )
+      window.clearInterval(intervalId)
     }
-  }, [
-    logout,
-    navigate,
-    user,
-  ])
+  }, [logout, navigate, user])
 
-  /*
-   * Admin always has full access.
-   *
-   * This is important because the Admin must be able
-   * to control maintenance mode.
-   */
+  // Admin always has access to the dashboard.
   if (user?.role === 'ADMIN') {
     return children
   }
 
-  /*
-   * The login page must remain accessible during
-   * maintenance so an Admin whose session expired
-   * can log back in.
-   *
-   * Buyer/Creator login attempts are still blocked
-   * by the backend.
-   */
+  // Keep the login page accessible.
   if (location.pathname === '/login') {
     return children
   }
 
-  /*
-   * Wait for the first maintenance check.
-   */
+  // Wait for the initial maintenance check.
   if (checking) {
     return null
   }
 
-  /*
-   * Guests, Buyers and Creators see the maintenance
-   * screen while maintenance is active.
-   */
- if (maintenance.enabled) {
-  return (
-    <MaintenanceScreen
-      message={maintenance.message}
-    />
-  )
-}
+  if (maintenance.enabled) {
+    return (
+      <MaintenanceScreen
+        message={maintenance.message}
+        startedAt={maintenance.startedAt}
+        endAt={maintenance.endAt}
+        appearance={maintenance.appearance}
+      />
+    )
+  }
 
   return children
 }

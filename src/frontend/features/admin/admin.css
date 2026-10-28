@@ -3940,3 +3940,490 @@
   color: var(--admin-muted);
   font-size: 13px;
 }
+
+/* =========================================================
+   MAINTENANCE PAGE — VISUAL POLISH
+   Scoped to maintenance controls to avoid changing other
+   Admin pages.
+========================================================= */
+
+.admin-maintenance-panel {
+  border: 1px solid #e2eaf0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 14px 40px rgba(16, 42, 67, 0.07);
+}
+
+.admin-maintenance-panel > .admin-panel-header {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fcfc 100%);
+}
+
+.admin-maintenance-panel > .admin-panel-header h2 {
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+
+.admin-maintenance-body {
+  gap: 28px;
+  padding: 28px;
+}
+
+.admin-maintenance-status-card {
+  align-items: center;
+  padding: 24px;
+  border-radius: 16px;
+  gap: 18px;
+}
+
+.admin-maintenance-status-card h3 {
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+
+.admin-maintenance-info {
+  gap: 16px;
+}
+
+.admin-maintenance-info > div {
+  padding: 22px;
+  border-color: #e4ebf1;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fff 0%, #fbfdfe 100%);
+}
+
+.admin-maintenance-info p {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.admin-maintenance-label {
+  margin-bottom: 8px;
+  color: #536b80;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.admin-maintenance-message {
+  gap: 14px;
+  margin-top: 0;
+  padding-top: 26px;
+  border-top: 1px solid #e8eef3;
+}
+
+.admin-maintenance-message > div:first-child p,
+.admin-maintenance-section-heading p {
+  max-width: 760px;
+  margin: 7px 0 0;
+  color: #718399;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.admin-maintenance-message-toolbar {
+  margin: 2px 0 0;
+}
+
+.admin-maintenance-format-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #f8fbfc;
+}
+
+.admin-maintenance-message-toolbar span {
+  font-size: 12px;
+}
+
+.admin-maintenance-message textarea {
+  min-height: 150px;
+  padding: 16px 18px;
+  border-color: #dce6ed;
+  border-radius: 12px;
+  background: #fbfdfe;
+  font-size: 13px;
+}
+
+.admin-maintenance-message textarea:focus {
+  border-color: #008f8f;
+  box-shadow: 0 0 0 4px rgba(0, 143, 143, 0.09);
+}
+
+.admin-maintenance-message-footer {
+  align-items: center;
+  margin-top: -4px;
+}
+
+.admin-maintenance-customization {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  padding: 26px;
+  border: 1px solid #e2eaf0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(16, 42, 67, 0.035);
+}
+
+.admin-maintenance-section-heading h3 {
+  margin: 0;
+  color: #102a43;
+  font-size: 20px;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.admin-maintenance-section-heading p {
+  margin-top: 8px;
+}
+
+.admin-maintenance-theme-presets {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-maintenance-theme-preset {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #dfe8ee;
+  border-radius: 13px;
+  background: #fff;
+  color: #243b53;
+  text-align: left;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.admin-maintenance-theme-preset:hover {
+  transform: translateY(-2px);
+  border-color: #9bcfcd;
+  box-shadow: 0 8px 20px rgba(16, 42, 67, 0.07);
+}
+
+.admin-maintenance-theme-preset[aria-pressed='true'] {
+  border-color: #008f8f;
+  background: #f0fbfa;
+  box-shadow: 0 0 0 2px rgba(0, 143, 143, 0.12);
+}
+
+.admin-maintenance-theme-swatches {
+  display: flex;
+  overflow: hidden;
+  height: 48px;
+  border: 1px solid rgba(16, 42, 67, 0.12);
+  border-radius: 8px;
+}
+
+.admin-maintenance-theme-swatches > span {
+  display: block;
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-maintenance-live-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  min-height: 260px;
+  padding: 24px;
+  border: 1px solid;
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+.admin-maintenance-preview-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  width: min(100%, 620px);
+  padding: clamp(22px, 4vw, 36px);
+  border: 1px solid;
+  border-radius: 14px;
+  box-sizing: border-box;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.admin-maintenance-preview-panel h3 {
+  margin: 0;
+  font-size: clamp(20px, 2.5vw, 28px);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.admin-maintenance-preview-panel p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.admin-maintenance-preview-track {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.admin-maintenance-preview-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.admin-maintenance-preview-panel button {
+  min-height: 40px;
+  padding: 0 20px !important;
+  border-radius: 9px !important;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: default;
+}
+
+.admin-maintenance-preview-caption {
+  color: inherit;
+  font-size: 11px;
+  opacity: 0.75;
+  text-align: center;
+}
+
+.admin-maintenance-color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.admin-maintenance-color-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid #e4ebf1;
+  border-radius: 12px;
+  background: #fbfdfe;
+}
+
+.admin-maintenance-color-field > span:first-child {
+  color: #526b82;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.admin-maintenance-color-control {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.admin-maintenance-color-control input[type='color'] {
+  width: 44px;
+  height: 40px;
+  padding: 4px;
+  border: 1px solid #dbe5eb;
+  border-radius: 9px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.admin-maintenance-color-control input[type='text'] {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid #dbe5eb;
+  border-radius: 9px;
+  box-sizing: border-box;
+  background: #fff;
+  color: #243b53;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.admin-maintenance-color-control input[type='text']:focus,
+.admin-maintenance-schedule-field input:focus {
+  outline: none;
+  border-color: #008f8f;
+  box-shadow: 0 0 0 3px rgba(0, 143, 143, 0.1);
+}
+
+.admin-maintenance-customization-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid #edf2f5;
+}
+
+.admin-maintenance-customization-actions .admin-secondary-button {
+  min-height: 42px;
+  padding: 0 16px;
+  font-size: 12px;
+}
+
+.admin-maintenance-customization-actions .admin-maintenance-action {
+  min-width: 150px;
+  min-height: 42px;
+  padding: 0 18px;
+  font-size: 12px;
+}
+
+.admin-maintenance-schedule-field {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.45fr) minmax(220px, 1fr);
+  align-items: center;
+  gap: 18px;
+  max-width: 760px;
+}
+
+.admin-maintenance-schedule-field > span {
+  color: #526b82;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.admin-maintenance-schedule-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid #dbe5eb;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background: #fbfdfe;
+  color: #243b53;
+  font: inherit;
+  font-size: 13px;
+}
+
+.admin-maintenance-schedule-note {
+  margin: -4px 0 0;
+  color: #718399;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.admin-maintenance-footer {
+  padding-top: 26px;
+}
+
+.admin-maintenance-footer strong {
+  font-size: 15px;
+}
+
+.admin-maintenance-footer span {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.admin-maintenance-footer .admin-maintenance-action {
+  min-height: 46px;
+}
+
+.admin-maintenance-panel .admin-form-success,
+.admin-maintenance-panel .admin-form-error {
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 1000px) {
+  .admin-maintenance-theme-presets {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-maintenance-color-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-maintenance-body {
+    gap: 20px;
+    padding: 18px;
+  }
+
+  .admin-maintenance-panel > .admin-panel-header {
+    padding: 20px 18px;
+  }
+
+  .admin-maintenance-customization {
+    gap: 17px;
+    padding: 19px;
+  }
+
+  .admin-maintenance-theme-presets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-maintenance-color-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-maintenance-schedule-field {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .admin-maintenance-customization-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .admin-maintenance-customization-actions button {
+    width: 100%;
+  }
+
+  .admin-maintenance-live-preview {
+    padding: 14px;
+  }
+
+  .admin-maintenance-preview-panel {
+    padding: 22px;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-maintenance-theme-presets {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .admin-maintenance-theme-preset {
+    padding: 9px;
+    font-size: 11px;
+  }
+
+  .admin-maintenance-theme-swatches {
+    height: 36px;
+  }
+
+  .admin-maintenance-status-card {
+    align-items: flex-start;
+    padding: 17px;
+  }
+
+  .admin-maintenance-message-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-maintenance-message-footer button {
+    width: 100%;
+  }
+}

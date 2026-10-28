@@ -1,164 +1,596 @@
+
+/* =========================================
+   MAINTENANCE SCREEN — CHARCOAL & EMBER
+========================================= */
+
 .maintenance-screen {
-  min-height: 100vh;
+  --maintenance-background: #1a1a1a;
+  --maintenance-panel: #2d2d2d;
+  --maintenance-border: #4a4a4a;
+  --maintenance-accent: #e85d3a;
+  --maintenance-highlight: #f07b4f;
+  --maintenance-accent-dark: #c24826;
+  --maintenance-heading: #f5f5f5;
+  --maintenance-text: #e5e5e5;
+  --maintenance-muted: #a3a3a3;
+  --maintenance-button-background: #e85d3a;
+  --maintenance-button-text: #ffffff;
+  --maintenance-progress-track: #4a4a4a;
+  --maintenance-progress-fill: #e85d3a;
+
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  padding: 32px 20px;
+  color: var(--maintenance-text);
   background:
     radial-gradient(
-      circle at top,
-      rgba(255, 255, 255, 0.08),
-      transparent 42%
+      ellipse at 50% 0%,
+      color-mix(
+        in srgb,
+        var(--maintenance-accent) 13%,
+        transparent
+      ),
+      transparent 48%
     ),
-    #f7f7f5;
-  color: #171717;
-  box-sizing: border-box;
+    var(--maintenance-background);
+  font-family: "Space Mono", "Courier New", monospace;
+}
+
+.maintenance-screen::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+  background-size: 36px 36px;
+  mask-image: linear-gradient(
+    to bottom,
+    black,
+    transparent 90%
+  );
 }
 
 .maintenance-card {
-  width: min(520px, 100%);
+  position: relative;
+  width: min(560px, 100%);
+  box-sizing: border-box;
+  padding: 42px 36px;
+  overflow: hidden;
   text-align: center;
-  padding: 48px 32px;
+  background: var(--maintenance-panel);
+  border: 1px solid var(--maintenance-border);
+  border-radius: 20px;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.3),
+    0 0 35px
+      color-mix(
+        in srgb,
+        var(--maintenance-accent) 6%,
+        transparent
+      );
+  animation: maintenance-card-enter 600ms ease both;
+}
+
+.maintenance-card::before {
+  position: absolute;
+  top: 0;
+  left: 12%;
+  width: 76%;
+  height: 2px;
+  content: "";
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--maintenance-accent),
+    var(--maintenance-highlight),
+    transparent
+  );
+  animation: maintenance-shimmer 4s ease-in-out infinite;
 }
 
 .maintenance-clock {
   position: relative;
-  width: 76px;
-  height: 76px;
+  width: 92px;
+  height: 92px;
   margin: 0 auto 30px;
-  border: 2px solid currentColor;
+  border: 2px solid var(--maintenance-accent);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.65);
+  background:
+    radial-gradient(
+      circle,
+      var(--maintenance-panel) 60%,
+      color-mix(
+        in srgb,
+        var(--maintenance-accent) 12%,
+        var(--maintenance-panel)
+      )
+    );
+  box-shadow:
+    0 0 0 7px
+      color-mix(
+        in srgb,
+        var(--maintenance-accent) 8%,
+        transparent
+      ),
+    0 0 32px
+      color-mix(
+        in srgb,
+        var(--maintenance-accent) 17%,
+        transparent
+      );
+}
+
+.maintenance-clock::before {
+  position: absolute;
+  inset: 7px;
+  border: 1px dashed
+    color-mix(
+      in srgb,
+      var(--maintenance-highlight) 55%,
+      transparent
+    );
+  border-radius: 50%;
+  content: "";
+  animation: maintenance-clock-rotate 30s linear infinite;
+}
+
+.maintenance-clock::after {
+  position: absolute;
+  inset: 15px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--maintenance-border) 80%,
+      transparent
+    );
+  border-radius: 50%;
+  content: "";
 }
 
 .maintenance-clock-hand {
   position: absolute;
-  left: 50%;
+  z-index: 2;
   bottom: 50%;
+  left: 50%;
+  display: block;
   width: 2px;
   border-radius: 999px;
-  background: currentColor;
+  background: var(--maintenance-heading);
   transform-origin: 50% 100%;
 }
 
 .maintenance-clock-hour {
   height: 20px;
-  animation: maintenance-clock-fast 4s linear infinite;
+  animation: maintenance-clock-hour 43200s linear infinite;
 }
 
 .maintenance-clock-minute {
-  height: 28px;
-  animation: maintenance-clock-fast 1.5s linear infinite;
+  height: 29px;
+  animation: maintenance-clock-minute 3600s linear infinite;
 }
 
 .maintenance-clock-second {
-  height: 32px;
   width: 1px;
-  animation: maintenance-clock-fast 0.35s linear infinite;
+  height: 32px;
+  background: var(--maintenance-highlight);
+  animation: maintenance-clock-second 60s steps(60) infinite;
 }
 
 .maintenance-clock-center {
   position: absolute;
+  z-index: 3;
   top: 50%;
   left: 50%;
   width: 7px;
   height: 7px;
+  border: 2px solid var(--maintenance-panel);
   border-radius: 50%;
-  background: currentColor;
+  background: var(--maintenance-highlight);
   transform: translate(-50%, -50%);
 }
 
 .maintenance-eyebrow {
-  display: inline-block;
-  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 18px;
+  color: var(--maintenance-highlight);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  opacity: 0.55;
+}
+
+.maintenance-eyebrow::before,
+.maintenance-eyebrow::after {
+  width: 17px;
+  height: 1px;
+  content: "";
+  background: var(--maintenance-accent);
+  opacity: 0.7;
 }
 
 .maintenance-card h1 {
   margin: 0;
-  font-size: clamp(30px, 6vw, 48px);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  color: var(--maintenance-heading);
+  font-size: clamp(27px, 5vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
 }
 
 .maintenance-message {
-  max-width: 420px;
+  max-width: 430px;
   margin: 20px auto 0;
-  font-size: 16px;
-  line-height: 1.6;
-  opacity: 0.7;
+  color: var(--maintenance-text);
+  font-size: 14px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.maintenance-message strong {
+  color: var(--maintenance-highlight);
+  font-weight: 700;
 }
 
 .maintenance-submessage {
-  margin: 8px 0 0;
-  font-size: 14px;
-  font-weight: 600;
-  opacity: 0.5;
+  margin: 10px 0 0;
+  color: var(--maintenance-muted);
+  font-size: 12px;
+  line-height: 1.8;
 }
 
-@keyframes maintenance-clock-fast {
-  from {
-    transform: translateX(-50%) rotate(0deg);
-  }
+/* =========================================
+   COUNTDOWN & PROGRESS BAR
+========================================= */
 
-  to {
-    transform: translateX(-50%) rotate(360deg);
-  }
+.maintenance-countdown {
+  margin-top: 32px;
+  padding: 20px;
+  text-align: left;
+  background: color-mix(
+    in srgb,
+    var(--maintenance-background) 65%,
+    var(--maintenance-panel)
+  );
+  border: 1px solid var(--maintenance-border);
+  border-radius: 12px;
 }
 
-@media (max-width: 600px) {
-  .maintenance-screen {
-    padding: 20px;
-  }
-
-  .maintenance-card {
-    padding: 32px 20px;
-  }
-
-  .maintenance-clock {
-    width: 68px;
-    height: 68px;
-    margin-bottom: 24px;
-  }
+.maintenance-countdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
 }
+
+.maintenance-countdown-header > span {
+  color: var(--maintenance-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.maintenance-countdown-header > strong {
+  color: var(--maintenance-highlight);
+  font-size: clamp(15px, 3vw, 20px);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.maintenance-progress-track {
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  background: var(--maintenance-progress-track);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.maintenance-progress-fill {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+  background: linear-gradient(
+    90deg,
+    var(--maintenance-accent-dark),
+    var(--maintenance-progress-fill),
+    var(--maintenance-highlight)
+  );
+  border-radius: inherit;
+  box-shadow: 0 0 14px
+    color-mix(
+      in srgb,
+      var(--maintenance-accent) 45%,
+      transparent
+    );
+  transition: width 900ms linear;
+}
+
+.maintenance-progress-fill::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.32) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: maintenance-progress-shimmer 2.5s linear infinite;
+}
+
+.maintenance-progress-labels {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  color: var(--maintenance-muted);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.maintenance-progress-labels span:last-child {
+  color: var(--maintenance-highlight);
+  text-align: right;
+}
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
 
 .maintenance-login-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-width: 150px;
-  margin-top: 28px;
-  padding: 13px 22px;
-  border: 0;
-  border-radius: 10px;
-  background: #2563eb;
-  color: #ffffff;
+  gap: 12px;
+  min-width: 165px;
+  margin-top: 30px;
+  padding: 14px 24px;
+  border: 1px solid
+    color-mix(
+      in srgb,
+      var(--maintenance-highlight) 55%,
+      var(--maintenance-accent)
+    );
+  border-radius: 9px;
+  background: var(--maintenance-button-background);
+  color: var(--maintenance-button-text);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.08em;
   cursor: pointer;
   transition:
-    transform 160ms ease,
-    box-shadow 160ms ease,
-    background 160ms ease;
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
 }
 
 .maintenance-login-button:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.18);
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px
+    color-mix(
+      in srgb,
+      var(--maintenance-accent) 25%,
+      transparent
+    );
 }
 
 .maintenance-login-button:active {
   transform: translateY(0);
 }
 
+.maintenance-login-button:focus-visible {
+  outline: 2px solid var(--maintenance-highlight);
+  outline-offset: 4px;
+}
+
 .maintenance-login-button span {
   font-size: 18px;
   line-height: 1;
+  transition: transform 180ms ease;
+}
+
+.maintenance-login-button:hover span {
+  transform: translateX(3px);
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes maintenance-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes maintenance-shimmer {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scaleX(0.75);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes maintenance-clock-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes maintenance-clock-hour {
+  to {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+@keyframes maintenance-clock-minute {
+  to {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+@keyframes maintenance-clock-second {
+  to {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+@keyframes maintenance-progress-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 600px) {
+  .maintenance-screen {
+    padding: 20px 14px;
+  }
+
+  .maintenance-card {
+    padding: 34px 20px;
+    border-radius: 15px;
+  }
+
+  .maintenance-clock {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 26px;
+  }
+
+  .maintenance-countdown {
+    margin-top: 26px;
+    padding: 16px;
+  }
+
+  .maintenance-progress-labels {
+    font-size: 9px;
+  }
+
+  .maintenance-login-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maintenance-card,
+  .maintenance-card::before,
+  .maintenance-clock::before,
+  .maintenance-clock-hour,
+  .maintenance-clock-minute,
+  .maintenance-clock-second,
+  .maintenance-progress-fill::after {
+    animation: none !important;
+  }
+
+  .maintenance-progress-fill,
+  .maintenance-login-button,
+  .maintenance-login-button span {
+    transition: none !important;
+  }
+}
+
+
+/* Simple, clean maintenance typography */
+
+.maintenance-screen {
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: normal;
+}
+
+.maintenance-card {
+  line-height: 1.6;
+}
+
+.maintenance-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+.maintenance-card h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+}
+
+.maintenance-message {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.maintenance-submessage {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.maintenance-countdown-header {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.maintenance-countdown-header strong {
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.maintenance-progress-labels {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.maintenance-login-button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: normal;
 }
