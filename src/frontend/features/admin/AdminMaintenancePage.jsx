@@ -403,11 +403,7 @@ export function AdminMaintenancePage() {
 
 
   return (
-      <AdminLayout>
-    <div className="admin-layout">
-      <div className="admin-main">
-
-        <main className="admin-content">
+    <AdminLayout>
 
           {/* =========================================
               PAGE HEADER
@@ -898,11 +894,6 @@ export function AdminMaintenancePage() {
             </div>
 
           </section>
-
-        </main>
-
-      </div>
-    </div>
 
     </AdminLayout>
   )

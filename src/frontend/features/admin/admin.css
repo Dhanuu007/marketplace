@@ -551,12 +551,10 @@
 
 .admin-content {
   width: 100%;
-
   max-width: 1500px;
-
   margin: 0 auto;
-
   padding: 38px 36px 70px;
+  box-sizing: border-box;
 }
 
 
@@ -4425,5 +4423,33 @@
 
   .admin-maintenance-message-footer button {
     width: 100%;
+  }
+}
+
+/* =========================================================
+   MAINTENANCE PAGE — CENTERED WORKSPACE FIX
+   Keeps the page inside the available area beside the sidebar.
+   The global .admin-content box-sizing fix prevents padding
+   from making the content wider than its parent.
+========================================================= */
+.admin-content:has(.admin-maintenance-panel) {
+  width: 100%;
+  max-width: 1280px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 32px 24px 60px;
+  box-sizing: border-box;
+}
+
+.admin-content:has(.admin-maintenance-panel) > .admin-page-header,
+.admin-content:has(.admin-maintenance-panel) > .admin-maintenance-panel {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 760px) {
+  .admin-content:has(.admin-maintenance-panel) {
+    padding: 24px 16px 40px;
   }
 }
