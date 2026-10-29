@@ -437,6 +437,11 @@
     0 18px 38px rgba(16, 42, 67, 0.09);
 }
 
+.admin-website-management-card.teal:hover {
+  border-color: #b9dfdc;
+  border-top-color: #008080;
+}
+
 
 .admin-website-management-card::after {
   content: '';
@@ -463,7 +468,7 @@
 ========================================================= */
 
 .admin-website-management-card.teal {
-  border-top-color: #08a3a3;
+  border-top-color: #008080;
 }
 
 
@@ -514,11 +519,11 @@
 
 .admin-website-management-card.teal
 .admin-website-card-icon {
-  border: 1px solid #ccefeb;
+  border: 1px solid #ccebea;
 
-  background: #e2f8f5;
+  background: #eaf7f6;
 
-  color: #00a19f;
+  color: #008080;
 }
 
 
@@ -567,9 +572,9 @@
 
 .admin-website-management-card.teal
 .admin-website-status {
-  background: #e7f9ee;
+  background: #eaf7f6;
 
-  color: #159447;
+  color: #008080;
 }
 
 
@@ -661,7 +666,7 @@
 
 .admin-website-management-card.teal
 .admin-website-card-action {
-  color: #009b9b;
+  color: #008080;
 }
 
 

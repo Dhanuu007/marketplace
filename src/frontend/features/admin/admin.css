@@ -4453,3 +4453,59 @@
     padding: 24px 16px 40px;
   }
 }
+
+
+/* =========================================================
+   ADMIN SIDEBAR — MATCH MARKETPLACE TEAL
+   Scoped to sidebar only; preserves existing layout.
+========================================================= */
+
+.admin-sidebar {
+  --admin-primary: #008080;
+  --admin-primary-dark: #006666;
+  --admin-primary-soft: #eaf7f6;
+}
+
+/* Brand subtitle */
+.admin-brand span {
+  color: #008080;
+}
+
+/* Navigation hover */
+.admin-sidebar .admin-nav-link:hover {
+  background: #eaf7f6;
+  border-color: #ccebea;
+  color: #008080;
+}
+
+/* Active navigation item */
+.admin-sidebar .admin-nav-link.active {
+  background: linear-gradient(
+    90deg,
+    #eaf7f6 0%,
+    #f5fbfa 100%
+  );
+  border-color: #ccebea;
+  color: #008080;
+  box-shadow: inset 3px 0 0 #008080;
+}
+
+/* Active navigation icon */
+.admin-sidebar .admin-nav-link.active .admin-nav-icon {
+  background: #ffffff;
+  border-color: #b9dfdc;
+  color: #008080;
+}
+
+/* Logout hover — keep its normal appearance otherwise */
+.admin-sidebar .admin-logout-button:hover {
+  background: #eaf7f6;
+  border-color: #ccebea;
+  color: #008080;
+}
+
+/* Keyboard focus */
+.admin-sidebar .admin-nav-link:focus-visible {
+  outline: 3px solid rgba(0, 128, 128, 0.2);
+  outline-offset: 2px;
+}

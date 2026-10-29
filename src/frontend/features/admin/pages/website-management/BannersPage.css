@@ -497,3 +497,149 @@
     font-size: 19px;
   }
 }
+
+/* =========================
+   BACK TO WEBSITE MANAGEMENT
+========================= */
+
+.banners-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 2px 0 14px;
+  padding: 9px 14px;
+
+  border: 1px solid #b9dfdc;
+  border-radius: 9px;
+
+  background: #eaf7f6;
+  color: #008080;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.banners-back-button:hover {
+  background: #d9f0ee;
+  border-color: #008080;
+  transform: translateX(-2px);
+}
+
+.banners-back-button:focus-visible {
+  outline: 3px solid rgba(0, 128, 128, 0.2);
+  outline-offset: 2px;
+}
+
+
+
+/* =========================
+   BANNERS HEADER ALIGNMENT
+========================= */
+
+.banners-management-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.banners-management-header-content {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+/* Back button aligned to the right */
+.banners-management-header-content .banners-back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: fit-content;
+  margin: 0 0 18px auto;
+  padding: 9px 14px;
+
+  border: 1px solid #b9dfdc;
+  border-radius: 9px;
+
+  background: #eaf7f6;
+  color: #008080;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.banners-management-header-content
+.banners-back-button:hover {
+  background: #d9f0ee;
+  border-color: #008080;
+  transform: translateX(-2px);
+}
+
+.banners-management-header-content
+.banners-back-button:focus-visible {
+  outline: 3px solid rgba(0, 128, 128, 0.2);
+  outline-offset: 2px;
+}
+
+/* Breadcrumb */
+.banners-management-header-content
+.banners-management-breadcrumb {
+  margin: 0 0 8px;
+  text-align: left;
+}
+
+/* Heading */
+.banners-management-header-content h1 {
+  margin: 0;
+  text-align: left;
+}
+
+/* Description */
+.banners-management-header-content > p:last-child {
+  margin: 9px 0 0;
+  max-width: 700px;
+  text-align: left;
+}
+
+/* Save button */
+.banners-management-header > .banners-save-button {
+  flex-shrink: 0;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .banners-management-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .banners-management-header-content {
+    width: 100%;
+  }
+
+  .banners-management-header > .banners-save-button {
+    width: 100%;
+  }
+}
+

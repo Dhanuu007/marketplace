@@ -279,3 +279,47 @@
     gap: 14px;
   }
 }
+
+
+/* Back to Website Management */
+.website-settings-back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: fit-content;
+
+  /* Move the button to the far left */
+  margin: 0 auto 14px 1100px;
+
+  padding: 9px 14px;
+
+  border: 1px solid #b9dfdc;
+  border-radius: 9px;
+
+  background: #eaf7f6;
+  color: #008080;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.website-settings-back-button:hover {
+  background: #d9f0ee;
+  border-color: #008080;
+  transform: translateX(-2px);
+}
+
+.website-settings-back-button:focus-visible {
+  outline: 3px solid rgba(0, 128, 128, 0.2);
+  outline-offset: 2px;
+}

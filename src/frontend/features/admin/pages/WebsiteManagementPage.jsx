@@ -27,26 +27,21 @@ function WebsiteManagementPage() {
       tone: 'teal',
     },
 
-    {
+        {
       title: 'Banners',
-      description:
-        'Manage promotional website banners.',
-      path:
-        '/admin/website-management/banners',
+      description: 'Manage promotional website banners.',
+      path: '/admin/website-management/banners',
       icon: '▧',
       status: '4 Active',
-      tone: 'blue',
+      tone: 'teal',
     },
-
     {
       title: 'Website Settings',
-      description:
-        'Manage general website settings and preferences.',
-      path:
-        '/admin/website-management/settings',
+      description: 'Manage general website settings and preferences.',
+      path: '/admin/website-management/settings',
       icon: '⚙',
       status: 'Configured',
-      tone: 'purple',
+      tone: 'teal',
     },
   ]
 

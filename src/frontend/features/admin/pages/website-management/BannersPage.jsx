@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../../../auth/useAuth.js'
 import { apiRequest } from '../../../../../services/apiClient.js'
@@ -23,6 +24,7 @@ const DEFAULT_BANNER = {
 
 function BannersPage() {
   const { token } = useAuth()
+  const navigate = useNavigate()
 
 
   const [banner, setBanner] =
@@ -301,48 +303,41 @@ function BannersPage() {
 
 
   return (
-    <div className="banners-management-page">
+    
+<div className="banners-management-page">
+  {/* Header */}
+  <div className="banners-management-header">
+    <div className="banners-management-header-content">
+      <button
+        type="button"
+        className="banners-back-button"
+        onClick={() => navigate('/admin/website-management')}
+      >
+        <span aria-hidden="true">←</span>
+        Back to Website Management
+      </button>
 
-      {/* Header */}
+      <p className="banners-management-breadcrumb">
+        Admin / Website Management / Banners
+      </p>
 
-      <div className="banners-management-header">
+      <h1>Banners</h1>
 
-        <div>
+      <p>
+        Manage the promotional banner displayed on your
+        marketplace homepage.
+      </p>
+    </div>
 
-          <p className="banners-management-breadcrumb">
-            Admin / Website Management / Banners
-          </p>
-
-
-          <h1>
-            Banners
-          </h1>
-
-
-          <p>
-            Manage the promotional banner displayed on your
-            marketplace homepage.
-          </p>
-
-        </div>
-
-
-        <button
-          className="banners-save-button"
-          type="button"
-          onClick={handleSave}
-          disabled={
-            loading ||
-            saving
-          }
-        >
-          {saving
-            ? 'Saving...'
-            : 'Save Changes'}
-        </button>
-
-      </div>
-
+    <button
+      className="banners-save-button"
+      type="button"
+      onClick={handleSave}
+      disabled={loading || saving}
+    >
+      {saving ? 'Saving...' : 'Save Changes'}
+    </button>
+  </div>
 
       {/* Status */}
 

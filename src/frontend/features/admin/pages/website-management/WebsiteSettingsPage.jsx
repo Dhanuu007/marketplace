@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../auth/useAuth.js'
 import { apiRequest } from '../../../../../services/apiClient.js'
 
@@ -45,6 +45,7 @@ const DEFAULT_SETTINGS = {
 
 
 function WebsiteSettingsPage() {
+  const navigate = useNavigate()
   const { token } = useAuth()
 
 
@@ -368,6 +369,15 @@ function WebsiteSettingsPage() {
           <p className="website-settings-breadcrumb">
             Admin / Website Management / Settings
           </p>
+
+          <button
+            type="button"
+            className="website-settings-back-button"
+            onClick={() => navigate('/admin/website-management')}
+          >
+            <span aria-hidden="true">←</span>
+            Back to Website Management
+          </button>
 
           <h1>
             Website Settings
