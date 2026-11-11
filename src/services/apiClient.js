@@ -18,17 +18,18 @@ export async function apiRequest(path, options = {}) {
   }
 
   const response = await fetch(
-    `${env.apiBaseUrl}${path}`,
-    {
-      method: options.method ?? 'GET',
-      headers,
-      body: isFormData
-        ? options.body
-        : options.body
-          ? JSON.stringify(options.body)
-          : undefined,
-    },
-  )
+  `${env.apiBaseUrl}${path}`,
+  {
+    method: options.method ?? 'GET',
+    headers,
+    cache: 'no-store',
+    body: isFormData
+      ? options.body
+      : options.body
+        ? JSON.stringify(options.body)
+        : undefined,
+  },
+)
 
   const data = await response
     .json()

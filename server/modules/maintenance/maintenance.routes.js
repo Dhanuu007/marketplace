@@ -23,9 +23,15 @@ router.get(
   '/maintenance/status',
   async (request, response, next) => {
     try {
+      response.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      })
+
       const maintenance = await getMaintenanceStatus()
 
-      return response.json({ maintenance })
+      return response.status(200).json({ maintenance })
     } catch (error) {
       return next(error)
     }
