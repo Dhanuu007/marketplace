@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from '@google/genai'
 
 import {
@@ -218,30 +219,214 @@ Do not assume that the guest has access to authenticated Buyer or Creator featur
 }
 
 
+// ========================================
+// GEMINI RETRY CONFIGURATION
+// ========================================
+
+const GEMINI_MAX_ATTEMPTS = 3
+
+const BASE_RETRY_DELAY_MS = 1000
+
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
+
+function getGeminiStatus(error) {
+  const status =
+    error?.statusCode ??
+    error?.status ??
+    error?.cause?.statusCode ??
+    error?.cause?.status
+
+  return Number(status) || null
+}
+
+
+function getRetryAfterMs(error) {
+  const headers =
+    error?.headers ??
+    error?.rawResponse?.headers ??
+    error?.cause?.headers ??
+    error?.cause?.rawResponse?.headers
+
+  const retryAfter =
+    headers?.get?.('retry-after') ??
+    headers?.['retry-after']
+
+  if (!retryAfter) {
+    return 0
+  }
+
+  const seconds = Number(retryAfter)
+
+  if (Number.isFinite(seconds)) {
+    return Math.max(0, seconds * 1000)
+  }
+
+  const date = Date.parse(retryAfter)
+
+  if (!Number.isNaN(date)) {
+    return Math.max(0, date - Date.now())
+  }
+
+  return 0
+}
+
+
+function isRetryableGeminiError(error) {
+  const status = getGeminiStatus(error)
+
+  return (
+    status === 429 ||
+    (status !== null && status >= 500 && status <= 599)
+  )
+}
+
+
+// ========================================
+// GEMINI STREAMING WITH RETRIES
+// ========================================
+
+async function* createGeminiStreamWithRetry(payload) {
+  for (
+    let attempt = 1;
+    attempt <= GEMINI_MAX_ATTEMPTS;
+    attempt++
+  ) {
+    let emittedText = false
+
+    try {
+      console.log(
+        `[Chatbot] Gemini request attempt ${attempt}/${GEMINI_MAX_ATTEMPTS}`,
+      )
+
+      // Use the standard Gemini streaming API.
+      // Each retry creates a fresh request.
+
+      const stream = await ai.models.generateContentStream(
+        payload,
+      )
+
+      for await (const chunk of stream) {
+        const text = chunk.text
+
+        if (text) {
+          emittedText = true
+
+          yield {
+            event_type: 'step.delta',
+            delta: {
+              type: 'text',
+              text,
+            },
+          }
+        }
+      }
+
+      // Successful completion.
+      return
+
+    } catch (error) {
+      const status = getGeminiStatus(error)
+
+      console.error(
+        '[Chatbot] Gemini stream error:',
+        {
+          status,
+          message: error?.message,
+          attempt,
+        },
+      )
+
+      // Never retry after text has already
+      // been sent to the user.
+      if (emittedText) {
+        throw error
+      }
+
+      const canRetry =
+        isRetryableGeminiError(error) &&
+        attempt < GEMINI_MAX_ATTEMPTS
+
+      if (canRetry) {
+        const exponentialDelay =
+          BASE_RETRY_DELAY_MS *
+          Math.pow(2, attempt - 1)
+
+        const retryAfter =
+          getRetryAfterMs(error)
+
+        const delay = Math.max(
+          exponentialDelay,
+          retryAfter,
+        )
+
+        console.warn(
+          `[Chatbot] Gemini returned ${status}. Retrying in ${delay / 1000} seconds.`,
+        )
+
+        await wait(delay)
+
+        continue
+      }
+
+      // All retries exhausted.
+      if (isRetryableGeminiError(error)) {
+        console.error(
+          '[Chatbot] All Gemini retry attempts failed.',
+        )
+
+        yield {
+          event_type: 'error',
+          error: {
+            message: 'Gemini is temporarily unavailable.',
+          },
+        }
+
+        return
+      }
+
+      // Non-retryable errors.
+      throw error
+    }
+  }
+}
+
+
+// ========================================
+// MAIN CHATBOT SERVICE
+// ========================================
+
 export async function streamChatbotMessage(
   message,
   user,
 ) {
 
+  // Process user memory.
   await processUserMemory({
     user,
     message,
   })
 
+
+  // Get role-specific instructions.
   const roleInstructions =
     getRoleInstructions(user)
 
+
+  // Load saved user memories.
   let memoryContext = ''
 
   if (user?.id) {
     const memories =
-      await getUserMemories(
-        user.id,
-      )
+      await getUserMemories(user.id)
 
     if (memories.length > 0) {
-      memoryContext =
-        `
+      memoryContext = `
 
 Known information about the user:
 ${memories
@@ -255,24 +440,28 @@ ${memories
   }
 
 
-  const stream =
-    await ai.interactions.create({
-      model: 'gemini-3.6-flash',
+  // Prepare Gemini request.
+  const payload = {
+    model: 'gemini-3.6-flash',
 
-      input:
-        `${memoryContext}
+    contents: `${memoryContext}
 
 User message:
 ${message}`,
 
-      system_instruction:
-        `${MARKETPALCE_INSTRUCTIONS}
+    config: {
+      systemInstruction: `${MARKETPALCE_INSTRUCTIONS}
 
 ${roleInstructions}`,
+    },
+  }
 
-      stream: true,
-    })
+
+  console.log(
+    '[Chatbot] Starting Gemini response stream.',
+  )
 
 
-  return stream
+  // Return the streaming generator.
+  return createGeminiStreamWithRetry(payload)
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   apiRequest,
@@ -202,6 +202,22 @@ export default function MarketplaceAssistant() {
               : "Hi! 👋 I'm the MarketPalce Assistant. How can I help you?",
       },
     ]);
+
+  // Automatically keep the latest conversation content visible.
+  const messagesContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const container = messagesContainerRef.current;
+
+    if (!container) return;
+
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: isStreaming ? "auto" : "smooth",
+    });
+  }, [messages, isOpen, isStreaming]);
 
 
   const handleContactAdmin = async () => {
@@ -618,7 +634,10 @@ export default function MarketplaceAssistant() {
           </div>
 
 
-          <div className="marketplace-assistant__messages">
+          <div
+            ref={messagesContainerRef}
+            className="marketplace-assistant__messages"
+          >
 
             {messages.map((item) => {
 

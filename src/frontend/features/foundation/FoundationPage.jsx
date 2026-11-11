@@ -2417,6 +2417,14 @@ export function FoundationPage() {
 
                           </span>
 
+                          <span
+                            className="marketplace-india-flag"
+                            role="img"
+                            aria-label="Indian flag"
+                          >
+                            <span className="india-flag-chakra">☸</span>
+                          </span>
+
 
 
 
