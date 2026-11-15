@@ -10,10 +10,15 @@ const navigation = [
   },
 
   {
-    label: 'Website Management',
-    path: '/admin/website-management',
+  label: 'Website Management',
+  path: '/admin/website-management',
+  end: true,
   },
 
+  {
+    label: 'Categories',
+    path: '/admin/website-management/categories',
+  },
   {
     label: 'Orders',
     path: '/admin/orders',
@@ -114,6 +119,7 @@ export function AdminSidebar({
           <NavLink
             key={item.path}
             to={item.path}
+            end={item.end}
             onClick={onNavigate}
             className={({ isActive }) =>
               `admin-nav-link ${

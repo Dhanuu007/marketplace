@@ -1,3 +1,4 @@
+
 import {
   getProducts,
   getAllProductsForAdmin,
@@ -154,7 +155,6 @@ export async function getCreatorProducts(creatorId) {
       creatorId,
     )
 
-
   const productsWithCategory =
     await Promise.all(
       products.map(async (product) => {
@@ -162,7 +162,6 @@ export async function getCreatorProducts(creatorId) {
           await getCategoryById(
             product.categoryId,
           )
-
 
         return {
           ...product,
@@ -174,7 +173,6 @@ export async function getCreatorProducts(creatorId) {
       }),
     )
 
-
   return productsWithCategory
 }
 
@@ -184,7 +182,6 @@ export async function addProduct(input) {
     await getCategoryById(
       input.categoryId,
     )
-
 
   if (!category) {
     const error = new Error(
@@ -196,39 +193,20 @@ export async function addProduct(input) {
     throw error
   }
 
-
   return createProduct({
     name: input.name,
-
     slug: input.slug,
-
-    description:
-      input.description,
-
+    description: input.description,
     price: input.price,
-
     image: input.image,
+    categoryId: input.categoryId,
+    demoUrl: input.demoUrl,
+    technology: input.technology,
+    screenshots: input.screenshots,
+    websiteZip: input.websiteZip,
 
-    categoryId:
-      input.categoryId,
-
-    demoUrl:
-      input.demoUrl,
-
-    technology:
-      input.technology,
-
-    screenshots:
-      input.screenshots,
-
-    websiteZip:
-      input.websiteZip,
-
-    approvalStatus:
-      'APPROVED',
-
-    isActive:
-      input.isActive,
+    approvalStatus: 'APPROVED',
+    isActive: input.isActive,
   })
 }
 
@@ -242,7 +220,6 @@ export async function addCreatorProduct(
       input.categoryId,
     )
 
-
   if (!category) {
     const error = new Error(
       'Category not found or inactive.',
@@ -252,7 +229,6 @@ export async function addCreatorProduct(
 
     throw error
   }
-
 
   return createProduct({
     name: input.name,
@@ -308,7 +284,6 @@ export async function editCreatorProduct(
       creatorId,
     )
 
-
   if (!product) {
     const error = new Error(
       'Website listing not found.',
@@ -319,12 +294,10 @@ export async function editCreatorProduct(
     throw error
   }
 
-
   const category =
     await getCategoryById(
       input.categoryId,
     )
-
 
   if (!category) {
     const error = new Error(
@@ -335,7 +308,6 @@ export async function editCreatorProduct(
 
     throw error
   }
-
 
   /*
    * Once a website listing is approved,
@@ -359,7 +331,6 @@ export async function editCreatorProduct(
 
     throw error
   }
-
 
   const updates = {
     name: input.name,
@@ -386,7 +357,6 @@ export async function editCreatorProduct(
       input.screenshots,
   }
 
-
   /*
    * If a rejected website is edited,
    * send it back to Admin for review.
@@ -400,7 +370,6 @@ export async function editCreatorProduct(
 
     updates.isActive = false
   }
-
 
   return updateProductForCreator(
     productId,
@@ -425,7 +394,6 @@ export async function reviewProduct(
     )
   }
 
-
   if (
     approvalStatus ===
     'REJECTED'
@@ -436,7 +404,6 @@ export async function reviewProduct(
       false,
     )
   }
-
 
   throw new Error(
     'Invalid product approval status.',
@@ -468,12 +435,10 @@ export async function deleteAdminProduct(
     throw error
   }
 
-
   const product =
     await deleteProduct(
       productId.trim(),
     )
-
 
   if (!product) {
     const error = new Error(
@@ -484,7 +449,6 @@ export async function deleteAdminProduct(
 
     throw error
   }
-
 
   return product
 }
@@ -511,12 +475,10 @@ export async function relistAdminProduct(
     throw error
   }
 
-
   const product =
     await relistProduct(
       productId.trim(),
     )
-
 
   if (!product) {
     const error = new Error(
@@ -527,7 +489,6 @@ export async function relistAdminProduct(
 
     throw error
   }
-
 
   return product
 }
@@ -551,7 +512,6 @@ export async function assignExistingProductToCreator(
     throw error
   }
 
-
   if (
     typeof creatorId !==
       'string' ||
@@ -566,12 +526,10 @@ export async function assignExistingProductToCreator(
     throw error
   }
 
-
   const creator =
     await findUserById(
       creatorId.trim(),
     )
-
 
   if (!creator) {
     const error = new Error(
@@ -582,7 +540,6 @@ export async function assignExistingProductToCreator(
 
     throw error
   }
-
 
   if (
     creator.role !==
@@ -597,14 +554,12 @@ export async function assignExistingProductToCreator(
     throw error
   }
 
-
   const product =
     await assignProductToCreator(
       productId.trim(),
       creator.id,
       creator.name,
     )
-
 
   if (!product) {
     const error = new Error(
@@ -615,7 +570,6 @@ export async function assignExistingProductToCreator(
 
     throw error
   }
-
 
   return product
 }

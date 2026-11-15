@@ -106,7 +106,17 @@ const DEFAULT_HOMEPAGE = {
 
 
 
+const isNewWithinSevenDays = (date) => {
+  if (!date) return false
 
+  const createdTime = new Date(date).getTime()
+
+  if (Number.isNaN(createdTime)) return false
+
+  const age = Date.now() - createdTime
+
+  return age >= 0 && age < 7 * 24 * 60 * 60 * 1000
+}
 
 export function FoundationPage() {
 
@@ -2142,21 +2152,17 @@ export function FoundationPage() {
 
 
                     <div className="marketplace-category-icon">
-
-
-
                       <span>
-
                         {category.name
-
                           ?.charAt(0)
-
                           ?.toUpperCase()}
-
                       </span>
 
-
-
+                      {isNewWithinSevenDays(category.createdAt) && (
+                        <span className="marketplace-new-badge">
+                          NEW
+                        </span>
+                      )}
                     </div>
 
 
@@ -2452,6 +2458,13 @@ export function FoundationPage() {
                         FEATURED
 
                       </span>
+
+                      {product.approvalStatus === 'APPROVED' &&
+                          isNewWithinSevenDays(product.approvedAt) && (
+                            <span className="marketplace-product-new-badge">
+                              NEW
+                            </span>
+                          )}
 
 
 

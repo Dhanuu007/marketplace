@@ -247,14 +247,13 @@ export async function createProduct(product) {
 
 
   const document = {
-
-    ...product,
-
-    createdAt: now,
-
-    updatedAt: now,
-
-  }
+  ...product,
+  createdAt: now,
+  updatedAt: now,
+  ...(product.approvalStatus === 'APPROVED'
+    ? { approvedAt: now }
+    : {}),
+}
 
 
   const result = await productCollection().insertOne(
@@ -337,60 +336,45 @@ export async function updateProductForCreator(
 
 
 
+
 export async function updateProductApproval(
-
   productId,
-
   approvalStatus,
-
   isActive,
-
 ) {
-
   await ensureProductIndexes()
 
-
   if (!ObjectId.isValid(productId)) {
-
     return null
-
   }
 
+  const now = new Date()
+
+  const updates = {
+    approvalStatus,
+    isActive,
+    updatedAt: now,
+  }
+
+  if (approvalStatus === 'APPROVED') {
+    updates.approvedAt = now
+  }
 
   const result = await productCollection().findOneAndUpdate(
-
     {
-
       _id: new ObjectId(productId),
-
     },
-
     {
-
-      $set: {
-
-        approvalStatus,
-
-        isActive,
-
-        updatedAt: new Date(),
-
-      },
-
+      $set: updates,
     },
-
     {
-
       returnDocument: 'after',
-
     },
-
   )
 
-
   return result
-
 }
+
 
 
 
@@ -478,18 +462,13 @@ export async function relistProduct(
     },
 
     {
-
-      $set: {
-
-        approvalStatus: 'APPROVED',
-
-        isActive: true,
-
-        updatedAt: new Date(),
-
-      },
-
-    },
+          $set: {
+            approvalStatus: 'APPROVED',
+            isActive: true,
+            approvedAt: new Date(),
+            updatedAt: new Date(),
+          },
+        },
 
     {
 

@@ -1,0 +1,120 @@
+
+.categories-admin-page {
+  padding: 24px;
+}
+
+.categories-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.categories-admin-panel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+}
+
+.categories-admin-panel h2 {
+  margin: 0 0 22px;
+  font-size: 19px;
+}
+
+.categories-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.categories-form-group label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.categories-form-group input,
+.categories-form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.categories-form-group textarea {
+  resize: vertical;
+}
+
+.categories-active-toggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 20px;
+}
+
+.categories-admin-panel form button {
+  background: #008080;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.categories-admin-panel form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.categories-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.categories-admin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+}
+
+.categories-admin-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.categories-admin-item div span {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.categories-active-badge {
+  color: #008080;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.categories-error {
+  color: #dc2626;
+  margin-top: 15px;
+}
+
+.categories-success {
+  color: #008080;
+  margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+  .categories-admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
