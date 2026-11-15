@@ -1516,3 +1516,39 @@
     transition: none !important;
   }
 }
+
+
+/* =========================================================
+   INTERACTIVE SCREENSHOT GALLERY
+========================================================= */
+
+.product-details-screenshot {
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.product-details-screenshot.active {
+  border: 2px solid #0f766e;
+
+  box-shadow:
+    0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.product-details-screenshot:focus-visible {
+  outline: 3px solid #14b8a6;
+  outline-offset: 3px;
+}
+
+.product-details-screenshot-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 600px) {
+  .product-details-screenshot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

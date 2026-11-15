@@ -28,6 +28,7 @@ export function ProductDetailsPage() {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState(0)
 
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export function ProductDetailsPage() {
 
         if (isMounted) {
           setProduct(data?.product ?? null)
+          setSelectedScreenshotIndex(0)
         }
       } catch (requestError) {
         if (isMounted) {
@@ -91,19 +93,22 @@ export function ProductDetailsPage() {
   }
 
 
-  const primaryScreenshot =
-    Array.isArray(product?.screenshots) &&
-    product.screenshots.length > 0
-      ? product.screenshots[0]
-      : null
+  // Convert every uploaded screenshot into a browser-ready URL.
+  const screenshotUrls = Array.isArray(product?.screenshots)
+    ? product.screenshots
+        .filter(
+          (screenshot) =>
+            typeof screenshot === 'string' && screenshot.trim(),
+        )
+        .map((screenshot) =>
+          /^https?:\/\//i.test(screenshot)
+            ? screenshot
+            : `${API_ORIGIN}${screenshot.startsWith('/') ? '' : '/'}${screenshot}`,
+        )
+    : []
 
-
-  const primaryScreenshotUrl =
-    primaryScreenshot
-      ? primaryScreenshot.startsWith('http')
-        ? primaryScreenshot
-        : `${API_ORIGIN}${primaryScreenshot}`
-      : null
+  const selectedScreenshotUrl =
+    screenshotUrls[selectedScreenshotIndex] || screenshotUrls[0] || null
 
 
   if (!productId) {
@@ -257,16 +262,16 @@ export function ProductDetailsPage() {
 
             <div className="product-details-image-wrapper">
 
-              {primaryScreenshotUrl ? (
+              {selectedScreenshotUrl ? (
                 <a
-                  href={primaryScreenshotUrl}
+                  href={selectedScreenshotUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="product-details-main-image-link"
                 >
 
                   <img
-                    src={primaryScreenshotUrl}
+                    src={selectedScreenshotUrl}
                     alt={`${product.name} website preview`}
                     className="product-details-image"
                   />
@@ -297,6 +302,44 @@ export function ProductDetailsPage() {
               )}
 
             </div>
+
+            {screenshotUrls.length > 1 && (
+              <div className="product-details-screenshots">
+
+                <div className="product-details-section-heading">
+                  <span>
+                    WEBSITE SCREENSHOTS
+                  </span>
+
+                  <small>
+                    {selectedScreenshotIndex + 1} / {screenshotUrls.length}
+                  </small>
+                </div>
+
+                <div className="product-details-screenshot-grid">
+
+                  {screenshotUrls.map((screenshot, index) => (
+                    <button
+                      key={`${screenshot}-${index}`}
+                      type="button"
+                      className={`product-details-screenshot ${
+                        selectedScreenshotIndex === index ? 'active' : ''
+                      }`}
+                      onClick={() => setSelectedScreenshotIndex(index)}
+                      aria-label={`View screenshot ${index + 1}`}
+                      aria-pressed={selectedScreenshotIndex === index}
+                    >
+                      <img
+                        src={screenshot}
+                        alt={`${product.name} screenshot ${index + 1}`}
+                      />
+                    </button>
+                  ))}
+
+                </div>
+
+              </div>
+            )}
 
           </div>
 
