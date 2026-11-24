@@ -7327,3 +7327,140 @@ top: -50px;
   line-height: 1;
   box-shadow: 0 3px 10px rgba(34, 197, 94, 0.25);
 }
+
+
+/* =====================================================
+   BOLT11-INSPIRED 3D MARKETPLACE HERO
+   Additive styles — preserve existing homepage styles.
+   ===================================================== */
+
+.marketplace-hero-new {
+  background:
+    radial-gradient(
+      ellipse at 75% 45%,
+      rgba(139, 92, 246, 0.13),
+      transparent 48%
+    ),
+    radial-gradient(
+      ellipse at 20% 15%,
+      rgba(34, 211, 238, 0.08),
+      transparent 42%
+    );
+}
+
+.marketplace-hero-3d {
+  position: relative;
+  isolation: isolate;
+  min-height: 620px;
+  width: 100%;
+  max-width: 720px;
+  overflow: visible;
+}
+
+.marketplace-hero-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.marketplace-hero-scene canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.marketplace-hero-3d-glow {
+  position: absolute;
+  z-index: 0;
+  width: 420px;
+  height: 420px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.22),
+    rgba(34, 211, 238, 0.09) 40%,
+    transparent 72%
+  );
+  filter: blur(35px);
+  animation: marketplace-3d-glow 6s ease-in-out infinite;
+}
+
+@keyframes marketplace-3d-glow {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(.9);
+    opacity: .65;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.12);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .marketplace-hero-3d {
+    justify-self: center;
+    width: 100%;
+    max-width: 680px;
+    min-height: 540px;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 700px) {
+  .marketplace-hero-3d {
+    min-height: 390px;
+    margin-top: 0;
+  }
+
+  .marketplace-hero-3d-glow {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-hero-3d-glow {
+    animation: none;
+  }
+}
+
+
+/* =====================================================
+   SHIMMER ENHANCEMENT — SMALL PLACEHOLDER ELEMENTS
+   ===================================================== */
+
+.marketplace-shimmer-category-card i,
+.marketplace-shimmer-category-card span,
+.marketplace-shimmer-status > span,
+.marketplace-shimmer-status i,
+.marketplace-shimmer-sale i,
+.marketplace-shimmer-sale span,
+.marketplace-shimmer-product-card > i {
+  background: linear-gradient(
+    100deg,
+    var(--shimmer-base) 20%,
+    var(--shimmer-highlight) 38%,
+    var(--shimmer-base) 56%
+  );
+  background-size: 220% 100%;
+  animation: marketplace-shimmer-sweep 1.45s ease-in-out infinite;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-shimmer-category-card i,
+  .marketplace-shimmer-category-card span,
+  .marketplace-shimmer-status > span,
+  .marketplace-shimmer-status i,
+  .marketplace-shimmer-sale i,
+  .marketplace-shimmer-sale span,
+  .marketplace-shimmer-product-card > i {
+    animation: none !important;
+  }
+}

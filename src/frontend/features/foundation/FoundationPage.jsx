@@ -26,6 +26,7 @@ import { useAuth } from '../auth/useAuth.js'
 
 import Credits from './Credits.jsx'
 
+import MarketplaceHeroScene from './MarketplaceHeroScene.jsx'
 
 
 import './foundation.css'
@@ -2005,28 +2006,15 @@ export function FoundationPage() {
             </div>
           </div>
 
-          <div className="marketplace-hero-visual marketplace-live-workflow" aria-label="Live marketplace workflow animation">
-            <div className="marketplace-workflow-grid" aria-hidden="true" /><div className="marketplace-workflow-glow" aria-hidden="true" />
-            <div className="marketplace-workflow-card marketplace-upload-card">
-              <div className="workflow-card-topline"><span>YOUR NEXT BIG THING</span><span className="workflow-live-dot">LIVE</span></div>
-              <div className="workflow-file-row"><div className="workflow-file-icon">ZIP</div><div className="workflow-file-copy"><strong>studio-essentials.zip</strong><span>24 files · 48.6 MB</span></div></div>
-              <div className="workflow-progress-track"><span className="workflow-progress-fill" /></div>
-              <div className="workflow-upload-status"><span>Your creation is ready</span><strong>100%</strong></div>
-            </div>
-            <div className="workflow-line workflow-line-one" aria-hidden="true"><span /></div>
-            <div className="workflow-status workflow-approved"><span className="workflow-status-icon">✓</span><div><strong>Approved</strong><span>Ready to sell</span></div></div>
-            <div className="workflow-sale"><span className="workflow-sale-label">NEW SALE</span><strong>+₹2,400.00</strong><span className="workflow-sale-pulse" /></div>
-            <div className="workflow-status workflow-payment"><span className="workflow-status-icon">₹</span><div><strong>Payment received</strong><span>Creator earnings updated</span></div></div>
-            <div className="workflow-line workflow-line-two" aria-hidden="true"><span /></div>
-            <div className="marketplace-download-card">
-              <div className="download-card-header"><span>DESIGN ASSETS</span><span className="download-card-check">✓</span></div>
-              <div className="download-card-title">Studio essentials</div><p>A little head start for your next big idea.</p>
-              <div className="download-card-footer"><strong>₹2,400 INR</strong><button type="button" aria-label="Download your files">↓ Download your files ↗</button></div>
-              <div className="download-card-ready">✓ Your files are ready.</div>
-            </div>
-            <div className="marketplace-workflow-zip" aria-hidden="true"><span>ZIP</span></div>
-            <div className="workflow-block workflow-block-one" aria-hidden="true" /><div className="workflow-block workflow-block-two" aria-hidden="true" />
-          </div>
+          
+              <div
+                className="marketplace-hero-visual marketplace-live-workflow marketplace-hero-3d"
+                aria-label="3D preview of the website marketplace workflow"
+              >
+                <div className="marketplace-hero-3d-glow" />
+                <MarketplaceHeroScene />
+              </div>
+
         </section>
       )}
 
