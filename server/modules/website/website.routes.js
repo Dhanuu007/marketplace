@@ -1,6 +1,8 @@
 
 import { Router } from 'express'
-
+import {
+  homepageGalleryUpload,
+} from '../../middleware/upload.js'
 import {
   requireAuth,
   requireRole,
@@ -84,6 +86,40 @@ router.put(
     }
   },
 )
+
+
+// Admin Homepage Gallery Image Upload
+router.post(
+  '/website/homepage/gallery/upload',
+  requireAuth,
+  requireRole(USER_ROLES.ADMIN),
+  homepageGalleryUpload,
+  async (request, response, next) => {
+    try {
+      const files = request.files ?? []
+
+      if (files.length === 0) {
+        return response.status(400).json({
+          message: 'Please select at least one image.',
+        })
+      }
+
+      const images = files.map((file) => ({
+        imageUrl: `/uploads/gallery/${file.filename}`,
+        title: '',
+        order: 0,
+      }))
+
+      response.status(201).json({
+        message: 'Gallery images uploaded successfully.',
+        images,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
 
 
 // Public Website Settings

@@ -91,6 +91,19 @@ app.use(
 )
 
 
+  // Uploaded homepage gallery images
+  app.use(
+    '/uploads/gallery',
+    express.static(
+      path.resolve(
+        process.cwd(),
+        'server',
+        'uploads',
+        'gallery',
+      ),
+    ),
+  )
+
   app.use(
     '/api',
     apiRoutes,

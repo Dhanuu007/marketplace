@@ -48,6 +48,11 @@ const DEFAULT_PRICE_VISIBILITY = {
   loginRequired: false,
 }
 
+const DEFAULT_GALLERY = {
+  isActive: false,
+  images: [],
+}
+
 
 function HomepagePage() {
   const { token } = useAuth()
@@ -83,6 +88,11 @@ function HomepagePage() {
 
   const [priceVisibility, setPriceVisibility] =
     useState(DEFAULT_PRICE_VISIBILITY)
+
+  const [gallery, setGallery] = useState(DEFAULT_GALLERY)
+  const [galleryUploading, setGalleryUploading] = useState(false)
+
+    
 
 
   const [loading, setLoading] =
@@ -210,8 +220,20 @@ function HomepagePage() {
             ...DEFAULT_PRICE_VISIBILITY,
             ...(savedHomepage.priceVisibility ?? {}),
           })
+
+          setGallery({
+  ...DEFAULT_GALLERY,
+  ...(savedHomepage.gallery ?? {}),
+  images: Array.isArray(savedHomepage.gallery?.images)
+    ? savedHomepage.gallery.images
+    : [],
+})
+
+          
         }
 
+
+        
 
         setCategories(
           Array.isArray(
@@ -333,6 +355,147 @@ function HomepagePage() {
   }
 
 
+
+  const uploadGalleryImages = async (files, replaceIndex = null) => {
+    const selectedFiles = Array.from(files ?? [])
+    if (!selectedFiles.length) return
+
+    const availableSlots =
+      replaceIndex === null
+        ? 7 - gallery.images.length
+        : 1
+
+    if (selectedFiles.length > availableSlots) {
+      setError(
+        replaceIndex === null
+          ? `You can add only ${Math.max(availableSlots, 0)} more image(s). Maximum is 7.`
+          : 'Choose one image to replace the selected image.',
+      )
+      return
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+    const invalidFile = selectedFiles.find(
+      (file) => !allowedTypes.includes(file.type) || file.size > 7 * 1024 * 1024,
+    )
+
+    if (invalidFile) {
+      setError('Only JPG, PNG, or WebP images up to 7 MB each are allowed.')
+      return
+    }
+
+    const formData = new FormData()
+    selectedFiles.forEach((file) => formData.append('images', file))
+
+    try {
+      setGalleryUploading(true)
+      setError('')
+      setSuccess('')
+
+      const response = await apiRequest(
+        '/website/homepage/gallery/upload',
+        {
+          method: 'POST',
+          token,
+          body: formData,
+        },
+      )
+
+      const uploadedImages =
+        response?.images ??
+        response?.gallery?.images ??
+        response?.files ??
+        []
+
+      if (!Array.isArray(uploadedImages) || uploadedImages.length !== selectedFiles.length) {
+        throw new Error('The server did not return the uploaded gallery image details.')
+      }
+
+      setGallery((current) => {
+        const nextImages = [...current.images]
+
+        if (replaceIndex !== null) {
+          nextImages[replaceIndex] = {
+            ...uploadedImages[0],
+            title: nextImages[replaceIndex]?.title ?? '',
+            order: replaceIndex,
+          }
+        } else {
+          uploadedImages.forEach((image) => {
+            nextImages.push({
+              ...image,
+              title: image.title ?? '',
+              order: nextImages.length,
+            })
+          })
+        }
+
+        return {
+          ...current,
+          images: nextImages.map((image, index) => ({
+            ...image,
+            order: index,
+          })),
+        }
+      })
+
+      setSuccess(
+        replaceIndex === null
+          ? 'Gallery image(s) uploaded. Click Save Changes to publish them.'
+          : 'Gallery image replaced. Click Save Changes to publish the change.',
+      )
+    } catch (uploadError) {
+      setError(uploadError?.message || 'Gallery image upload failed.')
+    } finally {
+      setGalleryUploading(false)
+    }
+  }
+
+  const removeGalleryImage = (index) => {
+    setGallery((current) => ({
+      ...current,
+      images: current.images
+        .filter((_, imageIndex) => imageIndex !== index)
+        .map((image, imageIndex) => ({
+          ...image,
+          order: imageIndex,
+        })),
+    }))
+  }
+
+  const moveGalleryImage = (index, direction) => {
+    setGallery((current) => {
+      const nextImages = [...current.images]
+      const targetIndex = index + direction
+
+      if (targetIndex < 0 || targetIndex >= nextImages.length) {
+        return current
+      }
+
+      ;[nextImages[index], nextImages[targetIndex]] = [
+        nextImages[targetIndex],
+        nextImages[index],
+      ]
+
+      return {
+        ...current,
+        images: nextImages.map((image, imageIndex) => ({
+          ...image,
+          order: imageIndex,
+        })),
+      }
+    })
+  }
+
+  const updateGalleryImageTitle = (index, title) => {
+    setGallery((current) => ({
+      ...current,
+      images: current.images.map((image, imageIndex) =>
+        imageIndex === index ? { ...image, title } : image,
+      ),
+    }))
+  }
+
   const handleSave = async () => {
     if (!token) {
       setError(
@@ -393,6 +556,14 @@ function HomepagePage() {
               sections,
 
               priceVisibility,
+
+              gallery: {
+                isActive: gallery.isActive,
+                images: gallery.images.map((image, index) => ({
+                  ...image,
+                  order: index,
+                })),
+              },
             },
           },
         )
@@ -471,6 +642,8 @@ function HomepagePage() {
         ...DEFAULT_PRICE_VISIBILITY,
         ...(savedHomepage.priceVisibility ?? {}),
       })
+
+      
 
 
       setSuccess(
@@ -754,6 +927,189 @@ function HomepagePage() {
 
       </section>
 
+
+
+      {/* Scroll Gallery Management */}
+
+      <section className="homepage-management-panel">
+        <div className="homepage-panel-header">
+          <div>
+            <p className="homepage-panel-label">Homepage Experience</p>
+            <h2>Scrolling Image Gallery</h2>
+            <p>
+              Manage up to 7 images displayed in the scroll-controlled gallery
+              immediately before Browse Top Categories.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className={`homepage-toggle ${gallery.isActive ? 'active' : ''}`}
+            onClick={() =>
+              setGallery((current) => ({
+                ...current,
+                isActive: !current.isActive,
+              }))
+            }
+            disabled={loading || saving || galleryUploading}
+            aria-label={gallery.isActive ? 'Disable gallery' : 'Enable gallery'}
+            aria-pressed={gallery.isActive}
+          >
+            <span />
+          </button>
+        </div>
+
+        <div className="homepage-price-visibility-status">
+          <strong>
+            {gallery.isActive ? 'Gallery enabled' : 'Gallery disabled'}
+          </strong>
+          <p>
+            {gallery.isActive
+              ? 'The gallery will appear on the public homepage after you save changes.'
+              : 'The gallery is hidden from visitors. Your uploaded images will remain saved.'}
+          </p>
+        </div>
+
+        <div className="homepage-form-group" style={{ marginTop: 20 }}>
+          <label htmlFor="homepage-gallery-upload">
+            Add gallery images ({gallery.images.length}/7)
+          </label>
+          <input
+            id="homepage-gallery-upload"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            disabled={
+              loading ||
+              saving ||
+              galleryUploading ||
+              gallery.images.length >= 7
+            }
+            onChange={(event) => {
+              uploadGalleryImages(event.target.files)
+              event.target.value = ''
+            }}
+          />
+          <p style={{ marginTop: 8, fontSize: 13, opacity: 0.75 }}>
+            JPG, PNG or WebP · Maximum 7 MB per image · Maximum 7 images.
+          </p>
+        </div>
+
+        {galleryUploading && (
+          <p style={{ marginTop: 12 }}>Uploading gallery image(s)...</p>
+        )}
+
+        {gallery.images.length > 0 ? (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+              gap: 16,
+              marginTop: 20,
+            }}
+          >
+            {gallery.images.map((image, index) => (
+              <div
+                key={`${image.imageUrl}-${index}`}
+                style={{
+                  border: '1px solid var(--border-color, #ddd)',
+                  borderRadius: 12,
+                  padding: 12,
+                  minWidth: 0,
+                }}
+              >
+                <img
+                  src={image.imageUrl}
+                  alt={image.title || `Gallery image ${index + 1}`}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    height: 145,
+                    objectFit: 'cover',
+                    borderRadius: 8,
+                    background: '#eee',
+                  }}
+                />
+
+                <p style={{ fontWeight: 600, margin: '10px 0' }}>
+                  Image {index + 1}
+                </p>
+
+                <div className="homepage-form-group">
+                  <label htmlFor={`gallery-title-${index}`}>Image title (optional)</label>
+                  <input
+                    id={`gallery-title-${index}`}
+                    type="text"
+                    maxLength={100}
+                    value={image.title ?? ''}
+                    onChange={(event) =>
+                      updateGalleryImageTitle(index, event.target.value)
+                    }
+                    placeholder="Enter image title"
+                    disabled={saving || galleryUploading}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
+                  <button
+                    type="button"
+                    onClick={() => moveGalleryImage(index, -1)}
+                    disabled={index === 0 || saving || galleryUploading}
+                    aria-label={`Move image ${index + 1} left`}
+                  >
+                    ←
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => moveGalleryImage(index, 1)}
+                    disabled={index === gallery.images.length - 1 || saving || galleryUploading}
+                    aria-label={`Move image ${index + 1} right`}
+                  >
+                    →
+                  </button>
+
+                  <label
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      padding: '6px 10px',
+                      border: '1px solid currentColor',
+                      borderRadius: 6,
+                      cursor: saving || galleryUploading ? 'not-allowed' : 'pointer',
+                      opacity: saving || galleryUploading ? 0.5 : 1,
+                    }}
+                  >
+                    Replace
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      hidden
+                      disabled={saving || galleryUploading}
+                      onChange={(event) => {
+                        uploadGalleryImages(event.target.files, index)
+                        event.target.value = ''
+                      }}
+                    />
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={() => removeGalleryImage(index)}
+                    disabled={saving || galleryUploading}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ marginTop: 16 }}>
+            No gallery images uploaded yet.
+          </p>
+        )}
+      </section>
 
       {/* Featured Categories */}
 

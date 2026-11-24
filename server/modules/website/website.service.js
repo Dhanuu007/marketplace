@@ -1,3 +1,4 @@
+
 import {
   getHomepage,
   saveHomepage,
@@ -8,6 +9,9 @@ import {
 import { getCategories } from '../category/category.repository.js'
 import { getPublicProducts } from '../product/product.service.js'
 
+// =========================
+// HOMEPAGE CONTENT
+// =========================
 
 export async function getHomepageContent() {
   const homepage = await getHomepage()
@@ -40,6 +44,11 @@ export async function getHomepageContent() {
         categories: true,
         products: true,
         banner: true,
+      },
+
+      gallery: {
+        isActive: false,
+        images: [],
       },
     }
   }
@@ -80,21 +89,24 @@ export async function getHomepageContent() {
 
     sections: {
       hero: homepage.sections?.hero ?? true,
+      categories: homepage.sections?.categories ?? true,
+      products: homepage.sections?.products ?? true,
+      banner: homepage.sections?.banner ?? true,
+    },
 
-      categories:
-        homepage.sections?.categories ?? true,
-
-      products:
-        homepage.sections?.products ?? true,
-
-      banner:
-        homepage.sections?.banner ?? true,
+    gallery: {
+      isActive: homepage.gallery?.isActive ?? false,
+      images: homepage.gallery?.images ?? [],
     },
 
     updatedAt: homepage.updatedAt,
   }
 }
 
+
+// =========================
+// PUBLIC HOMEPAGE CONTENT
+// =========================
 
 export async function getPublicHomepageContent(user) {
   const homepage = await getHomepage()
@@ -155,6 +167,11 @@ export async function getPublicHomepageContent(user) {
           banner:
             homepage.sections?.banner ?? true,
         },
+
+        gallery: {
+          isActive: homepage.gallery?.isActive ?? false,
+          images: homepage.gallery?.images ?? [],
+        },
       }
     : {
         heading:
@@ -186,6 +203,11 @@ export async function getPublicHomepageContent(user) {
           categories: true,
           products: true,
           banner: true,
+        },
+
+        gallery: {
+          isActive: false,
+          images: [],
         },
       }
 
@@ -224,6 +246,10 @@ export async function getPublicHomepageContent(user) {
   }
 }
 
+
+// =========================
+// UPDATE HOMEPAGE CONTENT
+// =========================
 
 export async function updateHomepageContent(input) {
   const homepage = await saveHomepage(input)
@@ -276,6 +302,11 @@ export async function updateHomepageContent(input) {
 
       banner:
         homepage.sections?.banner ?? true,
+    },
+
+    gallery: {
+      isActive: homepage.gallery?.isActive ?? false,
+      images: homepage.gallery?.images ?? [],
     },
 
     updatedAt: homepage.updatedAt,
@@ -394,6 +425,10 @@ export async function getWebsiteSettingsContent() {
   }
 }
 
+
+// =========================
+// UPDATE WEBSITE SETTINGS
+// =========================
 
 export async function updateWebsiteSettingsContent(input) {
   const settings = await saveWebsiteSettings(input)

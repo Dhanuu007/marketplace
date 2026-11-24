@@ -7,6 +7,17 @@ import multer from 'multer'
 // UPLOAD DIRECTORIES
 // ============================================================
 
+const galleryUploadDirectory = path.resolve(
+  process.cwd(),
+  'server',
+  'uploads',
+  'gallery',
+)
+
+fs.mkdirSync(galleryUploadDirectory, {
+  recursive: true,
+})
+
 const screenshotUploadDirectory = path.resolve(
   process.cwd(),
   'server',
@@ -378,3 +389,65 @@ export const creatorWebsiteZipUpload =
       fileSize: 500 * 1024 * 1024,
     },
   })
+
+
+// ============================================================
+// HOMEPAGE GALLERY IMAGE UPLOAD
+// ============================================================
+
+const galleryImageStorage = multer.diskStorage({
+  destination(request, file, callback) {
+    callback(null, galleryUploadDirectory)
+  },
+
+  filename(request, file, callback) {
+    const extension = path
+      .extname(file.originalname)
+      .toLowerCase()
+
+    const baseName = path
+      .basename(file.originalname, extension)
+      .replace(/[^a-zA-Z0-9-_]/g, '-')
+      .toLowerCase()
+
+    callback(
+      null,
+      `${Date.now()}-${baseName}${extension}`,
+    )
+  },
+})
+
+function galleryImageFileFilter(
+  request,
+  file,
+  callback,
+) {
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+  ]
+
+  if (!allowedTypes.includes(file.mimetype)) {
+    return callback(
+      new Error(
+        'Only JPG, PNG, and WebP gallery images are allowed.',
+      ),
+    )
+  }
+
+  callback(null, true)
+}
+
+const galleryImageMulter = multer({
+  storage: galleryImageStorage,
+  fileFilter: galleryImageFileFilter,
+
+  limits: {
+    files: 7,
+    fileSize: 7 * 1024 * 1024,
+  },
+})
+
+export const homepageGalleryUpload =
+  galleryImageMulter.array('images', 7)

@@ -122,6 +122,94 @@ function validatePriceVisibility(input = {}) {
   }
 }
 
+
+function validateGallery(input = {}) {
+  const isActive = input.isActive ?? false
+  const images = input.images ?? []
+
+  if (typeof isActive !== 'boolean') {
+    throw createHttpError(
+      400,
+      'INVALID_INPUT',
+      'Gallery active status must be a boolean',
+    )
+  }
+
+  if (!Array.isArray(images)) {
+    throw createHttpError(
+      400,
+      'INVALID_INPUT',
+      'Gallery images must be an array',
+    )
+  }
+
+  if (images.length > 7) {
+    throw createHttpError(
+      400,
+      'INVALID_INPUT',
+      'Gallery cannot contain more than 7 images',
+    )
+  }
+
+  const validatedImages = images.map((image, index) => {
+    if (!image || typeof image !== 'object' || Array.isArray(image)) {
+      throw createHttpError(
+        400,
+        'INVALID_INPUT',
+        `Gallery image ${index + 1} is invalid`,
+      )
+    }
+
+    const imageUrl = cleanString(
+      image.imageUrl ?? '',
+      'Gallery image URL',
+    )
+
+    const title = cleanString(
+      image.title ?? '',
+      'Gallery image title',
+    )
+
+    const order = image.order ?? index
+
+    if (!imageUrl.startsWith('/uploads/gallery/')) {
+      throw createHttpError(
+        400,
+        'INVALID_INPUT',
+        'Invalid gallery image URL',
+      )
+    }
+
+    if (title.length > 100) {
+      throw createHttpError(
+        400,
+        'INVALID_INPUT',
+        'Gallery image title cannot exceed 100 characters',
+      )
+    }
+
+    if (!Number.isInteger(order) || order < 0) {
+      throw createHttpError(
+        400,
+        'INVALID_INPUT',
+        'Gallery image order must be a non-negative integer',
+      )
+    }
+
+    return {
+      imageUrl,
+      title,
+      order,
+    }
+  })
+
+  return {
+    isActive,
+    images: validatedImages,
+  }
+}
+
+
 export function validateHomepage(input = {}) {
   const heading = cleanString(
     input.heading ?? '',
@@ -223,6 +311,10 @@ export function validateHomepage(input = {}) {
       input.priceVisibility ?? {},
     )
 
+    const gallery = validateGallery(
+  input.gallery ?? {},
+)
+
   return {
     heading,
     description,
@@ -232,6 +324,7 @@ export function validateHomepage(input = {}) {
     banner,
     sections,
     priceVisibility,
+    gallery,
   }
 }
 

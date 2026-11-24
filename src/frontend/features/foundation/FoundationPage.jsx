@@ -17,6 +17,9 @@ import MarketplaceAssistant from '../chatbot/MarketplaceAssistant'
 
 
 import * as THREE from 'three'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { env } from '../../config/env.js'
 
 
 
@@ -54,6 +57,11 @@ const DEFAULT_HOMEPAGE = {
   featuredCategoryIds: [],
 
   featuredProductIds: [],
+
+  gallery: {
+    isActive: false,
+    images: [],
+  },
 
 
 
@@ -217,6 +225,11 @@ export function FoundationPage() {
 
     useRef(null)
 
+  const gallerySectionRef = useRef(null)
+  const galleryViewportRef = useRef(null)
+  const galleryTrackRef = useRef(null)
+  const galleryScrollTriggerRef = useRef(null)
+
 
 
 
@@ -309,6 +322,14 @@ export function FoundationPage() {
             sections: {
               ...DEFAULT_HOMEPAGE.sections,
               ...(data.homepage.sections ?? {}),
+            },
+
+            gallery: {
+              ...DEFAULT_HOMEPAGE.gallery,
+              ...(data.homepage.gallery ?? {}),
+              images: Array.isArray(data.homepage.gallery?.images)
+                ? data.homepage.gallery.images
+                : [],
             },
 
             categories: data.homepage.categories ?? [],
@@ -1440,6 +1461,109 @@ export function FoundationPage() {
 
 
 
+  /* =====================================================
+     SCROLL-CONTROLLED HOMEPAGE GALLERY
+  ====================================================== */
+
+  useEffect(() => {
+    const section = gallerySectionRef.current
+    const viewport = galleryViewportRef.current
+    const track = galleryTrackRef.current
+    const images = homepage.gallery?.images ?? []
+
+    if (!homepage.gallery?.isActive || images.length < 2 || !section || !viewport || !track) {
+      return undefined
+    }
+
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    const isMobile = window.matchMedia?.('(max-width: 700px)').matches
+    if (reduceMotion || isMobile) return undefined
+
+    gsap.registerPlugin(ScrollTrigger)
+
+    let tween
+    const setup = () => {
+      if (tween) {
+        tween.scrollTrigger?.kill()
+        tween.kill()
+      }
+
+      const distance = Math.max(0, track.scrollWidth - viewport.clientWidth)
+      if (!distance) return
+
+      tween = gsap.to(track, {
+        x: -distance,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: () => `+=${distance}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+        },
+      })
+      galleryScrollTriggerRef.current = tween.scrollTrigger ?? null
+    }
+
+    const refreshTimer = window.setTimeout(() => {
+      setup()
+      ScrollTrigger.refresh()
+    }, 80)
+
+    const onLoad = () => {
+      setup()
+      ScrollTrigger.refresh()
+    }
+    track.querySelectorAll('img').forEach((img) => {
+      if (!img.complete) img.addEventListener('load', onLoad, { once: true })
+    })
+
+    window.addEventListener('resize', setup)
+
+    return () => {
+      window.clearTimeout(refreshTimer)
+      window.removeEventListener('resize', setup)
+      track.querySelectorAll('img').forEach((img) => img.removeEventListener('load', onLoad))
+      galleryScrollTriggerRef.current = null
+      if (tween) {
+        tween.scrollTrigger?.kill()
+        tween.kill()
+      }
+    }
+  }, [homepage.gallery?.isActive, homepage.gallery?.images, loading])
+
+
+  function moveGallery(direction) {
+    const viewport = galleryViewportRef.current
+    const track = galleryTrackRef.current
+    if (!viewport || !track) return
+
+    const cardCount = track.children.length
+    if (cardCount < 2) return
+
+    const isMobile = window.matchMedia?.('(max-width: 700px)').matches
+    if (isMobile) {
+      const card = track.querySelector('.marketplace-scroll-gallery-card')
+      const gap = 16
+      viewport.scrollBy({
+        left: direction * ((card?.getBoundingClientRect().width ?? viewport.clientWidth * 0.84) + gap),
+        behavior: 'smooth',
+      })
+      return
+    }
+
+    const trigger = galleryScrollTriggerRef.current
+    if (!trigger) return
+
+    const currentIndex = Math.round(trigger.progress * (cardCount - 1))
+    const nextIndex = Math.max(0, Math.min(cardCount - 1, currentIndex + direction))
+    const targetTop = trigger.start + (nextIndex / (cardCount - 1)) * (trigger.end - trigger.start)
+    window.scrollTo({ top: targetTop, behavior: 'smooth' })
+  }
+
+
   if (loading) {
     return (
       <main
@@ -1667,6 +1791,7 @@ export function FoundationPage() {
     categories,
 
     products,
+    gallery,
     paymentsEnabled = true,
     announcementEnabled = false,
     announcementMessage = '',
@@ -2015,6 +2140,94 @@ export function FoundationPage() {
                 <MarketplaceHeroScene />
               </div>
 
+        </section>
+      )}
+
+
+      {/* =====================================================
+          SCROLL-CONTROLLED IMAGE GALLERY
+      ====================================================== */}
+
+      {gallery?.isActive && Array.isArray(gallery.images) && gallery.images.length > 0 && (
+        <section
+          ref={gallerySectionRef}
+          className="marketplace-scroll-gallery"
+          aria-label="Featured website gallery"
+        >
+          <div className="marketplace-scroll-gallery-inner">
+            <div className="marketplace-scroll-gallery-heading">
+              <span className="marketplace-section-label">A CLOSER LOOK</span>
+              <h2>Explore what’s possible</h2>
+              <p>Scroll to discover a collection of standout digital experiences.</p>
+            </div>
+
+            <div className="marketplace-scroll-gallery-viewport" ref={galleryViewportRef}>
+              <button
+                type="button"
+                className="marketplace-scroll-gallery-arrow marketplace-scroll-gallery-arrow-left"
+                onClick={() => moveGallery(-1)}
+                aria-label="Previous gallery image"
+              >
+                <span aria-hidden="true">‹</span>
+              </button>
+              <button
+                type="button"
+                className="marketplace-scroll-gallery-arrow marketplace-scroll-gallery-arrow-right"
+                onClick={() => moveGallery(1)}
+                aria-label="Next gallery image"
+              >
+                <span aria-hidden="true">›</span>
+              </button>
+              <div className="marketplace-scroll-gallery-track" ref={galleryTrackRef}>
+                {gallery.images
+                  .filter((item) => item?.imageUrl)
+                  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                  .map((item, index) => {
+                    // Gallery uploads are served by the backend's /uploads route,
+                    // not by the frontend's /api route. Resolve the image against
+                    // the backend origin so the browser requests the correct host.
+                    const imageSrc = (() => {
+                      const rawImageUrl = String(item.imageUrl || '').trim()
+                      if (/^https?:\/\//i.test(rawImageUrl)) return rawImageUrl
+
+                      const configuredApiUrl = String(env.apiBaseUrl || '').trim()
+                      let backendOrigin
+
+                      try {
+                        const apiUrl = new URL(configuredApiUrl || '/', window.location.origin)
+                        backendOrigin = apiUrl.origin
+                      } catch {
+                        backendOrigin = window.location.origin
+                      }
+
+                      const normalizedImagePath = rawImageUrl.startsWith('/')
+                        ? rawImageUrl
+                        : `/${rawImageUrl}`
+
+                      return new URL(normalizedImagePath, backendOrigin).toString()
+                    })()
+
+                    return (
+                      <article className="marketplace-scroll-gallery-card" key={`${item.imageUrl}-${index}`}>
+                        <div className="marketplace-scroll-gallery-image-wrap">
+                          <img
+                            src={imageSrc}
+                            alt={item.title || `Featured gallery image ${index + 1}`}
+                            loading={index === 0 ? 'eager' : 'lazy'}
+                            draggable="false"
+                          />
+                        </div>
+                        {item.title && <h3>{item.title}</h3>}
+                        <span className="marketplace-scroll-gallery-index">{String(index + 1).padStart(2, '0')}</span>
+                      </article>
+                    )
+                  })}
+              </div>
+            </div>
+            <div className="marketplace-scroll-gallery-hint" aria-hidden="true">
+              <span>SCROLL TO EXPLORE</span><i />
+            </div>
+          </div>
         </section>
       )}
 
