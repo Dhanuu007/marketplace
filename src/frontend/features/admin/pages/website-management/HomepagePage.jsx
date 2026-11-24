@@ -4,6 +4,7 @@ import { AdminLayout } from '../../components/AdminLayout.jsx'
 
 import { useAuth } from '../../../auth/useAuth.js'
 import { apiRequest } from '../../../../../services/apiClient.js'
+import { env } from '../../../../config/env.js'
 
 import './HomepagePage.css'
 
@@ -51,6 +52,22 @@ const DEFAULT_PRICE_VISIBILITY = {
 const DEFAULT_GALLERY = {
   isActive: false,
   images: [],
+}
+
+
+// Resolve relative gallery paths against the configured backend origin.
+// In production this points to Railway; locally it keeps using the Vite proxy.
+const getGalleryImageUrl = (imageUrl) => {
+  const rawUrl = String(imageUrl || '').trim()
+
+  if (!rawUrl) return ''
+  if (/^https?:\/\//i.test(rawUrl)) return rawUrl
+
+  const configuredApiUrl = String(env.apiBaseUrl || '').trim()
+  const apiUrl = new URL(configuredApiUrl || '/', window.location.origin)
+  const imagePath = rawUrl.startsWith('/') ? rawUrl : `/${rawUrl}`
+
+  return new URL(imagePath, apiUrl.origin).toString()
 }
 
 
@@ -1019,7 +1036,7 @@ function HomepagePage() {
                 }}
               >
                 <img
-                  src={image.imageUrl}
+                  src={getGalleryImageUrl(image.imageUrl)}
                   alt={image.title || `Gallery image ${index + 1}`}
                   style={{
                     display: 'block',
