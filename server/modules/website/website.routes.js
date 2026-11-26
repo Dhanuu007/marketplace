@@ -127,24 +127,34 @@ router.post(
 router.get(
   '/website/settings/public',
   async (request, response, next) => {
-    try {
+    try { 
       const settings =
         await getWebsiteSettingsContent()
 
       response.set('Cache-Control', 'no-store')
 
-      response.json({
-        settings: {
-          paymentsEnabled:
-            settings.paymentsEnabled ?? true,
+      
+response.json({
+  settings: {
+    paymentsEnabled:
+      settings.paymentsEnabled ?? true,
 
-          announcementEnabled:
-            settings.announcementEnabled ?? false,
+    announcementEnabled:
+      settings.announcementEnabled ?? false,
 
-          announcementMessage:
-            settings.announcementMessage ?? '',
-        },
-      })
+    announcementMessage:
+      settings.announcementMessage ?? '',
+
+    // Public social media links
+    socialLinks: {
+      instagram: settings.socialLinks?.instagram ?? '',
+      facebook: settings.socialLinks?.facebook ?? '',
+      linkedin: settings.socialLinks?.linkedin ?? '',
+      twitter: settings.socialLinks?.twitter ?? '',
+    },
+  },
+})
+
     } catch (error) {
       next(error)
     }

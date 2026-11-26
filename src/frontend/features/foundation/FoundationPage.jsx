@@ -8,6 +8,7 @@ import {
 
 } from 'react'
 
+import MarketplaceFooter from './components/MarketplaceFooter.jsx'
 
 
 import { Link } from 'react-router-dom'
@@ -265,6 +266,13 @@ try {
           setHomepage({
             ...DEFAULT_HOMEPAGE,
             ...data.homepage,
+
+            socialLinks: {
+              instagram: publicSettings.socialLinks?.instagram ?? '',
+              facebook: publicSettings.socialLinks?.facebook ?? '',
+              linkedin: publicSettings.socialLinks?.linkedin ?? '',
+              twitter: publicSettings.socialLinks?.twitter ?? '',
+            },
 
             banner: {
               ...DEFAULT_HOMEPAGE.banner,
@@ -3078,237 +3086,10 @@ try {
 
         )}
 
-
-
-
-
-      {/* =====================================================
-
-          FOOTER
-
-      ====================================================== */}
-
-
-
-      <footer className="marketplace-footer">
-
-
-
-        <div className="marketplace-footer-main">
-
-
-
-          <div className="marketplace-footer-brand">
-
-
-
-            <Link
-
-              to="/"
-
-              className="marketplace-logo"
-
-            >
-
-
-
-              <span className="marketplace-logo-mark">
-
-                M
-
-              </span>
-
-
-
-
-
-              <span>
-
-                MarketPalce
-
-              </span>
-
-
-
-            </Link>
-
-
-
-
-
-            <p>
-
-              A premium marketplace for websites,
-
-              templates and digital products.
-
-            </p>
-
-
-
-          </div>
-
-
-
-
-
-          <div className="marketplace-footer-links">
-
-
-
-            <div>
-
-
-
-              <strong>
-
-                Marketplace
-
-              </strong>
-
-
-
-
-
-              <a href="#categories">
-
-                Categories
-
-              </a>
-
-
-
-
-
-              <a href="#products">
-
-                Products
-
-              </a>
-
-
-
-
-
-              <a href="#promotion">
-
-                Offers
-
-              </a>
-
-
-
-            </div>
-
-
-
-
-
-            <div>
-
-
-
-              <strong>
-
-                Account
-
-              </strong>
-
-
-
-
-
-              <Link to="/login">
-
-                Login
-
-              </Link>
-
-
-
-
-
-              <Link to="/register">
-
-                Register
-
-              </Link>
-
-
-
-
-
-              <Link to="/account">
-
-                My Account
-
-              </Link>
-
-
-
-            </div>
-
-
-
-          </div>
-
-
-
-        </div>
-
-
-
-
-
-        <div className="marketplace-footer-bottom">
-
-
-
-          <span>
-
-            © {new Date().getFullYear()} MarketPalce
-
-          </span>
-
-
-
-
-
-          <span>
-
-            Premium digital marketplace
-
-          </span>
-
-
-
-
-
-          <button
-
-            type="button"
-
-            className="marketplace-credits-button"
-
-            onClick={() =>
-
-              setShowCredits(true)
-
-            }
-
-          >
-
-            Credits
-
-          </button>
-
-
-
-        </div>
-
-
-
-      </footer>
+        {/* MARKETPLACE FOOTER */}
+<MarketplaceFooter
+  socialLinks={homepage.socialLinks || {}}
+/>  
 
 
 

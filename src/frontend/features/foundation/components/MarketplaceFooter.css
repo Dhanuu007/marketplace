@@ -1,0 +1,128 @@
+
+.marketplace-footer {
+  width: 100%;
+  background: #071b2b;
+  color: #ffffff;
+  margin-top: 60px;
+  padding: 55px 6% 20px;
+}
+
+.marketplace-footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.marketplace-footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  padding-bottom: 40px;
+}
+
+.marketplace-footer-brand {
+  max-width: 430px;
+}
+
+.marketplace-footer-brand h2 {
+  font-size: 25px;
+  font-weight: 750;
+  margin: 0 0 14px;
+}
+
+.marketplace-footer-brand p {
+  color: #a9b8c7;
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.marketplace-footer-social h3 {
+  font-size: 16px;
+  margin: 0 0 18px;
+}
+
+.marketplace-footer-social-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.marketplace-footer-social-icons a {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #34485a;
+  border-radius: 50%;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 700;
+  transition: all 0.25s ease;
+}
+
+.marketplace-footer-social-icons a:hover {
+  background: #008080;
+  border-color: #008080;
+  transform: translateY(-4px);
+}
+
+.marketplace-footer-bottom {
+  border-top: 1px solid #263a4b;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.marketplace-footer-bottom p,
+.marketplace-footer-bottom span {
+  color: #a9b8c7;
+  font-size: 12px;
+  margin: 0;
+}
+
+@media (max-width: 650px) {
+  .marketplace-footer {
+    padding: 40px 22px 20px;
+  }
+
+  .marketplace-footer-top {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .marketplace-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+/* Social icon visibility fix */
+.marketplace-footer-social-icons a span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.marketplace-footer-social-icons a svg {
+  display: block;
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px;
+  fill: none !important;
+  stroke: #ffffff !important;
+  overflow: visible;
+}
+
+.marketplace-footer-social-icons a svg rect,
+.marketplace-footer-social-icons a svg circle {
+  fill: none;
+  stroke: #ffffff;
+}
