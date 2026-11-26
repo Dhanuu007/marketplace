@@ -8140,3 +8140,71 @@ top: -50px;
     width: 320px;
   }
 }
+
+/* =========================================
+   MOBILE NAVIGATION FIX
+========================================= */
+
+@media (max-width: 850px) {
+  .marketplace-header {
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 0;
+    padding-top: 12px;
+    padding-bottom: 10px;
+    row-gap: 12px;
+  }
+
+  .marketplace-header-left {
+    order: 1;
+  }
+
+  .marketplace-header-actions {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .marketplace-nav {
+    display: flex;
+    order: 3;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 12px 0 4px;
+    gap: 28px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    border-top: 1px solid var(--market-border-soft);
+  }
+
+  .marketplace-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .marketplace-nav a {
+    flex: 0 0 auto;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 600px) {
+  .marketplace-header {
+    padding-left: 16px;
+    padding-right: 16px;
+    row-gap: 8px;
+  }
+
+  .marketplace-nav {
+    gap: 25px;
+    padding-top: 11px;
+  }
+
+  .marketplace-nav a {
+    font-size: 12px;
+  }
+}
