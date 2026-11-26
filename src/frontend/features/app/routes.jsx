@@ -30,12 +30,14 @@ import { CreatorPaymentSettingsPage } from '../creator/CreatorPaymentSettingsPag
 import { CreatorFinancesPage } from '../creator/CreatorFinancesPage.jsx'
 import { CreatorAutomatedPayoutsPage } from '../creator/CreatorAutomatedPayoutsPage.jsx'
 import { CreatorChatPage } from '../creator/CreatorChatPage.jsx'
+import { CreatorAdminMessagesPage } from '../creator/CreatorAdminMessagesPage.jsx'
 import { CreatorConversationPage } from '../creator/CreatorConversationPage.jsx'
 
 import { BuyerDashboardPage } from '../buyer/BuyerDashboardPage.jsx'
 import { BuyerOrdersPage } from '../buyer/BuyerOrdersPage.jsx'
 import { BuyerChatPage } from '../buyer/BuyerChatPage.jsx'
 import { BuyerSuspensionSupportPage } from '../buyer/BuyerSuspensionSupportPage.jsx'
+import { BuyerAdminMessagesPage } from '../buyer/BuyerAdminMessagesPage.jsx'
 
 import { AdminDashboardPage } from '../admin/AdminDashboardPage.jsx'
 import { AdminOrdersPage } from '../admin/AdminOrdersPage.jsx'
@@ -43,6 +45,8 @@ import { AdminProductsPage } from '../admin/AdminProductsPage.jsx'
 import { AdminPayoutsPage } from '../admin/AdminPayoutsPage.jsx'
 import { AdminActivityPage } from '../admin/AdminActivityPage.jsx'
 import { AdminChatPage } from '../admin/AdminChatPage.jsx'
+import { AdminMessagesPage } from '../admin/AdminMessagesPage.jsx'
+import AdminAnnouncementsPage from '../admin/AdminAnnouncementsPage.jsx'
 import { AdminConversationPage } from '../admin/AdminConversationPage.jsx'
 import { AccountSecurityPage } from '../admin/AccountSecurityPage.jsx'
 import { AdminSuspensionSupportPage } from '../admin/AdminSuspensionSupportPage.jsx'
@@ -239,6 +243,24 @@ export function AppRoutes() {
             }
           />
 
+          <Route
+            path="/buyer/admin-messages"
+            element={
+              <ProtectedRoute allowedRoles={['BUYER']}>
+                <BuyerAdminMessagesPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+          path="/creator/admin-messages"
+          element={
+            <ProtectedRoute allowedRoles={['CREATOR']}>
+              <CreatorAdminMessagesPage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/creator/orders"
           element={
@@ -402,6 +424,24 @@ export function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['ADMIN']}>
               <WebsiteSettingsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/messages"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminMessagesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/announcements"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminAnnouncementsPage />
             </ProtectedRoute>
           }
         />

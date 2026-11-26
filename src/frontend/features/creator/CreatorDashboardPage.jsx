@@ -1,5 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Bell,
+  CircleDollarSign,
+  CreditCard,
+  LogOut,
+  Mail,
+  MessageSquare,
+  Plus,
+  ShoppingBag,
+} from 'lucide-react'
 import { CreatorDashboardScene } from './CreatorDashboardScene.jsx'
 
 import { useAuth } from '../auth/useAuth.js'
@@ -1222,11 +1234,9 @@ export function CreatorDashboardPage() {
           <div className="creator-header-actions">
 
             <div
-              className={
-                isSuspended
-                  ? 'creator-header-actions-blocked'
-                  : ''
-              }
+              className={`creator-header-actions-grid ${
+                isSuspended ? 'creator-header-actions-blocked' : ''
+              }`}
               aria-hidden={
                 isSuspended
               }
@@ -1241,13 +1251,9 @@ export function CreatorDashboardPage() {
                 className="creator-earnings-button"
               >
 
-                <span>
-                  Earnings & Payouts
-                </span>
-
-                <span className="creator-button-arrow">
-                  →
-                </span>
+                <CircleDollarSign className="creator-action-leading-icon" aria-hidden="true" />
+                <span className="creator-action-label">Earnings & Payouts</span>
+                <ArrowRight className="creator-button-arrow" aria-hidden="true" />
 
               </Link>
 
@@ -1261,13 +1267,9 @@ export function CreatorDashboardPage() {
                 className="creator-orders-button"
               >
 
-                <span>
-                  Orders
-                </span>
-
-                <span className="creator-button-arrow">
-                  →
-                </span>
+                <ShoppingBag className="creator-action-leading-icon" aria-hidden="true" />
+                <span className="creator-action-label">Orders</span>
+                <ArrowRight className="creator-button-arrow" aria-hidden="true" />
 
               </Link>
 
@@ -1281,14 +1283,21 @@ export function CreatorDashboardPage() {
                 className="creator-orders-button"
               >
 
-                <span>
-                  Messages
-                </span>
+                <Mail className="creator-action-leading-icon" aria-hidden="true" />
+                <span className="creator-action-label">Messages</span>
+                <ArrowRight className="creator-button-arrow" aria-hidden="true" />
 
-                <span className="creator-button-arrow">
-                  →
-                </span>
+              </Link>
 
+                            {/* ADMIN MESSAGES */}
+
+              <Link
+                to="/creator/admin-messages"
+                className="creator-orders-button"
+              >
+                <MessageSquare className="creator-action-leading-icon" aria-hidden="true" />
+                <span className="creator-action-label">Admin Messages</span>
+                <ArrowRight className="creator-button-arrow" aria-hidden="true" />
               </Link>
 
 
@@ -1316,13 +1325,10 @@ export function CreatorDashboardPage() {
                   }
                 >
 
-                  <span className="creator-notification-icon">
-                    ♧
-                  </span>
+                  <Bell className="creator-action-leading-icon" aria-hidden="true" />
 
-                  <span>
-                    Notifications
-                  </span>
+                  <span className="creator-action-label">Notifications</span>
+                  <ArrowRight className="creator-button-arrow" aria-hidden="true" />
 
 
                   {notificationUnreadCount > 0 && (
@@ -1514,13 +1520,9 @@ export function CreatorDashboardPage() {
                 className="creator-payment-settings-button"
               >
 
-                <span>
-                  Manual Payout Details
-                </span>
-
-                <span className="creator-button-arrow">
-                  →
-                </span>
+                <CreditCard className="creator-action-leading-icon" aria-hidden="true" />
+                <span className="creator-action-label">Manual Payout Details</span>
+                <ArrowRight className="creator-button-arrow" aria-hidden="true" />
 
               </Link>
 
@@ -1534,35 +1536,11 @@ export function CreatorDashboardPage() {
                 className="creator-automated-payouts-button"
               >
 
-                <span>
-                  Automated Payouts
-                </span>
-
-                <span className="creator-button-arrow">
-                  →
-                </span>
+                <ArrowUpRight className="creator-action-leading-icon" aria-hidden="true" />
+                <span className="creator-action-label">Automated Payouts</span>
+                <ArrowRight className="creator-button-arrow" aria-hidden="true" />
 
               </Link>
-
-
-              {/* =================================================
-                  ADD LISTING
-              ================================================= */}
-
-              <Link
-                to="/creator/listings/new"
-                className="creator-primary-button"
-              >
-
-                <span className="creator-plus">
-                  +
-                </span>
-
-                Add Website Listing
-
-              </Link>
-
-            </div>
 
 
             {/* =================================================
@@ -1575,15 +1553,27 @@ export function CreatorDashboardPage() {
               onClick={handleLogout}
             >
 
-              <span>
-                Logout
-              </span>
-
-              <span className="creator-button-arrow">
-                ↪
-              </span>
+              <LogOut className="creator-action-leading-icon" aria-hidden="true" />
+              <span className="creator-action-label">Logout</span>
 
             </button>
+
+
+              {/* =================================================
+                  ADD LISTING
+              ================================================= */}
+
+              <Link
+                to="/creator/listings/new"
+                className="creator-primary-button"
+              >
+
+                <Plus className="creator-plus" aria-hidden="true" />
+                <span className="creator-action-label">Add Website Listing</span>
+
+              </Link>
+
+            </div>
 
           </div>
 
@@ -1618,12 +1608,11 @@ export function CreatorDashboardPage() {
               </p>
 
               <h2>
-                Your selling activity
+                Your listings at a glance
               </h2>
 
               <p>
-                Track your listings, orders, sales,
-                and delivery activity at a glance.
+                A clear view of your creator activity.
               </p>
 
             </div>

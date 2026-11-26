@@ -20,6 +20,7 @@
     "express": "^5.2.1",
     "gsap": "^3.15.1",
     "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^1.80.0",
     "mongodb": "^7.5.0",
     "multer": "^2.2.0",
     "nodemailer": "^9.0.5",

@@ -384,6 +384,33 @@ useEffect(() => {
               </Link>
 
 
+{/* Admin Messages */}
+
+<Link
+  to="/buyer/admin-messages"
+  className="buyer-action-card"
+>
+  <div className="buyer-action-icon">
+    ✉️
+  </div>
+
+  <div>
+    <h3>
+      Admin Messages
+    </h3>
+
+    <p>
+      View private messages and replies from the Marketplace Admin.
+    </p>
+  </div>
+
+  <span className="buyer-action-arrow">
+    →
+  </span>
+</Link>
+
+
+
               {/* Account */}
 
               <Link

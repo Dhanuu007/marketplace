@@ -8,6 +8,9 @@ const MESSAGES_COLLECTION = 'messages'
 const SUSPENSION_SUPPORT_TYPE =
   'SUSPENSION_SUPPORT'
 
+const ADMIN_DIRECT_MESSAGE_TYPE =
+  'ADMIN_DIRECT_MESSAGE'
+
 function conversationCollection() {
   return getDatabase().collection(
     CONVERSATIONS_COLLECTION,
@@ -74,6 +77,21 @@ async function ensureChatIndexes() {
     updatedAt: -1,
   })
 
+  // One direct-message conversation per Admin and recipient.
+await conversations.createIndex(
+  {
+    adminId: 1,
+    recipientId: 1,
+  },
+  {
+    unique: true,
+    partialFilterExpression: {
+      type: ADMIN_DIRECT_MESSAGE_TYPE,
+    },
+    name: 'admin_direct_message_unique',
+  },
+)
+
   await messageCollection().createIndex({
     conversationId: 1,
     createdAt: 1,
@@ -87,6 +105,106 @@ async function ensureChatIndexes() {
   indexesReady = true
 }
 
+/*
+ * Create an Admin Direct Message conversation.
+ */
+export async function createAdminDirectConversation({
+  adminId,
+  adminName,
+  recipientId,
+  recipientRole,
+  recipientName,
+}) {
+  await ensureChatIndexes()
+
+  const now = new Date()
+
+  const document = {
+    type: ADMIN_DIRECT_MESSAGE_TYPE,
+
+    adminId,
+    adminName,
+
+    recipientId,
+    recipientRole,
+    recipientName,
+
+    lastMessage: '',
+    lastMessageAt: null,
+
+    adminUnreadCount: 0,
+    recipientUnreadCount: 0,
+
+    status: 'OPEN',
+
+    createdAt: now,
+    updatedAt: now,
+  }
+
+  const result =
+    await conversationCollection().insertOne(
+      document,
+    )
+
+  return conversationCollection().findOne({
+    _id: result.insertedId,
+  })
+}
+
+/*
+ * Find an existing Admin–recipient conversation.
+ */
+export async function getAdminDirectConversation(
+  adminId,
+  recipientId,
+) {
+  await ensureChatIndexes()
+
+  return conversationCollection().findOne({
+    type: ADMIN_DIRECT_MESSAGE_TYPE,
+    adminId,
+    recipientId,
+  })
+}
+
+/*
+ * Get Admin's direct-message conversations.
+ */
+export async function getAdminDirectConversationsByAdminId(
+  adminId,
+) {
+  await ensureChatIndexes()
+
+  return conversationCollection()
+    .find({
+      type: ADMIN_DIRECT_MESSAGE_TYPE,
+      adminId,
+    })
+    .sort({
+      updatedAt: -1,
+    })
+    .toArray()
+}
+
+/*
+ * Get direct-message conversations for a Buyer or Creator.
+ */
+export async function getAdminDirectConversationsByRecipientId(
+  recipientId,
+) {
+  await ensureChatIndexes()
+
+  return conversationCollection()
+    .find({
+      type: ADMIN_DIRECT_MESSAGE_TYPE,
+      recipientId,
+    })
+    .sort({
+      updatedAt: -1,
+    })
+    .toArray()
+}
+
 
 /*
  * Create a new conversation.
@@ -94,6 +212,8 @@ async function ensureChatIndexes() {
 export async function createConversation(
   conversation,
 ) {
+
+  
   await ensureChatIndexes()
 
   const now = new Date()
@@ -459,6 +579,111 @@ export async function getMessagesByConversationId(
     .toArray()
 }
 
+/*
+ * Update an Admin Direct Message conversation
+ * after a new message.
+ */
+export async function updateAdminDirectConversationAfterMessage(
+  conversationId,
+  lastMessage,
+  senderRole,
+) {
+  await ensureChatIndexes()
+
+  if (!ObjectId.isValid(conversationId)) {
+    return null
+  }
+
+  const update = {
+    $set: {
+      lastMessage,
+      lastMessageAt: new Date(),
+      updatedAt: new Date(),
+    },
+  }
+
+  if (senderRole === 'ADMIN') {
+    update.$inc = {
+      recipientUnreadCount: 1,
+    }
+  } else {
+    update.$inc = {
+      adminUnreadCount: 1,
+    }
+  }
+
+  return conversationCollection().findOneAndUpdate(
+    {
+      _id: new ObjectId(conversationId),
+      type: ADMIN_DIRECT_MESSAGE_TYPE,
+    },
+    update,
+    {
+      returnDocument: 'after',
+    },
+  )
+}
+
+/*
+ * Mark Admin Direct Message messages as read.
+ */
+export async function markAdminDirectConversationRead(
+  conversationId,
+  userId,
+  isAdmin,
+) {
+  await ensureChatIndexes()
+
+  if (!ObjectId.isValid(conversationId)) {
+    return null
+  }
+
+  const conversation =
+    await conversationCollection().findOneAndUpdate(
+      {
+        _id: new ObjectId(conversationId),
+        type: ADMIN_DIRECT_MESSAGE_TYPE,
+        ...(isAdmin
+          ? { adminId: userId }
+          : { recipientId: userId }),
+      },
+      {
+        $set: isAdmin
+          ? {
+              adminUnreadCount: 0,
+              updatedAt: new Date(),
+            }
+          : {
+              recipientUnreadCount: 0,
+              updatedAt: new Date(),
+            },
+      },
+      {
+        returnDocument: 'after',
+      },
+    )
+
+  if (!conversation) {
+    return null
+  }
+
+  await messageCollection().updateMany(
+    {
+      conversationId,
+      readBy: {
+        $ne: userId,
+      },
+    },
+    {
+      $addToSet: {
+        readBy: userId,
+      },
+    },
+  )
+
+  return conversation
+}
+
 
 /*
  * Update conversation after a new message.
@@ -504,6 +729,7 @@ export async function updateConversationAfterMessage(
     },
   )
 }
+
 
 
 /*

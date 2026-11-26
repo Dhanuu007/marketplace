@@ -24,9 +24,21 @@ import {
   getSuspensionConversations,
   updateSuspensionConversationAfterMessage,
   markSuspensionConversationRead,
+
+  createAdminDirectConversation,
+getAdminDirectConversation,
+getAdminDirectConversationsByAdminId,
+getAdminDirectConversationsByRecipientId,
+updateAdminDirectConversationAfterMessage,
+markAdminDirectConversationRead,
+
+
 } from './chat.repository.js'
 
-
+import {
+  findUserById,
+  findUsersByRole,
+} from '../auth/user.repository.js'
 
 
 const CHAT_ELIGIBLE_ORDER_STATUSES = [
@@ -845,6 +857,8 @@ export async function closeChatConversation(
 function serializeConversation(
   conversation,
 ) {
+
+  
   return {
     id:
       conversation._id.toString(),
@@ -889,6 +903,384 @@ function serializeConversation(
       conversation.updatedAt,
   }
 }
+
+
+/*
+ * Create or return an Admin Direct Message conversation.
+ */
+export async function createOrGetAdminDirectConversation(
+  admin,
+  recipientId,
+) {
+  if (admin.role !== 'ADMIN') {
+    throw createError(
+      403,
+      'Only Admin can start a direct message.',
+    )
+  }
+
+  if (
+    typeof recipientId !== 'string' ||
+    recipientId.trim() === ''
+  ) {
+    throw createError(
+      400,
+      'A valid recipient ID is required.',
+    )
+  }
+
+  const recipient = await findUserById(
+    recipientId.trim(),
+  )
+
+  if (!recipient) {
+    throw createError(
+      404,
+      'Recipient account not found.',
+    )
+  }
+
+  if (
+    recipient.role !== 'BUYER' &&
+    recipient.role !== 'CREATOR'
+  ) {
+    throw createError(
+      400,
+      'Direct messages are available only for Buyers and Creators.',
+    )
+  }
+
+  let conversation =
+    await getAdminDirectConversation(
+      admin.id,
+      recipient.id,
+    )
+
+  if (!conversation) {
+    try {
+      conversation =
+        await createAdminDirectConversation({
+          adminId: admin.id,
+          adminName: admin.name ?? 'Admin',
+          recipientId: recipient.id,
+          recipientRole: recipient.role,
+          recipientName: recipient.name ?? '',
+        })
+    } catch (error) {
+      // Another request may have created the same
+      // conversation at the same time.
+      if (error.code !== 11000) {
+        throw error
+      }
+
+      conversation =
+        await getAdminDirectConversation(
+          admin.id,
+          recipient.id,
+        )
+
+      if (!conversation) {
+        throw error
+      }
+    }
+  }
+
+  return serializeAdminDirectConversation(
+    conversation,
+  )
+}
+
+
+/*
+ * Get all direct-message conversations for Admin.
+ */
+export async function getAdminDirectMessages(
+  admin,
+) {
+  if (admin.role !== 'ADMIN') {
+    throw createError(
+      403,
+      'Only Admin can access direct messages.',
+    )
+  }
+
+  const conversations =
+    await getAdminDirectConversationsByAdminId(
+      admin.id,
+    )
+
+  return conversations.map(
+    serializeAdminDirectConversation,
+  )
+}
+
+/*
+ * Get all Buyers and Creators for Admin
+ * to start individual direct messages.
+ */
+export async function getAdminDirectMessageRecipients(admin) {
+  if (admin.role !== 'ADMIN') {
+    throw createError(
+      403,
+      'Only Admin can access the recipient list.',
+    )
+  }
+
+  const [buyers, creators] = await Promise.all([
+    findUsersByRole('BUYER'),
+    findUsersByRole('CREATOR'),
+  ])
+
+  const recipients = [...buyers, ...creators].map((user) => ({
+    id: user.id,
+    name: user.name ?? 'Unnamed User',
+    role: user.role,
+  }))
+
+  return recipients
+}
+
+
+/*
+ * Get direct-message conversations for Buyer or Creator.
+ */
+export async function getUserAdminDirectMessages(
+  user,
+) {
+  if (
+    user.role !== 'BUYER' &&
+    user.role !== 'CREATOR'
+  ) {
+    throw createError(
+      403,
+      'You do not have access to Admin direct messages.',
+    )
+  }
+
+  const conversations =
+    await getAdminDirectConversationsByRecipientId(
+      user.id,
+    )
+
+  return conversations.map(
+    serializeAdminDirectConversation,
+  )
+}
+
+
+/*
+ * Verify that the user belongs to an Admin Direct Message.
+ */
+async function getAuthorizedAdminDirectConversation(
+  conversationId,
+  user,
+) {
+  const conversation =
+    await getConversationById(
+      conversationId,
+    )
+
+  if (!conversation) {
+    throw createError(
+      404,
+      'Conversation not found.',
+    )
+  }
+
+  if (
+    conversation.type !==
+    'ADMIN_DIRECT_MESSAGE'
+  ) {
+    throw createError(
+      403,
+      'This is not an Admin direct-message conversation.',
+    )
+  }
+
+  const isAdmin =
+    user.role === 'ADMIN' &&
+    conversation.adminId === user.id
+
+  const isRecipient =
+    (
+      user.role === 'BUYER' ||
+      user.role === 'CREATOR'
+    ) &&
+    conversation.recipientId === user.id &&
+    conversation.recipientRole === user.role
+
+  if (!isAdmin && !isRecipient) {
+    throw createError(
+      403,
+      'You do not have access to this conversation.',
+    )
+  }
+
+  return conversation
+}
+
+
+/*
+ * Get one Admin Direct Message conversation with messages.
+ */
+export async function getAdminDirectConversationWithMessages(
+  conversationId,
+  user,
+) {
+  const conversation =
+    await getAuthorizedAdminDirectConversation(
+      conversationId,
+      user,
+    )
+
+  const messages =
+    await getMessagesByConversationId(
+      conversationId,
+    )
+
+  return {
+    conversation:
+      serializeAdminDirectConversation(
+        conversation,
+      ),
+
+    messages:
+      messages.map(
+        serializeMessage,
+      ),
+  }
+}
+
+
+/*
+ * Send a message in an Admin Direct Message conversation.
+ */
+export async function sendAdminDirectMessage(
+  conversationId,
+  user,
+  text,
+) {
+  const conversation =
+    await getAuthorizedAdminDirectConversation(
+      conversationId,
+      user,
+    )
+
+  if (conversation.status === 'CLOSED') {
+    throw createError(
+      400,
+      'This conversation is closed.',
+    )
+  }
+
+  const senderRole =
+    user.role === 'ADMIN'
+      ? 'ADMIN'
+      : user.role
+
+  const message =
+    await createMessage({
+      conversationId,
+      senderId: user.id,
+      senderRole,
+      text,
+    })
+
+  const updatedConversation =
+    await updateAdminDirectConversationAfterMessage(
+      conversationId,
+      text,
+      senderRole,
+    )
+
+  if (!updatedConversation) {
+    throw createError(
+      404,
+      'Conversation not found.',
+    )
+  }
+
+  return {
+    message:
+      serializeMessage(message),
+
+    conversation:
+      serializeAdminDirectConversation(
+        updatedConversation,
+      ),
+  }
+}
+
+
+/*
+ * Mark Admin Direct Message messages as read.
+ */
+export async function markAdminDirectMessageAsRead(
+  conversationId,
+  user,
+) {
+  await getAuthorizedAdminDirectConversation(
+    conversationId,
+    user,
+  )
+
+  const isAdmin =
+    user.role === 'ADMIN'
+
+  const updatedConversation =
+    await markAdminDirectConversationRead(
+      conversationId,
+      user.id,
+      isAdmin,
+    )
+
+  if (!updatedConversation) {
+    throw createError(
+      404,
+      'Conversation not found.',
+    )
+  }
+
+  return serializeAdminDirectConversation(
+    updatedConversation,
+  )
+}
+
+
+/*
+ * Serialize Admin Direct Message conversations.
+ */
+function serializeAdminDirectConversation(
+  conversation,
+) {
+  return {
+    id: conversation._id.toString(),
+
+    type: conversation.type,
+
+    adminId: conversation.adminId,
+    adminName: conversation.adminName ?? 'Admin',
+
+    recipientId: conversation.recipientId,
+    recipientRole: conversation.recipientRole,
+    recipientName: conversation.recipientName ?? '',
+
+    lastMessage: conversation.lastMessage ?? '',
+    lastMessageAt: conversation.lastMessageAt,
+
+    adminUnreadCount:
+      conversation.adminUnreadCount ?? 0,
+
+    recipientUnreadCount:
+      conversation.recipientUnreadCount ?? 0,
+
+    status: conversation.status,
+
+    createdAt: conversation.createdAt,
+    updatedAt: conversation.updatedAt,
+  }
+}
+
 
 
 function serializeMessage(

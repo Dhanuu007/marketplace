@@ -18,6 +18,8 @@ import chatbotRoutes from './chatbot/chatbot.routes.js'
 
 import notificationRoutes from './notification/notification.routes.js'
 
+import announcementRoutes from './announcement/announcement.routes.js'
+
 import adminRoutes from './admin/admin.routes.js'
 
 import maintenanceRoutes from './maintenance/maintenance.routes.js'
@@ -63,6 +65,8 @@ router.use(chatRoutes)
 router.use(chatbotRoutes)
 
 router.use(notificationRoutes)
+
+router.use(announcementRoutes)
 
 router.use(orderRoutes)
 

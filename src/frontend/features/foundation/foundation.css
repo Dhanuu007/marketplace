@@ -600,7 +600,7 @@ top: -50px;
 
 
 
-  gap: 28px;
+  gap: 34px;
 
 
 
@@ -4723,7 +4723,7 @@ top: -50px;
 
   .marketplace-nav {
 
-    gap: 18px;
+    gap: 20px;
 
 
 
@@ -7716,5 +7716,427 @@ top: -50px;
   .marketplace-scroll-gallery-hint {
     width: 100%;
     margin-top: 18px;
+  }
+}
+
+
+/* =========================================================
+   HOMEPAGE ANNOUNCEMENTS — LATEST UPDATES
+========================================================= */
+
+.marketplace-announcements {
+  position: relative;
+  z-index: 1;
+
+  width: min(1100px, calc(100% - 48px));
+  margin: 28px auto 36px;
+  padding: 26px 30px;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--market-border);
+  border-radius: 20px;
+
+  background: var(--market-bg-card);
+
+  color: var(--market-text);
+
+  box-shadow:
+    0 12px 35px rgba(15, 23, 42, 0.06);
+
+  animation: marketplaceAnnouncementIn 0.5s ease both;
+}
+
+.marketplace-announcements-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  margin-bottom: 20px;
+}
+
+.marketplace-announcements-heading > span {
+  display: grid;
+  place-items: center;
+
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  background: rgba(99, 102, 241, 0.12);
+
+  font-size: 23px;
+}
+
+.marketplace-announcements-heading strong {
+  display: block;
+
+  color: var(--market-text-heading);
+
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.marketplace-announcements-heading p {
+  margin: 5px 0 0;
+
+  color: var(--market-text-muted);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.marketplace-announcements-list {
+  display: grid;
+  gap: 12px;
+}
+
+.marketplace-announcement-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+
+  padding: 18px;
+
+  border: 1px solid var(--market-border-soft);
+  border-radius: 14px;
+
+  background: var(--market-bg-soft);
+
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.marketplace-announcement-card:hover {
+  transform: translateY(-2px);
+
+  border-color: var(--market-primary);
+
+  box-shadow:
+    0 8px 22px rgba(99, 102, 241, 0.08);
+}
+
+.marketplace-announcement-icon {
+  display: grid;
+  place-items: center;
+
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background: rgba(99, 102, 241, 0.12);
+
+  font-size: 19px;
+}
+
+.marketplace-announcement-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.marketplace-announcement-content h3 {
+  margin: 0 0 7px;
+
+  color: var(--market-text-heading);
+
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.marketplace-announcement-content p {
+  margin: 0;
+
+  color: var(--market-text-muted);
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  overflow-wrap: anywhere;
+}
+
+.marketplace-announcement-content small {
+  display: block;
+
+  margin-top: 12px;
+
+  color: var(--market-text-soft);
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+@keyframes marketplaceAnnouncementIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 700px) {
+  .marketplace-announcements {
+    width: calc(100% - 32px);
+    margin: 20px auto 28px;
+    padding: 20px 16px;
+
+    border-radius: 16px;
+  }
+
+  .marketplace-announcements-heading {
+    gap: 11px;
+    margin-bottom: 16px;
+  }
+
+  .marketplace-announcements-heading > span {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .marketplace-announcements-heading strong {
+    font-size: 16px;
+  }
+
+  .marketplace-announcements-heading p {
+    font-size: 12px;
+  }
+
+  .marketplace-announcement-card {
+    gap: 11px;
+    padding: 14px 12px;
+  }
+
+  .marketplace-announcement-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .marketplace-announcement-content h3 {
+    font-size: 14px;
+  }
+
+  .marketplace-announcement-content p {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marketplace-announcements {
+    animation: none;
+  }
+
+  .marketplace-announcement-card {
+    transition: none;
+  }
+}
+/* =====================================================
+   HEADER ANNOUNCEMENT DROPDOWN
+===================================================== */
+
+.marketplace-announcement-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.marketplace-announcement-trigger {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--market-text-heading);
+  font-size: 19px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.marketplace-announcement-trigger:hover {
+  background: var(--market-bg-card);
+}
+
+.marketplace-announcement-count {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--market-bg-card);
+  border-radius: 20px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.marketplace-announcement-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: -85px;
+  z-index: 1000;
+  width: 350px;
+  max-width: calc(100vw - 28px);
+  overflow: hidden;
+  border: 1px solid var(--market-border);
+  border-radius: 16px;
+  background: var(--market-bg-card);
+  box-shadow: var(--market-shadow);
+  animation: marketplace-announcement-appear 0.18s ease;
+}
+
+.marketplace-announcement-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px;
+  border-bottom: 1px solid var(--market-border);
+}
+
+.marketplace-announcement-dropdown-header div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.marketplace-announcement-dropdown-header strong {
+  color: var(--market-text-heading);
+  font-size: 15px;
+}
+
+.marketplace-announcement-dropdown-header span {
+  color: var(--market-text-muted);
+  font-size: 12px;
+}
+
+.marketplace-announcement-dropdown-header button {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--market-text-muted);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.marketplace-announcement-dropdown-header button:hover {
+  background: var(--market-border);
+}
+
+.marketplace-announcement-dropdown-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.marketplace-announcement-dropdown-item {
+  display: flex;
+  gap: 12px;
+  padding: 15px 17px;
+  border-bottom: 1px solid var(--market-border);
+}
+
+.marketplace-announcement-dropdown-item:last-child {
+  border-bottom: 0;
+}
+
+.marketplace-announcement-dropdown-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--market-bg-card);
+  font-size: 17px;
+}
+
+.marketplace-announcement-dropdown-item > div {
+  min-width: 0;
+}
+
+.marketplace-announcement-dropdown-item strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--market-text-heading);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.marketplace-announcement-dropdown-item p {
+  margin: 0;
+  color: var(--market-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.marketplace-announcement-dropdown-item small {
+  display: block;
+  margin-top: 7px;
+  color: var(--market-text-muted);
+  font-size: 10px;
+}
+
+.marketplace-announcement-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 30px 15px;
+  text-align: center;
+}
+
+.marketplace-announcement-empty span {
+  font-size: 27px;
+}
+
+.marketplace-announcement-empty strong {
+  color: var(--market-text-heading);
+  font-size: 13px;
+}
+
+.marketplace-announcement-empty p {
+  margin: 0;
+  color: var(--market-text-muted);
+  font-size: 12px;
+}
+
+@keyframes marketplace-announcement-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .marketplace-announcement-dropdown {
+    right: -95px;
+    width: 320px;
   }
 }

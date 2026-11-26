@@ -1,6 +1,10 @@
 import { Router } from 'express'
 
 import {
+  createAdminAnnouncement,
+} from '../notification/notification.service.js'
+
+import {
   requireAuth,
   requireRole,
 } from '../../middleware/auth.js'
@@ -14,6 +18,46 @@ import {
 } from './admin.service.js'
 
 const router = Router()
+
+// =========================================================
+// PUBLISH ADMIN ANNOUNCEMENT
+// =========================================================
+
+router.post(
+  '/admin/announcements',
+  requireAuth,
+  requireRole('ADMIN'),
+  async (request, response, next) => {
+    try {
+      const { title, message } = request.body
+
+      if (
+        typeof title !== 'string' ||
+        typeof message !== 'string' ||
+        !title.trim() ||
+        !message.trim()
+      ) {
+        return response.status(400).json({
+          code: 'INVALID_ANNOUNCEMENT',
+          message: 'Title and message are required.',
+        })
+      }
+
+      const result = await createAdminAnnouncement({
+        title,
+        message,
+      })
+
+      return response.status(201).json({
+        status: 'success',
+        announcement: result,
+        message: 'Announcement published successfully.',
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
 
 
 // =========================================================

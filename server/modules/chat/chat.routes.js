@@ -21,6 +21,15 @@ import {
   getAdminSuspensionConversations,
   sendSuspensionMessage,
   markSuspensionConversationAsRead,
+
+
+  createOrGetAdminDirectConversation,
+  getAdminDirectMessages,
+  getAdminDirectMessageRecipients,
+  getUserAdminDirectMessages,
+  getAdminDirectConversationWithMessages,
+  sendAdminDirectMessage,
+  markAdminDirectMessageAsRead,
 } from './chat.service.js'
 
 import {
@@ -30,6 +39,177 @@ import {
 
 
 const router = Router()
+
+/*
+ * Admin: get all Buyers and Creators
+ * available for direct messaging.
+ */
+router.get(
+  '/admin/chat/direct-message-recipients',
+  requireAuth,
+  requireRole('ADMIN'),
+  async (request, response, next) => {
+    try {
+      const recipients =
+        await getAdminDirectMessageRecipients(request.user)
+
+      response.json({
+        recipients,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+/*
+ * Admin: get all direct-message conversations.
+ */
+router.get(
+  '/admin/chat/direct-messages',
+  requireAuth,
+  requireRole('ADMIN'),
+  async (request, response, next) => {
+    try {
+      const conversations =
+        await getAdminDirectMessages(
+          request.user,
+        )
+
+      response.json({
+        conversations,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+
+/*
+ * Admin: start or open a direct message
+ * with an individual Buyer or Creator.
+ */
+router.post(
+  '/admin/chat/direct-messages',
+  requireAuth,
+  requireRole('ADMIN'),
+  async (request, response, next) => {
+    try {
+      const conversation =
+        await createOrGetAdminDirectConversation(
+          request.user,
+          request.body?.recipientId,
+        )
+
+      response.status(200).json({
+        conversation,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+
+/*
+ * Buyer / Creator: get their Admin conversations.
+ */
+router.get(
+  '/chat/admin-direct-messages',
+  requireAuth,
+  async (request, response, next) => {
+    try {
+      const conversations =
+        await getUserAdminDirectMessages(
+          request.user,
+        )
+
+      response.json({
+        conversations,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+
+/*
+ * Admin / Buyer / Creator:
+ * get one direct-message conversation.
+ */
+router.get(
+  '/chat/admin-direct-messages/:conversationId',
+  requireAuth,
+  async (request, response, next) => {
+    try {
+      const result =
+        await getAdminDirectConversationWithMessages(
+          request.params.conversationId,
+          request.user,
+        )
+
+      response.json(result)
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+
+/*
+ * Admin / Buyer / Creator:
+ * send a direct message.
+ */
+router.post(
+  '/chat/admin-direct-messages/:conversationId/messages',
+  requireAuth,
+  async (request, response, next) => {
+    try {
+      const input =
+        validateSendMessage(
+          request.body,
+        )
+
+      const result =
+        await sendAdminDirectMessage(
+          request.params.conversationId,
+          request.user,
+          input.text,
+        )
+
+      response.status(201).json(result)
+    } catch (error) {
+      next(error)
+    }
+  },
+)
+
+
+/*
+ * Admin / Buyer / Creator:
+ * mark direct messages as read.
+ */
+router.patch(
+  '/chat/admin-direct-messages/:conversationId/read',
+  requireAuth,
+  async (request, response, next) => {
+    try {
+      const conversation =
+        await markAdminDirectMessageAsRead(
+          request.params.conversationId,
+          request.user,
+        )
+
+      response.json({
+        conversation,
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+)
 
 
 /*

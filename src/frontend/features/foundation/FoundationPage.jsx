@@ -128,103 +128,39 @@ const isNewWithinSevenDays = (date) => {
 }
 
 export function FoundationPage() {
-
-
-
   const { token } = useAuth()
 
-
-
   /* =====================================================
-
      HOMEPAGE STATE
-
   ====================================================== */
 
+  const [homepage, setHomepage] = useState(DEFAULT_HOMEPAGE)
+  const [announcements, setAnnouncements] = useState([])
+  const [showAnnouncements, setShowAnnouncements] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-
-  const [homepage, setHomepage] =
-
-    useState(DEFAULT_HOMEPAGE)
-
-
-
-  const [loading, setLoading] =
-
-    useState(true)
-
-
-
-  const [error, setError] =
-
-    useState('')
-
-
-
-  const [showCredits, setShowCredits] =
-
-    useState(false)
-
-
-
-
+  const [showCredits, setShowCredits] = useState(false)
 
   /* =====================================================
-
      THEME STATE
-
   ====================================================== */
 
-
-
-  const [darkMode, setDarkMode] =
-
-    useState(() => {
-
-      return (
-
-        localStorage.getItem(
-
-          'marketplace-theme',
-
-        ) === 'dark'
-
-      )
-
-    })
-
-
-
-
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('marketplace-theme') === 'dark'
+  })
 
   /* =====================================================
-
      BACK TO TOP STATE
-
   ====================================================== */
 
-
-
-  const [showBackToTop, setShowBackToTop] =
-
-    useState(false)
-
-
-
-
+  const [showBackToTop, setShowBackToTop] = useState(false)
 
   /* =====================================================
-
      THREE.JS HERO REF
-
   ====================================================== */
 
-
-
-  const heroCanvasRef =
-
-    useRef(null)
-
+  const heroCanvasRef = useRef(null)
   const gallerySectionRef = useRef(null)
   const galleryViewportRef = useRef(null)
   const galleryTrackRef = useRef(null)
@@ -232,9 +168,7 @@ export function FoundationPage() {
 
 
 
-
-
-  /* =====================================================
+    /* =====================================================
 
      THEME TOGGLE
 
@@ -288,6 +222,24 @@ export function FoundationPage() {
           '/website/homepage/public',
           token ? { token } : undefined,
         )
+
+        // Load published marketplace announcements
+try {
+  const announcementData = await apiRequest('/announcements')
+
+  if (isMounted) {
+    setAnnouncements(
+      Array.isArray(announcementData?.announcements)
+        ? announcementData.announcements
+        : [],
+    )
+  }
+} catch (announcementError) {
+  console.warn(
+    'Could not load marketplace announcements:',
+    announcementError.message || announcementError,
+  )
+}
 
         // Payment maintenance settings are public, separate from homepage content.
         // If this request fails, the homepage should still load normally.
@@ -1977,87 +1929,108 @@ export function FoundationPage() {
 
         <div className="marketplace-header-actions">
 
+  <button
+    type="button"
+    className="marketplace-search-button"
+    aria-label="Search"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M16 16L21 21" />
+    </svg>
+  </button>
 
+  {/* ANNOUNCEMENTS DROPDOWN */}
+  <div className="marketplace-announcement-menu">
+
+    <button
+      type="button"
+      className="marketplace-announcement-trigger"
+      onClick={() => setShowAnnouncements((current) => !current)}
+      aria-label="View announcements"
+      aria-expanded={showAnnouncements}
+    >
+      <span aria-hidden="true">📢</span>
+
+      {announcements.length > 0 && (
+        <span className="marketplace-announcement-count">
+          {announcements.length > 99 ? '99+' : announcements.length}
+        </span>
+      )}
+    </button>
+
+    {showAnnouncements && (
+      <div className="marketplace-announcement-dropdown">
+
+        <div className="marketplace-announcement-dropdown-header">
+          <div>
+            <strong>Announcements</strong>
+            <span>Latest news and updates</span>
+          </div>
 
           <button
-
             type="button"
-
-            className="marketplace-search-button"
-
-            aria-label="Search"
-
+            onClick={() => setShowAnnouncements(false)}
+            aria-label="Close announcements"
           >
-
-
-
-            <svg
-
-              viewBox="0 0 24 24"
-
-              aria-hidden="true"
-
-            >
-
-
-
-              <circle
-
-                cx="11"
-
-                cy="11"
-
-                r="6.5"
-
-              />
-
-
-
-              <path d="M16 16L21 21" />
-
-
-
-            </svg>
-
-
-
+            ×
           </button>
+        </div>
 
+        <div className="marketplace-announcement-dropdown-list">
 
+          {announcements.length > 0 ? (
+            announcements.map((announcement) => (
+              <article
+                className="marketplace-announcement-dropdown-item"
+                key={announcement.id}
+              >
+                <span className="marketplace-announcement-dropdown-icon">
+                  📣
+                </span>
 
+                <div>
+                  <strong>{announcement.title}</strong>
+                  <p>{announcement.message}</p>
 
-
-          <Link
-
-            to="/login"
-
-            className="marketplace-login-link"
-
-          >
-
-            Log in
-
-          </Link>
-
-
-
-
-
-          <Link
-
-            to="/register"
-
-            className="marketplace-header-button"
-
-          >
-
-            Get Started
-
-          </Link>
-
-
+                  {announcement.createdAt && (
+                    <small>
+                      {new Date(announcement.createdAt).toLocaleDateString(
+                        'en-IN',
+                        {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        }
+                      )}
+                    </small>
+                  )}
+                </div>
+              </article>
+            ))
+          ) : (
+            <div className="marketplace-announcement-empty">
+              <span>📭</span>
+              <strong>No announcements yet</strong>
+              <p>New updates will appear here.</p>
+            </div>
+          )}
 
         </div>
+      </div>
+    )}
+
+  </div>
+
+  <Link to="/login" className="marketplace-login-link">
+    Log in
+  </Link>
+
+  <Link to="/register" className="marketplace-header-button">
+    Get Started
+  </Link>
+
+</div>
 
 
 
